@@ -12,6 +12,6 @@
     "Content": false,
     "Settings": false
   },
-  "plan": "QmuMigrationProfile",
+  "plan": "QmuMigrationPlan",
   "clientId": "AhKaYGGvTSWfZWvwob94Zg"
 }
