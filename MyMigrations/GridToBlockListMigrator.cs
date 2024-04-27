@@ -1,5 +1,7 @@
-﻿using Umbraco.Cms.Core.Composing;
+﻿using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.PropertyEditors;
 using uSync.Migrations.Core.Context;
 using uSync.Migrations.Core.Migrators;
 using uSync.Migrations.Core.Migrators.Models;
@@ -7,16 +9,18 @@ using uSync.Migrations.Core.Migrators.Models;
 namespace MyMigrations;
 
 [SyncMigrator(Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid)]
-[HideFromTypeFinder] // hide from type if you don't want to automatically load this one (you have to replace in a composer)
-// [SyncDefaultMigrator] // set it to default if you do load it and always want it to be the one you use. (can be overriden by preferred)
+[SyncMigratorVersion(8)]
+// [HideFromTypeFinder] // hide from type if you don't want to automatically load this one (you have to replace in a composer)
+// [SyncDefaultMigrator] // Set it to default and always want it to be the one for Grid. (can be overriden by preferred) (BF - We may not need a Custom plan if there's no other grids?)
 internal class GridToBlockListMigrator : SyncPropertyMigratorBase
 {
-    /// <summary>
-    ///  the migrated editor alias.
-    /// </summary>
-    /// <remarks>
-    ///  e.g if you are converting Umbraco.Grid to Umbraco.BlockGrid
-    /// </remarks>
+    private readonly ILogger<GridToBlockListMigrator> _logger;
+
+    public GridToBlockListMigrator(ILogger<GridToBlockListMigrator> logger)
+    {
+        _logger = logger;
+    }
+
     public override string GetEditorAlias(SyncMigrationDataTypeProperty propertyModel, SyncMigrationContext context)
         => Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList;
 
