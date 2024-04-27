@@ -1,0 +1,58 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Home>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+
+    <div id="overlay">
+        <!-- overlay code in here -->
+    </div>
+
+    <div class="container">
+
+        <div class="column-layout">
+
+            <div class="left" id="left" tabindex="-1">
+
+                <h1>@Model.Value("displayTitle")</h1>
+
+                <div class="intro-text">@Model.Value("introduction")</div>
+
+                <!-- on page links -->
+                <div class="tile-items">
+                    @{
+                        var typedMultiNodeTreePicker = Model.Value<IEnumerable<IPublishedContent>>("onPageLinks");
+                        foreach (var item in typedMultiNodeTreePicker)
+                        {
+                            <div class="tile"><a href="@item.Url()"><span>@item.Value("DisplayTitle")</span></a></div>
+                        }
+                    }
+                </div>
+
+                <!-- Focus Panels-->
+                @Html.CachedPartial("FocusPanels", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <!-- FP end -->
+            </div>
+
+            <!-- right column -->
+            <div class="right">
+                @*@if (Model.ContactPicker != null)
+                    {
+                        @Html.CachedPartial("ContactGroup")
+                    }*@
+                @Html.Partial("courseSearch")
+                @Html.GetGridHtml(Model, "rcContent")
+            </div>
+
+        </div>
+
+    </div>
+
+
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

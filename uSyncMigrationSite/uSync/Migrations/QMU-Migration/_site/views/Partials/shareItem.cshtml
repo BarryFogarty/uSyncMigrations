@@ -1,0 +1,27 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    if (Model.Twitter != null)
+    {
+
+        var twitters = Model.Twitter;
+        foreach (var twitter in twitters) {
+    <a href="@twitter.Link.Url" target="" class="social-item twitter">
+             
+        <div class="image">
+            <img src="@twitter.Image.Url" alt="@twitter.Image.AltText" />
+            <p>@twitter.Summary</p>
+        </div>
+    </a>
+            }
+        }
+    }
+

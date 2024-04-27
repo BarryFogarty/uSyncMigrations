@@ -1,0 +1,86 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{ var type = Model.MediaGallery;
+    if (Model.MediaGallery.Count != 0)
+    {
+    <div class="carousel-item">
+        <div class="inner-carousel">
+
+            @foreach (var item in Model.MediaGallery)
+            {
+            <div class="item">
+                @if (item.Image != null && item.Image.Url.Length > 0)
+                {
+                    <div class="image">
+                        <img src="@item.Image.Url" alt="@item.Image.AltText" />
+                    </div>
+                }
+                else
+                {
+                    <div class="image">
+                        <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(item.Title) || !string.IsNullOrEmpty(item.Subtitle))
+                {
+                    <!-- sort null for item.Link.Url -->
+                    <div class="content-box">
+                        @if (!string.IsNullOrEmpty(item.Title))
+                        {
+                            <strong>@item.Title</strong>
+                        }
+                        @item.Subtitle
+                    </div>
+                }
+            </div>
+            }
+        </div>
+
+        <div class="inner-carousel-thumbs slick-fix">
+            @foreach (var item in Model.MediaGallery)
+            {
+                if (item.Image != null)
+                {
+                    <div class="item" style="height:auto !important">
+                        @if (item.Image.Url.Length > 0)
+                        {
+                            <div class="thumbnail">
+                                <img src="@item.Image.Url" alt="@item.Image.AltText" />
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="item">
+                        <div class="thumbnail">
+                            <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                        </div>
+                    </div>
+                }
+            }
+        </div>         
+    </div>
+    }
+}
+
+
+<style>
+
+    #left > div.carousel-item > div.inner-carousel.slick-initialized.slick-slider > div{
+        height: 445px !important;
+    }
+
+</style>

@@ -1,0 +1,99 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<SiftLibrary.Models.SearchResultNodes>
+@using System.Text.RegularExpressions
+@{
+    var eventItems = Model.Nodes.Select(n => (EventItem)n);
+    IPublishedContent fillerImage = null;
+
+    var imagesFolder = Umbraco.MediaAtRoot().Where(m => m.Name == "Images").FirstOrDefault();
+    if (imagesFolder != null)
+    {
+        var generalCampusUseFolder = imagesFolder.Children(m => m.Name == "Campus General Use").FirstOrDefault();
+        if (generalCampusUseFolder != null)
+        {
+            fillerImage = generalCampusUseFolder.Children(m => m.Name == "Qmu Filler Thumb").FirstOrDefault();
+        }
+    }
+}
+
+<div class="search-form">
+    <div class="search-paging">
+        @Html.Partial("_SiftQmuPagination", Model)
+    </div>
+</div>
+
+<div class="filter-grid no-padding-grid row">
+
+    @foreach (var eventItem in eventItems)
+    {
+        <div class="filter-item blog-item col-sm-6 col-lg-4 mb-5">
+            <div class="d-flex h-100 accented-boxes">
+
+                <div class="box w-100">
+
+                    <div class="image">
+                        <a href="@eventItem.Url()">
+                            @if (eventItem.AdSpotImage != null)
+                            {
+                                <img src="@eventItem.AdSpotImage.Url()" alt="@eventItem.AdSpotImage.Value("AltText")" />
+                            }
+                            else if (fillerImage != null)
+                            {
+                                <img src="@fillerImage.Url()" alt="@fillerImage.Value("AltText")" />
+                            }
+                            <div class="overlay-text lh-sm">
+                                @eventItem.DisplayTitle
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="text">
+
+                        @if (eventItem.EventStartDate != DateTime.MinValue)
+                        {
+                            <div class="event-date">
+                                <span class="label">Start: </span>
+                                <span class="date"><time>@(eventItem.EventStartDate.ToString("dd MMMM yyyy h:mm tt"))</time></span>
+                            </div>
+                        }
+
+                        @if (eventItem.EventEndDate != DateTime.MinValue)
+                        {
+                            <div class="event-date">
+                                <span class="label">End: </span>
+                                <span class="date"><time>@(eventItem.EventEndDate.ToString("dd MMMM yyyy h:mm tt"))</time></span>
+                            </div>
+                        }
+
+                        @{
+                            if (eventItem.Introduction != null)
+                            {
+                                var intro = eventItem.Introduction.ToString();
+                                string summary = string.Empty;
+
+                                int characterCount = 100;
+
+                                summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                if (summary.Length > characterCount)
+                                {
+                                    char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                    summary = Html.TruncateByWords(summary, 16, false).ToString().Trim(charsToTrim) ?? summary;
+                                }
+                                summary += string.Format(" <a href=\"" + @eventItem.Url() + "\" aria-label=\"read more about " + @eventItem.DisplayTitle + "\"><strong>read more</strong></a>");
+                                <p>@Html.Raw(summary)</p>
+                            }
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<div class="search-form">
+    <div class="search-paging">
+        @Html.Partial("_SiftQmuPagination", Model)
+    </div>
+</div>

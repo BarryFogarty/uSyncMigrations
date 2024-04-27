@@ -1,0 +1,7 @@
+﻿@using Umbraco.Web.PublishedModels
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<FullWidthImage>
+
+
+<div class="container full-width full-width-100 image-background-container @bottomMargin" id="@Model.AnchorCode" style="background-image: url(@Model.Image.Url());" role="img" aria-label="@Model.Image.Value("altText")">
+    <p class="cut-in-text">@Model.Title</p>
+</div>

@@ -1,0 +1,52 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.SubjectsOverview>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+    var paddingClass = "no-header";
+}
+
+<main role="main" class="main-content @paddingClass" aria-label="main body content">
+    <div class="column-layout grey">
+        <div class="container">
+
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                <p class="lead">@Model.Introduction</p>
+            </div>
+
+            <div class="right">
+                @*@Html.CachedPartial("courseFinder")*@
+                <div class="grey-aside alt white">
+                    <h2>@Model.ContactBoxTitle</h2>
+                    <div class="white-inner">
+                        @Model.ContactBoxText
+                        @if (Model.ContactBoxLink != null)
+                        {
+                            var rbimage = Model.Value<IPublishedContent>("rightBlockImage");
+
+                            if (Model.ContactBoxLink != null)
+                            {
+                                <a href="@Model.ContactBoxLink.Url" class="blue-btn" target="@Model.ContactBoxLink.Target">@Model.ContactBoxLink.Name</a>}
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="full-width-content">
+            <div class="subject-list">
+                @Html.CachedPartial("itl", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            @Html.CachedPartial("ShareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+

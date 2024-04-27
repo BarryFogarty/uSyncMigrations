@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{ 
+	string imageUrl = string.Empty;
+	var image = Model.MacroParameters["image"];
+	if (image != null && image.ToString().Length > 0)
+	{
+		imageUrl = Helpers.GetMediaUrl(image);
+	}
+
+	var text = Model.MacroParameters["text"];
+
+	string url = string.Empty;
+	string target = string.Empty;
+
+	var internalLink = Model.MacroParameters["internalLink"];
+	int id;
+	if (internalLink != null && Int32.TryParse(internalLink.ToString(), out id))
+	{
+		url = Helpers.GetLink(id);
+	}
+
+	var externalLink = Model.MacroParameters["externalLink"];
+	if (externalLink != null && externalLink.ToString().Length > 0)
+	{
+		url = externalLink.ToString();
+		target = "target=_blank";
+	}
+}
+
+<a href="@url" @target class="side-image-panel">
+	<img src="@imageUrl" alt="Image" />
+	@if (text != null && text.ToString().Length > 0)
+	{
+		<div class="text">
+			<span>@text</span>
+		</div>
+	}
+</a>

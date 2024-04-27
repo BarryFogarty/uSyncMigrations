@@ -1,0 +1,78 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<HorizontalStories>
+@using Umbraco.Web.PublishedModels
+@using System.Web.Mvc
+@using QMUCloud.Core.Helpers
+
+<section class="qmu_cmp_horizontalStories component-spacing bg-c-charcoal" id="@Model.AnchorCode">
+    @if (!string.IsNullOrWhiteSpace(Model.Title))
+    {
+        <div class="container">
+            <h2 class="text-center">@Model.Title</h2>
+        </div>
+    }
+
+    <div class="container full-width full-width-95">
+        <div class="row gx-3">
+
+            @foreach (var story in Model.Stories)
+            {
+                var webpImage = Url.GetCropUrlWebp(story.Image, "Image grid small");
+                var fallbackImage = story.Image.GetCropUrl("Image grid small");
+
+                <div class="col-sm-6 col-lg-4 col-xl mb-4 mb-xl-0">
+                    <article class="story">
+
+                        @* data-webp-fallback notes in main.js - line 1712 *@
+                        <img src="@webpImage" data-webp-fallback="@fallbackImage" alt="@story.Image.Value("altText")" loading="lazy">
+                        <div class="story__content">
+                            <div class="story__content__info">
+                                @if (!string.IsNullOrEmpty(story.StudentsName))
+                                {
+                                    <h3>@story.StudentsName</h3>
+                                }
+
+                                @if (!String.IsNullOrEmpty(story.Strapline))
+                                {
+                                    <p @(String.IsNullOrEmpty(story.CurrentEmployer) ? "class=story__content__info__strapline--no-employer" : "")>@story.Strapline</p>
+                                }
+
+                                @if (!String.IsNullOrEmpty(story.CurrentEmployer))
+                                {
+                                    <p>@story.CurrentEmployer</p>
+                                }
+                            </div>
+
+                            @if (!String.IsNullOrEmpty(story.Quote))
+                            {
+                                <div class="story__content__quote">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-quote" viewBox="0 0 16 16">
+                                        <path d="M12 12a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1h-1.388c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 9 7.558V11a1 1 0 0 0 1 1h2Zm-6 0a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1H4.612c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 3 7.558V11a1 1 0 0 0 1 1h2Z" />
+                                    </svg>
+                                    <blockquote>@Html.TruncateByWords(story.Quote, 50, true)</blockquote>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-quote" viewBox="0 0 16 16">
+                                        <path d="M12 12a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1h-1.388c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 9 7.558V11a1 1 0 0 0 1 1h2Zm-6 0a1 1 0 0 0 1-1V8.558a1 1 0 0 0-1-1H4.612c0-.351.021-.703.062-1.054.062-.372.166-.703.31-.992.145-.29.331-.517.559-.683.227-.186.516-.279.868-.279V3c-.579 0-1.085.124-1.52.372a3.322 3.322 0 0 0-1.085.992 4.92 4.92 0 0 0-.62 1.458A7.712 7.712 0 0 0 3 7.558V11a1 1 0 0 0 1 1h2Z" />
+                                    </svg>
+                                </div>
+                            }
+                        </div>
+
+                        <a href="@story.Link.Url" target="@story.Link.Target"></a>
+                        <button>
+                            <span>@story.Link.Name</span>
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </article>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    @if (Model.CentreButtonLink != null)
+    {
+        <div class="container text-center mt-5">
+            <a class="white-btn lg-btn" href="@Model.CentreButtonLink.Url" target="@Model.CentreButtonLink.Target">@Model.CentreButtonLink.Name</a>
+        </div>
+    }
+
+</section>

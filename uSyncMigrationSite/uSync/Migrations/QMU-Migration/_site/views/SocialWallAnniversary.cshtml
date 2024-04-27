@@ -1,0 +1,250 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.SocialWall>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+    var tiles = Model.Tiles;
+
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content social-wall" style="display:flow-root;" aria-label="main body content">
+    <div class="content">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            @Model.Introduction
+            <div class="mob-filter">
+                <div class="show-filter">Show Filter...</div>
+                <div class="active-filter">All</div>
+            </div>
+            <ul class="social-filter">
+                <li id="twitter"><span class="icon-twitter" role="button" aria-label="Filter by Twitter" tabindex="0">Twitter</span></li>
+
+                <li id="facebook"><span class="icon-facebook-official" role="button" aria-label="Filter by Facebook" tabindex="0">Facebook</span></li>
+
+                <li id="instagram"><span class="icon-instagram" role="button" aria-label="Filter by Instagram" tabindex="0">Instagram</span></li>
+
+                <li id="youtube"><span class="icon-youtube-play" role="button" aria-label="Filter by Youtube" tabindex="0">Youtube</span></li>
+
+                <li id="articles"><span class="icon-articles" role="button" aria-label="Filter by Articles" tabindex="0">Articles</span></li>
+            </ul>
+            <!-- ANY -->
+            <div class="sw-results" @*style="height:1000px;"*@>
+                @foreach (var tile in tiles)
+                {
+                    var cssClass = string.Empty;
+                    @*<div data-id="all" class="social-col-wrap active">
+                        <div class="half">*@
+                    if (@tile.Type == "Twitter")
+                    {
+                        cssClass = "twitter icon-twitter";
+                    }
+                    else if (@tile.Type == "Facebook")
+                    {
+                        cssClass = "facebook icon-facebook-official";
+                    }
+                    else if (@tile.Type == "Instagram")
+                    {
+                        cssClass = "instagram icon-instagram";
+                    }
+                    else if (@tile.Type == "YouTube")
+                    {
+                        cssClass = "instagram icon-instagram";
+                    }
+                    else if (@tile.Type == "Articles")
+                    {
+                        cssClass = "articles icon-articles";
+                    }
+
+                    <div class="column">
+                        <a href="@tile.Link.Url" target="" class="social-item @cssClass">
+                            <!-- if youtube here -->
+                            <div class="image">
+                                <img src="@tile.Image.Url()" alt="@tile.Image.Value("altText")" />
+                            </div>
+                            <div class="quote">
+                                @tile.Quote
+                            </div>
+
+                            <div class="text-block-new">
+                                @tile.Summary
+                                <!-- date stuffs in here-->
+                                <div class="view-post">View post</div>
+                            </div>
+                        </a>
+                    </div>
+
+                }
+
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<style>
+    .text-block-new {
+        position: relative;
+        padding: 20px 14px 58px 14px;
+        background: #5376A1;
+        color: #fff;
+        line-height: 26px;
+    }
+
+    }
+
+    .column {
+        float: left;
+        width: 25%;
+        /*height: 400px;*/ /* Should be removed. Only for demonstration */
+        padding: 0 9px;
+        /*height:auto;*/
+    }
+
+        .column:nth-child(4n+1) {
+            clear: both;
+        }
+
+        .column .social-item {
+            display: block;
+            position: relative;
+            border: 12px solid transparent;
+            margin-bottom: 20px;
+            -moz-transition: border-color 0.15s ease-in-out;
+            -o-transition: border-color 0.15s ease-in-out;
+            -webkit-transition: border-color 0.15s ease-in-out;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+
+            .column .social-item.twitter:before {
+                font-size: 29px;
+                background: #4DC7F0;
+                padding: 6px 0;
+                color: #fff;
+            }
+
+            .column .social-item.facebook:before {
+                font-size: 29px;
+                background: #3D599A;
+                padding: 6px 0;
+                color: #fff;
+            }
+
+            .column .social-item.instagram:before {
+                font-size: 29px;
+                background: #A94DBC;
+                padding: 6px 0;
+                color: #fff;
+            }
+
+            .column .social-item.youtube:before {
+                font-size: 32px;
+                background: #E52518;
+                padding: 5px 0;
+            }
+
+            .column .social-item.articles:before {
+                content: ' ';
+                font-size: 40px;
+                background: #D57801 url(/images/icon-article-white.png) no-repeat center;
+                background-size: 18px 24px;
+                padding: 6px 0;
+            }
+
+        .column .social-item {
+            display: block;
+            position: relative;
+            border: 12px solid transparent;
+            margin-bottom: 20px;
+            -moz-transition: border-color 0.15s ease-in-out;
+            -o-transition: border-color 0.15s ease-in-out;
+            -webkit-transition: border-color 0.15s ease-in-out;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+            .column .social-item:hover {
+                border-color: #6990b2;
+            }
+
+            .column .social-item:before {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 50px;
+                height: 40px;
+                z-index: 200;
+                margin-left: 0;
+            }
+
+            .column .social-item .text-block {
+                position: relative;
+                padding: 20px 14px 58px 14px;
+                background: #e7e7e7;
+                color: #333;
+                line-height: 26px;
+            }
+
+            .column .social-item .quote {
+                position: relative;
+                background: #374a5c;
+                font-size: 16px;
+                line-height: 24px;
+                color: #fff;
+                padding: 42px 18px 42px 22px;
+            }
+
+                .column .social-item .quote:before {
+                    position: absolute;
+                    top: 14px;
+                    left: 14px;
+                    content: ' ';
+                    background: url(/images/icon-quote1.png) no-repeat center;
+                    background-size: 19px 17px;
+                    width: 19px;
+                    height: 17px;
+                }
+
+
+                .column .social-item .quote:after {
+                    position: absolute;
+                    bottom: 14px;
+                    right: 14px;
+                    content: ' ';
+                    background: url(/images/icon-quote2.png) no-repeat center;
+                    background-size: 19px 17px;
+                    width: 19px;
+                    height: 17px;
+                }
+
+            .column .social-item .text-block:before {
+                position: absolute;
+                top: -10px;
+                left: 8px;
+                margin: 0 auto;
+                content: ' ';
+                width: 0;
+                height: 0;
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                border-bottom: 10px solid #e7e7e7;
+            }
+
+        .column .image {
+            margin-bottom: 0px;
+        }
+
+        .column .text-block .view-post {
+            cursor: pointer;
+            position: absolute;
+            bottom: 6px;
+            right: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #374a5c;
+        }
+
+    .sw-item {
+        width: 25%;
+    }
+</style>

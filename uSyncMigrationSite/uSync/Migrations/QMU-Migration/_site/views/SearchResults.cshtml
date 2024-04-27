@@ -1,0 +1,213 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.SearchResults>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Examine
+@using Examine.Search;
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Extensions
+
+
+@{
+    Layout = "Master.cshtml";
+    var searchPage = Model.Root().FirstChildOfType("searchResults");
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content" aria-label="main body content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <h1>@Model.DisplayTitle</h1>
+            <div class="search-form">
+                <div class="search-results" id="search-results">
+                    <!-- Search Box -->
+                    @helper RenderResults(ISearchResults results, UmbracoHelper umbraco)
+                    {
+                        int resultsPerPage = 10;
+                        double totalPagesCalculation = (double)results.Count() / (double)resultsPerPage;
+                        var totalPages = (int)Math.Ceiling(totalPagesCalculation);
+                        <ul>
+                            @foreach (var result in results)
+                            {
+                                var node = umbraco.Content(result.Id);
+
+                                if (node != null)
+                                {
+
+                                    var searchImage = node.Value<IPublishedContent>("adSpotImage");
+                                    var url = node.Url();
+                                    if (node.ContentType.Alias == "externalCourse")
+                                    {
+                                        url = node.Value<string>("externalURL");
+                                    }
+                                    <li>
+                                        <div class="left">
+                                            <a href="@url" aria-label="@node.Name">
+                                                @if (searchImage != null)
+                                                {
+                                                    <img src="@searchImage.Url()" alt="@searchImage.Value("AltText")" />
+                                                }
+                                                else
+                                                {
+                                                    <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                                                }
+                                            </a>
+                                        </div>
+                                        <div class="right">
+                                            <h2>
+                                                <a href="@url">@node.Name</a>
+                                                @*<br />Relevance - (@result.Score)*@
+                                            </h2>
+                                            @{var intro = node.Value<string>("Introduction");
+                                                if (intro != null)
+                                                {
+                                                    string summary = string.Empty;
+
+                                                    int characterCount = 300;
+
+                                                    summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                                    if (summary.Length > characterCount)
+                                                    {
+                                                        char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                                        summary = summary.Truncate(characterCount).Trim(charsToTrim);
+                                                    }
+                                                    summary += string.Format(" <a href=\"" + url + "\" aria-label=\"" + node.Name + "\"><strong>read more</strong></a>");
+                                                    <p> @Html.Raw(summary) </p>
+                                                    <a href="@url" class="blue-btn" aria-label="@node.Name">View page</a>
+                                                }
+                                            }
+                                        </div>
+                                    </li>
+                                }              
+                         
+                            }
+
+                        </ul>
+                    }
+
+                    @{
+                        var searchTerm = string.IsNullOrEmpty(Request["query"])
+                        ? string.Empty
+                        : Request["query"];
+                        searchTerm = searchTerm.MakeSearchQuerySafe();
+
+                        if (searchTerm == string.Empty)
+                        {
+                            <p>Enter search term</p>
+                        }
+                        else
+                        {
+                            IExamineManager examineManager = ExamineManager.Instance;
+                            if (!examineManager.TryGetIndex(Constants.UmbracoIndexes.ExternalIndexName, out
+                            IIndex index))
+                            {
+                                throw new InvalidOperationException($"No index found by name{ Constants.UmbracoIndexes.ExternalIndexName }");
+                            }
+                            var searcher = index.GetSearcher();
+                            var fieldToSearch = "displayTitle";
+                            //var textFields = new[] { "shortTitle", "introduction", "content" };
+                            var hideFromSearch = "hideFromSearch";
+                            var criteria = searcher.CreateQuery(IndexTypes.Content, BooleanOperation.Or);
+
+                            var examineQuery = criteria.Field(fieldToSearch, searchTerm);
+
+                            //examineQuery.OrderByDescending(new SortableField("createDate"));
+
+                            //examineQuery.Or().Field("shortTitle", searchTerm);
+
+
+                            if (searchTerm.Contains(" "))
+                            {
+                                char[] separators = new char[] { ' ' };
+                                var terms = searchTerm.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(x =>
+                                            x.MultipleCharacterWildcard()).ToArray();
+                                examineQuery.And().GroupedOr(new[] { fieldToSearch, "courseTitle", "shortTitle", "introduction", "bodyTop", "bodyBottom", "metaTitle", "metaDescription" }, terms);
+                            }
+                            else
+                            {
+                                examineQuery.And().GroupedOr(new[] { fieldToSearch, "courseTitle", "shortTitle", "introduction", "bodyTop", "bodyBottom", "metaTitle", "metaDescription" }, searchTerm.MultipleCharacterWildcard());
+
+                            }
+
+
+                            examineQuery.Not().Field(hideFromSearch, 1.ToString());
+                            examineQuery.Not().NodeTypeAlias("navigationGroup");
+                            examineQuery.Not().NodeTypeAlias("navigationItem");
+                            examineQuery.Not().NodeTypeAlias("navigationMenu");
+                            examineQuery.Not().NodeTypeAlias("home");
+                            examineQuery.Not().NodeTypeAlias("contactGroup");
+                            examineQuery.Not().NodeTypeAlias("contactIndividual");
+                            examineQuery.Not().NodeTypeAlias("link");
+                            examineQuery.Not().NodeTypeAlias("error404");
+                            examineQuery.Not().NodeTypeAlias("quote");
+                            examineQuery.Not().NodeTypeAlias("tag");
+
+
+                            var results = examineQuery.Execute();
+                            if (results.Any())
+                            {
+                                <p>
+                                    Your search for "<strong>@searchTerm</strong>" found
+                                    @results.TotalItemCount results
+                                </p>
+                                @RenderResults(results, Umbraco)
+
+                                @*<p>Query - > @criteria.ToString()</p>*@
+                            }
+                            else
+                            {
+                                <p> No results found for query @searchTerm</p>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+@*<script>
+        $('.search-next').on('click', function () {
+            var currentPageNumber = $('.search-page-number').val();
+            var totalPages = @(totalPages);
+
+            if (currentPageNumber < totalPages) {
+                var nextPageNumber = parseInt(currentPageNumber) + 1;
+
+                $('.search-page-number').val(nextPageNumber);
+                UpdatePreviousSearch();
+                document.getElementById('search-form-button').click();
+            }
+        });
+
+        $('.search-prev').on('click', function () {
+            var currentPageNumber = $('.search-page-number').val();
+
+            if (currentPageNumber > 1) {
+                var nextPageNumber = parseInt(currentPageNumber) - 1;
+
+                $('.search-page-number').val(nextPageNumber);
+                UpdatePreviousSearch();
+                document.getElementById('search-form-button').click();
+            }
+        });
+
+        $('.search-index').on('click', function () {
+            var targetPageNumber = $(this).text();
+            $('.search-page-number').val(targetPageNumber);
+            UpdatePreviousSearch();
+            document.getElementById('search-form-button').click();
+        });
+
+        function UpdatePreviousSearch () {
+            var value = $('.search-textbox').val()
+
+            if (!value ) {
+                value = $('.search-tag').val();
+            }
+
+            $('.search-previous-value').val(value);
+        }
+    </script>*@

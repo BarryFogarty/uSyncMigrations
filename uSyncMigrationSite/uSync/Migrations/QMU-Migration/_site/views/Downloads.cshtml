@@ -1,0 +1,286 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Downloads>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+
+    var searchPage = "/search/";
+    string keyword = Request.QueryString["keyword"];
+}
+
+<main role="main" class="main-content no-header" aria-label="main body content">
+    <div class="column-layout grey">
+        <div class="container">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                <p>@Model.Introduction</p>
+            </div>
+            <div class="right">
+                <!-- Search Media -->
+                <div class="image-box" style="background-image: url(/images/blue-image.png)">
+                    <h2>Advanced Search</h2>
+                    <div class="course-search">
+                        <form action="@(searchPage)" method="get" id="DownloadSearchForm">
+                            @Html.TextBoxFor(model => @keyword, new
+                            {
+                                placeholder = "Search downloads...",
+                                id = "download-query",
+                                name = "query",
+                                aria_label = "search text"
+                            })
+                            <input type="submit" value="Show Courses" aria-label="search" />
+                        </form>
+                    </div>
+                    <a href="" class="link">Need some help?</a>
+                </div>
+            </div>
+                </div>
+            </div>
+
+    <div class="container">
+        <div class="download-row">
+            <h2>@Model.ProspectusTitle</h2>
+            <div class="clearfix">
+                @foreach (var item in Model.ProspectusItems)
+                {
+                    var viewMedia = item.ViewMedia;
+                    var downloadPdf = item.Download;
+                    var previewImage = item.PreviewImage;
+                    <div class="pdf-item">
+                        <div class="image">
+                            @{
+                                if (previewImage != null)
+                                {
+                                    if (viewMedia != null)
+                                    {
+                                        <a href="@viewMedia.Url" aria-label="image link view media @item.Title" target="_blank">
+                                            <img src="@previewImage.Url" alt="@item.Title" />
+                                        </a>
+                                    }
+                                    else if (downloadPdf != null)
+                                    {
+                                        <a href="@downloadPdf.Url" aria-label="image link download media @item.Title" download>
+                                            <img src="@previewImage.Url" alt="@item.Title" />
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <img src="@previewImage.Url" alt="@item.Title" />
+                                    }
+                                }
+                            }
+
+                        </div>
+                        <div class="text">
+                            <h3>@item.Title</h3>
+                            @{
+                                if (viewMedia != null)
+                                {
+                                    <a href="@viewMedia.Url" aria-label="link view media @item.Title" target="_blank">View Media</a>
+                                }
+                                if (downloadPdf != null)
+                                {
+                                    <a href="@downloadPdf.Url" aria-label="link download media @item.Title" download>Download PDF</a>
+                                    if (downloadPdf.Type.ToString().Equals("media", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        <span><!-- File size meant to be here --></span>
+                                    }
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="pdf-item printed">
+                    <div class="text">
+                        @Html.Raw(Model.ProspectusBox)
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <!-- Prospectus end - Magazine start-->
+        @if (Model.MagazineItems != null && Model.MagazineItems.Any())
+        {
+            <div class="download-row">
+                <h2>@Model.MagazineTitle</h2>
+                <div class="download-carousel slick-fix" style="height:475px;">
+                    @foreach (var item in Model.MagazineItems)
+                    {
+                        <div class="item">
+                            @{
+                                var viewMedia = item.ViewMedia;
+                                var downloadPdf = item.Download;
+                                var previewImage = item.PreviewImage;
+                                if (previewImage != null)
+                                {
+                                    if (viewMedia != null)
+                                    {
+                                        <a href="@viewMedia.Url" aria-label="image link view media @item.Title" target="_blank">
+                                            <img src="@previewImage.Url" alt="@item.Title" />
+                                        </a>
+                                    }
+                                    else if (downloadPdf != null)
+                                    {
+                                        <a href="@downloadPdf.Url" aria-label="image link download media @item.Title" download>
+                                            <img src="@previewImage.Url" alt="@item.Title" />
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <img src="@previewImage.Url" alt="@item.Title" />
+                                    }
+                                }
+                                <strong>@item.Title</strong>
+                                if (viewMedia != null)
+                                {
+                                    <a href="@viewMedia.Url" aria-label="link view media @item.Title" class="download" target="_blank">View Media</a>
+                                }
+                                if (downloadPdf != null)
+                                {
+                                    <a href="@downloadPdf.Url" aria-label="link download media @item.Title" class="download" download>Download PDF</a>
+                                    if (downloadPdf.Type.ToString().Equals("media", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        <span><!-- File size to be here --></span>
+                                    }
+                                }
+
+                            }
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        }
+
+        @if (Model.UndergraduateItems != null && Model.UndergraduateItems.Any())
+        {
+            <div class="download-row">
+                <h2>@Model.UndergraduateTitle</h2>
+                <div class="clearfix">
+                    @foreach (var item in Model.UndergraduateItems)
+                    {
+                        var viewMedia = item.ViewMedia;
+                        var downloadPdf = item.Download;
+                        var previewImage = item.PreviewImage;
+                        <div class="pdf-item">
+                            <div class="image">
+                                @{
+                                    if (previewImage != null)
+                                    {
+                                        if (viewMedia != null)
+                                        {
+                                            <a href="@viewMedia.Url" aria-label="image link view media " target="_blank">
+                                                <img src="@previewImage.Url" alt="@item.Title" />
+                                            </a>
+                                        }
+                                        else if (downloadPdf != null)
+                                        {
+                                            <a href="@downloadPdf.Url" aria-label="image link download media " download>
+                                                <img src="@previewImage.Url" alt="@item.Title" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="@previewImage.Url" alt="@item.Title" />
+                                        }
+                                    }
+                                }
+
+                            </div>
+                            <div class="text">
+                                <h3>@item.Title</h3>
+                                @{
+                                    if (viewMedia != null)
+                                    {
+                                        <a href="@viewMedia.Url" aria-label="link view media @item.Title" target="_blank">View Media</a>
+                                    }
+                                    if (downloadPdf != null)
+                                    {
+                                        <a href="@downloadPdf.Url" aria-label="link download media @item.Title" download>Download PDF</a>
+                                        if (downloadPdf.Type.ToString().Equals("media", StringComparison.InvariantCultureIgnoreCase))
+                                        {
+                                            <span><!-- File size meant to be here --></span>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        @if (Model.PostgraduateItems != null && Model.PostgraduateItems.Any())
+        {
+            <div class="download-row">
+                <h2>@Model.PostgraduateTitle</h2>
+                <div class="clearfix">
+                    @foreach (var item in Model.PostgraduateItems)
+                    {
+                        var viewMedia = item.ViewMedia;
+                        var downloadPdf = item.Download;
+                        var previewImage = item.PreviewImage;
+                        <div class="pdf-item">
+                            <div class="image">
+                                @{
+                                    if (previewImage != null)
+                                    {
+                                        if (viewMedia != null)
+                                        {
+                                            <a href="@viewMedia.Url" aria-label="image link view media " target="_blank">
+                                                <img src="@previewImage.Url" alt="@item.Title" />
+                                            </a>
+                                        }
+                                        else if (downloadPdf != null)
+                                        {
+                                            <a href="@downloadPdf.Url" aria-label="image link download media " download>
+                                                <img src="@previewImage.Url" alt="@item.Title" />
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <img src="@previewImage.Url" alt="@item.Title" />
+                                        }
+                                    }
+                                }
+
+                            </div>
+                            <div class="text">
+                                <h3>@item.Title</h3>
+                                @{
+                                    if (viewMedia != null)
+                                    {
+                                        <a href="@viewMedia.Url" aria-label="link view media @item.Title" target="_blank">View Media</a>
+                                    }
+                                    if (downloadPdf != null)
+                                    {
+                                        <a href="@downloadPdf.Url" aria-label="link download media @item.Title" download>Download PDF</a>
+                                        if (downloadPdf.Type.ToString().Equals("media", StringComparison.InvariantCultureIgnoreCase))
+                                        {
+                                            <span><!-- File size meant to be here --></span>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<style>
+    #pdf-item:nth-of-type(1n+3){
+        display:none;
+    }
+
+
+</style>

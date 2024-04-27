@@ -1,0 +1,72 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.ViewModels.QMU_VM_LowerBannerModel>
+@using Umbraco.Web.PublishedModels
+@{
+
+    var componentStyles = "";
+
+    if (Model.BoxPosition != null && Model.BoxPosition.ToLower() == "right")
+    {
+        componentStyles += "overlay-box-right";
+    }
+
+    if (Model.Title == null || Model.Title == "")
+    {
+        componentStyles += " no-title";
+    }
+
+    if (Model.Copy == null || Model.Copy == "")
+    {
+        componentStyles += " no-copy";           
+    }
+   
+    if (Model.IsInfographic == true)
+    {
+        componentStyles += " is-infographic";
+    }
+
+}
+
+<section class="qmu_cmp_lowerbanner @componentStyles">
+
+
+    @* Image have different styling depending on whether they are an infographic or a background image, controlled by a toggle in umbraco  *@
+    @if (Model.IsInfographic == false)
+    {
+        @* Background image -- switchs to mobile image if present *@
+        if (Model.MobileBannerImage != null)
+        {
+            <span style="background-image: url(@Model.MobileBannerImage.Url());" class="qmu_cmp_lowerbanner__bgImage--mobile bg-cover-img" role="img" aria-label="@Model.MobileBannerImage.Value("altText")"> </span>
+        }
+        <span style="background-image: url(@Model.BannerImage.Url());" class="qmu_cmp_lowerbanner__bgImage @(Model.MobileBannerImage != null ? "hide-on-mobile" : "") bg-cover-img" role="img" aria-label="@Model.BannerImage.Value("altText")"> </span>
+    }
+
+    @if (Model.IsInfographic == true)
+    {
+        @* Infographic -- takes mobile image if present *@
+        <picture>
+            @if (Model.MobileBannerImage != null)
+            {
+                <source media="(max-width: 480px)" srcset="@Model.MobileBannerImage.Url()" />
+            }
+            <img class="qmu_cmp_lowerbanner__infographic" src="@Model.BannerImage.Url()" alt="@Model.BannerImage.Value("altText")" />
+        </picture>
+    }
+
+    @if(!String.IsNullOrEmpty(Model.Title) || !String.IsNullOrEmpty(Model.Copy))
+            {
+
+                <div class="container">
+                    @if (!String.IsNullOrEmpty(Model.Title))
+                    {
+                        <h2 class="qmu_cmp_lowerbanner__title">@Model.Title</h2>
+                    }
+                    @if (!String.IsNullOrEmpty(Model.Copy))
+                    {
+                        <div class="qmu_cmp_lowerbanner__copy">
+                            @Html.Raw(Model.Copy)
+                        </div>
+                    }
+                </div>
+     }
+
+</section>

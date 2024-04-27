@@ -1,0 +1,33 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<UsefulLinksFromLibrary>
+
+@if (Model.UsefulLinks != null)
+{
+    var usefulLinks = (UsefulLinksDetails)Model.UsefulLinks;
+    var themeClass = usefulLinks.UseDarkTheme ? "blue" : "alt";
+
+    <div class="grey-aside @themeClass">
+
+        @if (!string.IsNullOrWhiteSpace(usefulLinks.Title))
+        {
+            <h2>@usefulLinks.Title</h2>
+        }
+        else
+        {
+            <h2>Useful Links</h2>
+        }
+
+        <div class="white-inner">
+            <ul>
+                @foreach (var link in usefulLinks.Usefuls)
+                {
+                    <li>
+                        <a href="@link.Url" title="@link.Name" target="@link.Target">@link.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+    </div>
+}
+
+

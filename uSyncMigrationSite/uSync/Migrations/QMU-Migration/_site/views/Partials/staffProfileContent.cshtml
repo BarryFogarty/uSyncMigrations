@@ -1,0 +1,44 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.StaffProfile>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using QMUCloud.Core.Services
+@{
+    var approvalService = DependencyResolver.Current.GetService<IApprovalService>();
+    var approvedCentralBlocks = approvalService.CheckFundedProjectsTabVisibility(Model, Members);
+}
+
+<div class="contact-box">
+    <h2>@Model.Position</h2>
+    @{
+        var school = Model.SchoolDivision;
+        if (school != null)
+        {
+            <p><a href="@Model.SchoolDivision.Url">@Model.SchoolDivision.Name</a></p>
+        }
+        if (Model.ExtraInformation != null)
+        {
+            <p><strong>@Html.Raw(Model.ExtraInformation)</strong></p>
+        }
+        if (!string.IsNullOrEmpty(Model.Telephone))
+        {
+            <p><a href="tel:@Model.Telephone">Tel: @Model.Telephone</a></p>
+        }
+
+        <div class="contact-row">
+            @if (!string.IsNullOrEmpty(Model.Email))
+            {
+                <a href="mailto:@Model.Email" class="email" aria-label="Email Me">Email Me</a>}
+            @if (!string.IsNullOrEmpty(Model.Twitter))
+            {
+                <a href="http://www.twitter.com/@Model.Twitter" class="social twitter" target="_blank" aria-label="social link twitter"></a>}
+            @if (!string.IsNullOrEmpty(Model.LinkedIn))
+            {
+                <a href="http://www.linkedin.com/in/@Model.LinkedIn" class="social linkedin" style="width:40px; height:40px; background: #fff url(/images/i-linkedin.png) no-repeat 0 0; background-size: 40px 40px;" target="_blank" aria-label="social link linkedin"></a>}
+        </div>
+    }
+</div>
+<div class="inner">
+    <div class="staffintro" style="width:70%;">@Model.Introduction</div>
+    @Html.Partial("centralBlocks", approvedCentralBlocks)
+
+</div>
+

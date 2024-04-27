@@ -1,0 +1,20 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.StaffProfile>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+}
+
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content" aria-label="main body content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            @Html.Partial("staffProfileContent", Model)
+        </div>
+    </div>
+</main>
+<!-- Twitter in here ?-->
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

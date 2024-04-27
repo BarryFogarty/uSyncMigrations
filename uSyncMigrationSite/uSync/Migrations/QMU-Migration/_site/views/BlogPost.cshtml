@@ -1,0 +1,44 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BlogPost>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <div class="post-date"><time>@(Model.Value<DateTime>("DatePosted").ToString("dd MMMM yyyy"))</time></div>
+                @Model.Introduction
+                @Model.BodyContent
+                <!-- Tags to go here -->
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                @if (Model.Parent.Value<IPublishedContent>("adSpotImage") != null)
+                {
+                    var profileImage = Model.Parent.Value<IPublishedContent>("adSpotImage");
+                    <div class="profile-box">
+                        <span style="background-image: url(@profileImage.Url());" class="bg-cover-img" role="img" aria-label="@profileImage.Value("altText")"> </span>
+                        <div class="blue-overlay">
+                            <p><strong>@Model.Parent.Value("DisplayTitle")</strong> @Model.Parent.Value("ParentExtraInformation")</p>
+                            <div class="contact-row">
+                                <a href="@Model.Parent.Url()" class="email">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search in here -->
+                }
+            </div>
+        </div>
+    </div>
+</main>
+
+@Html.CachedPartial("_relatedBlogs", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true) 

@@ -1,0 +1,38 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using QMUCloud.Core.Extensions
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    var socMed = Model.SocialMedia;
+
+    var settingsContent = Umbraco.GetSettingsNode();
+
+    var items = settingsContent.Value<IEnumerable<IPublishedElement>>("footerSocialMedia");
+
+
+    if (socMed == true)
+    {
+        <div class="grey-aside">
+            <h2>Engage with QMU</h2>
+            <div class="white-inner">
+                <div class="social-box">
+
+                    @foreach (var item in items)
+                    {
+                        <a href="@item.Value("scUrl")" class="icon-item @item.Value("Title").ToString().ToLower()" target="_blank" aria-label="social link @item.Value("Title")"></a>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,70 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.ManualListing>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <h1>@Model.DisplayTitle</h1>
+            <p></p>
+            <div id="search-message"></div>
+            <p></p>
+            <div id="no-results"></div>
+            <div class="student-grid">
+                @if (Model.ContentItems != null)
+                {
+                    foreach (var item in Model.ContentItems)
+                    {
+                        var itemImage = item.Value<IPublishedContent>("adSpotImage");
+                        <div class="student-item">
+                            <a href="@item.Url()">
+                                @if (item.Value<IPublishedContent>("adSpotImage") != null)
+                                {
+                                    var imageAlt = itemImage.Value<string>("altText");
+                                    <img src="@itemImage.Url()" alt="@imageAlt" class="listingLink" />
+                                }
+                                else
+                                {
+                                    <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" class="listingLink" />
+                                }
+                                <div class="image">
+                                    <div>
+                                        <div class="overlay-text">
+                                            @item.Value("displayTitle")
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="full-width-content">
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<style>
+    .student-grid .student-item {
+        margin-bottom: 50px;
+    }
+
+    .listingLink:hover {
+        opacity: 0.7 !important;
+    }
+
+    .overlay-text {
+        opacity: 0.8;
+    }
+</style>

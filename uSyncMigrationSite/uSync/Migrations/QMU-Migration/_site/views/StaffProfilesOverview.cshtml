@@ -1,0 +1,127 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.StaffProfilesOverview>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using QMUCloud.Core.Services
+@{
+    Layout = "Master.cshtml";
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+    var parentDivision = Model.Ancestors("generalLandingPage").FirstOrDefault();
+    IEnumerable<IPublishedContent> otherDepartments = new List<IPublishedContent>();
+    if (parentDivision != null)
+    {
+        otherDepartments = searchService.GetDescendantsWithType(parentDivision, "staffProfilesOverview");
+    }
+
+    var staffProfiles = Model.Children.OrderBy(c => c.SortOrder);
+}
+
+<script>
+    $(document).on('change', '.departments-dropdown', function () {
+        var url = $(this).find(':selected').val();
+        if (url.length > 0) {
+            window.location.href = url;
+        }
+    });
+</script>
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content" aria-label="main body content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <div class="staff-profiles">
+                <div class="staff-profile-row">
+
+                    <!-- If Department list on settings node is not blank show this section -->
+                    <div class="staff-blue-box" style="margin-top:-50px">
+                        <p>View more staff profiles using the dropdown below...</p>
+                        <select class="departments-dropdown" aria-label="departments dropdown">
+                            <option>Select a Department...</option>
+                            @foreach (var staff in otherDepartments)
+                            {
+                                <option value="@staff.Url()">@staff.Value("displayTitle")</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+            @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <h1>@Model.DisplayTitle</h1>
+            <div class="inner">
+                @Model.Introduction
+            </div>
+            <div class="staff-grid">
+                @foreach (IPublishedContent staffProfile in staffProfiles)
+                {
+                    var staffItem = staffProfile;
+                    if (staffProfile.ContentType.Alias == "sharedStaffProfile")
+                    {
+                        staffItem = staffProfile.Value<IPublishedContent>("staffProfile");
+                    }
+
+                    var twitters = staffItem.Value<string>("Twitter");
+                    var emails = staffItem.Value<string>("Email");
+                    var telephones = staffItem.Value<string>("Telephone");
+                    var linkedins = staffItem.Value<string>("LinkedIn");
+                    var firstButtonOnly = "first-button";
+                    <div class="staff-item">
+                        <div class="image">
+                            <button class="close-x" aria-label="close" tabindex="-1"></button>
+                            <div class="popup-btn" tabindex="0">
+                                @if (staffItem.Value<IPublishedContent>("adSpotImage") != null)
+                                {
+                                    var staffImage = staffItem.Value<IPublishedContent>("adSpotImage");
+                                    <img src="@staffImage.Url()" alt="@staffImage.Value("AltText")" />
+                                    <div class="overlay-text">@staffItem.Value("DisplayTitle")</div>
+                                    <div class="title">@staffItem.Value("Position")</div>
+                                }
+                                else
+                                {
+                                    <img src="~/media/8d88f15988d0561/banner-filler-as.jpg" alt="QMU preview image" />
+                                    <div class="overlay-text">@staffItem.Value("DisplayTitle")</div>
+                                    <div class="title">@staffItem.Value("Position")</div>
+                                }
+                            </div>
+                            <div class="blue-popup">
+                                <p>@staffItem.Value("Position")</p>
+                                <div class="contact-details">
+                                    @if (string.IsNullOrWhiteSpace(telephones) == false)
+                                    {
+                                        <span class="tel">@staffItem.Value("Telephone")</span>
+                                    }
+                                    <div class="contact-row">
+                                        @if (string.IsNullOrWhiteSpace(emails) == false)
+                                        {
+                                            <a href="mailto:@staffItem.Value("Email")" aria-label="email link for @staffItem.Value("DisplayTitle")" class="email @firstButtonOnly" tabindex="-1">Email</a>
+                                            { firstButtonOnly = ""; }
+                                        }
+
+                                        @if (string.IsNullOrWhiteSpace(twitters) == false)
+                                        {
+                                            <a href="http://twitter.com/@twitters" aria-label="twitter link for @staffItem.Value("DisplayTitle")" target="_blank" class="social twitter @firstButtonOnly" tabindex="-1"></a>
+                                            { firstButtonOnly = ""; }
+                                        }
+                                        @if (string.IsNullOrWhiteSpace(linkedins) == false)
+                                        {
+                                            <a href="https://www.linkedin.com/in/@linkedins" aria-label="linkedin link for @staffItem.Value("DisplayTitle")" target="_blank" class="social linkedin @firstButtonOnly" tabindex="-1"></a>
+                                            { firstButtonOnly = ""; }
+                                        }
+                                    </div>
+                                    <a href="@staffProfile.Url()" aria-label="view @staffItem.Value("DisplayTitle") profile" class="white-btn view-profile @firstButtonOnly" tabindex="-1">View Profile</a>
+                                    @{ firstButtonOnly = ""; }
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+            @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

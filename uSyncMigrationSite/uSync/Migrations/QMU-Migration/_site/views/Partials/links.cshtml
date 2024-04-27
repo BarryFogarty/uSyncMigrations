@@ -1,0 +1,79 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits UmbracoViewPage<ContentModels.Links>
+@using ContentModels = Umbraco.Web.PublishedModels;
+
+@{
+    var link = Model.Link;
+
+    if (Model.Link != null)
+    {
+
+        var text = link.Value("Text");
+
+        var image = link.Value<IPublishedContent>("image");
+
+        var intLink = link.Value<IPublishedContent>("internalLink");
+
+        var extLink = link.Value("externalLink");
+
+        string itemLink = string.Empty;
+
+        if (intLink != null)
+        {
+            itemLink = intLink.Url();
+        }
+        else
+        {
+            itemLink = extLink.ToString();
+        }
+
+        if (!string.IsNullOrWhiteSpace(itemLink))
+        {
+            <a href="@itemLink" class="side-image-panel">
+                @if (image != null)
+                {
+                    <img src="@image.Url()" alt="@image.Value("altText")" style="width:370px; height:220px;" />
+                }
+                else
+                {
+                    <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" style="width:370px; height:220px;" />
+                }
+                @if (text != null && text.ToString().Length > 0)
+                {
+                    <div class="text">
+                        <span>@text</span>
+                    </div>
+                }
+            </a>
+        }
+        else
+        {
+            <div class="side-image-panel">
+                @if (image != null)
+                {
+                    <img src="@image.Url()" alt="@image.Value("altText")" style="width:370px; height:220px;" />
+                }
+                else
+                {
+                    <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" style="width:370px; height:220px;" />
+                }
+                @if (text != null && text.ToString().Length > 0)
+                {
+                    <div class="text">
+                        <span>@text</span>
+                    </div>
+                }
+            </div>
+        }
+    }
+}

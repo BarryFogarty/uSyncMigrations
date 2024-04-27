@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@using Newtonsoft.Json;
+@{
+	string displayedTitle = "Useful Links";
+	var title = Model.MacroParameters["title"];
+	if (title != null && title.ToString().Length > 0)
+	{
+		displayedTitle = title.ToString();
+	}
+
+	string themeClass = "alt";
+	var darkTheme = Model.MacroParameters["useDarkTheme"];
+	if (darkTheme != null && darkTheme.ToString().Length > 0 && darkTheme.ToString() == "1")
+	{
+		themeClass = "blue";
+	}
+
+	var links = Model.MacroParameters["links"];
+	if (links != null && links.ToString().Length > 0)
+	{
+		<div class="grey-aside @themeClass">
+			<h2>@displayedTitle</h2>
+			<div class="white-inner">
+				<ul>
+					@{
+						dynamic linksList = JsonConvert.DeserializeObject(links.ToString());
+						foreach (var link in linksList)
+						{
+							<li>
+								<a href="@link.url" title="@link.name" target="@link.target">@link.name</a>
+							</li>
+						}
+					}
+				</ul>
+			</div>
+		</div>
+	}
+}

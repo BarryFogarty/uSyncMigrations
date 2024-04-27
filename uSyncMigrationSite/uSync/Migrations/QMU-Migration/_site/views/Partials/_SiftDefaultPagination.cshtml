@@ -1,0 +1,71 @@
+﻿@model SiftLibrary.Models.SearchResultNodes
+@{
+    int numButtons = 7;
+    int numMiddleButtons = numButtons - 2;
+
+
+    int firstMiddlePage = Model.Criteria.PageNumber - (numMiddleButtons / 2);
+    if (firstMiddlePage < 0)
+    {
+        firstMiddlePage = 0;
+    }
+
+    int lastMiddlePage = firstMiddlePage + numMiddleButtons;
+    if (lastMiddlePage > Model.NumberOfPages)
+    {
+        lastMiddlePage = Model.NumberOfPages;
+        firstMiddlePage = lastMiddlePage - numMiddleButtons;
+        if (firstMiddlePage < 0)
+        {
+            firstMiddlePage = 0;
+        }
+    }
+
+    if (Model.NumberOfPages <= numButtons)
+    {
+        numMiddleButtons = Model.NumberOfPages;
+    }
+}
+
+@if (firstMiddlePage > 0)
+{
+    <a id="search-button-page-first" href="#"
+        class="sift-search btn btn-gray"
+        data-sift-results-page-number="0">
+        1
+    </a>
+
+    if (firstMiddlePage > 1)
+    {
+        <span>...</span>
+    }
+}
+
+@for (int i = firstMiddlePage; i < lastMiddlePage; i++)
+{
+    var colour = "btn-gray";
+    if (i == Model.Criteria.PageNumber)
+    {
+        colour = "btn-blue";
+    }
+    <a id="search-button-page-@i" href="#"
+        class="sift-search btn @colour"
+        data-sift-results-page-number="@i">
+        @(i + 1)
+    </a>
+}
+
+@if (lastMiddlePage < Model.NumberOfPages)
+{
+    if (lastMiddlePage < (Model.NumberOfPages - 1))
+    {
+        <span>...</span>
+    }
+
+    <a id="search-button-page-last" href="#"
+        class="sift-search btn btn-gray"
+        data-sift-results-page-number="@(Model.NumberOfPages - 1)">
+        @Model.NumberOfPages
+    </a>
+}
+

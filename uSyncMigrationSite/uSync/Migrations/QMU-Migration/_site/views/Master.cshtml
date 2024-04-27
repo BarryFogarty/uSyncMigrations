@@ -1,0 +1,178 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = null;
+    var searchPage = Model.Root().FirstChildOfType("searchResults");
+    var metaTitle = Model.Value<string>("metaTitle");
+    if (string.IsNullOrWhiteSpace(metaTitle))
+    {
+        metaTitle = Model.Name;
+    }
+    var metaDescription = Model.Value<string>("metaDescription");
+
+    var ogImageUrl = "";
+    var adSpotImage = Model.Value<IPublishedContent>("adSpotImage");
+    if (adSpotImage != null)
+    {
+        ogImageUrl = adSpotImage.Url(mode: UrlMode.Absolute);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset="utf-8" />
+        <meta name="description" content="@metaDescription">
+        <title>@metaTitle</title>
+
+        <meta property="og:title" content="@metaTitle" />
+        <meta property="og:description" content="@metaDescription" />
+        <meta property="og:url" content="@Model.Url(mode: UrlMode.Absolute)" />
+
+        @if (!string.IsNullOrWhiteSpace(ogImageUrl))
+        {
+            <meta property="og:image" content="@ogImageUrl" />
+        }
+
+        @RenderSection("OpenGraph", "<meta property=\"og:type\" content=\"website\" /><meta name=\"twitter:card\" content=\"summary\" />")
+
+        @RenderSection("ExtraCss", false)
+
+        @* NEW SASS FILES *@
+        <link rel="stylesheet" href="/stylesheets/main.min.css?v=17.10.23">
+
+        <script type="text/javascript" src="~/scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+        <script type="text/javascript" src="~/scripts/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="~/scripts/jquery.validate.unobtrusive.min.js"></script>
+        <script type="text/javascript" src="~/scripts/modal-video.js"></script>
+        <script type="text/javascript" src="~/scripts/modernizr.custom.js"></script>
+        <script type="text/javascript" src="~/scripts/idevice-detection.js"></script>
+        <script type="text/javascript" src="~/scripts/slick.min.js"></script>
+
+        @RenderSection("ExtraJs", false)
+
+        <script type="text/javascript" src="~/scripts/main.js?v=4"></script>
+
+
+        @*Bootstrap v5.2.2 *@
+        <script src="~/scripts/bootstrap.bundle.min.js"></script>
+
+        <!-- Google Consent Mode - deny consent by default -->
+        <script>
+            // Include the following lines to define the gtag() function when
+            // calling this code prior to your gtag.js or Tag Manager snippet
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+
+            // Call the default command before gtag.js or Tag Manager runs to
+            // adjust how the tags operate when they run. Modify the defaults
+            // per your business requirements and prior consent granted/denied, e.g.:
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'wait_for_update': 500
+            });
+        </script>
+
+        <!-- Google Tag Manager -->
+        <script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({
+                    'gtm.start':
+                        new Date().getTime(), event: 'gtm.js'
+                }); var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-MWD3PBP');
+        </script>
+        <!-- End Google Tag Manager -->
+
+    </head>
+
+    <body>
+
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MWD3PBP"
+                    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+        <div class="page-wrapper">
+            <div class="site-overlay"></div>
+            <div class="overlay-filter">
+                <button class="close-filter" aria-label="Close filter"></button>
+                <ul></ul>
+            </div>
+            <nav role="navigation">
+                <a class="skip-main" href="#left">Skip to main content</a>
+                <div role="button" class="menu-btn" aria-label="Open menu" tabindex="0">
+                    <div>
+                        Menu
+                        <span class="lines">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                    </div>
+                </div>
+                <a href="/" class="logo" aria-label="home page"><img src="/images/logo.png" alt="QMU Logo" /></a>
+                <div class="quick-links">
+                    <ul>
+                        <li class="mob-title">Staff &amp; Students</li>
+                        @Html.CachedPartial("_topNav", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+                    </ul>
+                </div>
+                @if (searchPage != null)
+                {
+
+                    string searchUrl = searchPage.Url();
+
+                    <div class="search-area">
+                        <button class="search-open" aria-label="Open search"></button>
+                        <button class="search-close" aria-label="Close search" tabindex="-1"></button>
+                        <div class="search-box">
+                            <form action="@(searchUrl)" method="get" id="SiteSearchForm">
+                                <input id="query" name="query" placeholder="Search..." type="search" aria-label="search text" tabindex="-1" />
+                                <input type="submit" value="Search" aria-label="search" tabindex="-1" />
+                            </form>
+                        </div>
+                    </div>
+                }
+
+                <div class="scroll-nav-qmu">
+                    <div class="main-nav-wrapper">
+                        <ul class="main-nav">
+                            <li class="active"><a href="/" class="nav-menu-first" tabindex="-1">Home</a></li>
+                            @* Main nav moved into partial as cachedPartial was causing probs when deployed with umbraco cloud *@
+                            @Html.Partial("_mainNav", Model)
+                        </ul>
+                        <ul class="smaller-nav">
+                            @Html.CachedPartial("_leftNav", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            @RenderBody()
+            <button class="back-to-top" aria-label="Back to top" tabindex="-1"></button>
+            <footer>
+                <div class="container">
+                    <div class="footer-contents">
+                        @Html.CachedPartial("footer", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+                    </div>
+
+                </div>
+            </footer>
+        </div>
+
+
+        <!-- Civic Cookie Control -->
+        @Html.Partial("PageStructure/CookiesSettings")
+        @* Uses Modernizr to detect if browser is using webp images  *@
+        <script type="text/javascript" src="~/scripts/modernizr.webp.js"></script>
+        <script async src="https://www.tiktok.com/embed.js"></script>
+    </body>
+</html>
+
+

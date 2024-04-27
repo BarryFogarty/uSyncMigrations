@@ -1,0 +1,36 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.SharedStaffProfile>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+    ContentModels.StaffProfile staffProfile = null;
+    if (Model.StaffProfile != null && Model.StaffProfile is StaffProfile)
+    {
+        staffProfile = (ContentModels.StaffProfile)Model.StaffProfile;
+    }
+}
+
+@if (staffProfile != null)
+{
+    @Html.CachedPartial("bannerItem", staffProfile, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+}
+
+<main role="main" class="main-content" aria-label="main body content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            @if (staffProfile != null)
+            {
+                @Html.CachedPartial("staffProfileContent", staffProfile, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            }
+        </div>
+    </div>
+</main>
+
+@if (staffProfile != null && staffProfile.RelatedContent != null)
+{
+    @Html.CachedPartial("_relatedContent", staffProfile, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+}
+else
+{
+    @Html.CachedPartial("_relatedContent", Model.Parent, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+}

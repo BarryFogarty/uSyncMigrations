@@ -1,0 +1,56 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using System.Text.RegularExpressions
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+<div class="blog-grid">
+    @foreach (IPublishedContent blogItem in Model)
+    {
+        var rent = blogItem.Parent;
+        var rentTitle = rent.Value("displayTitle");
+
+        var bloggy = @blogItem.IsDocumentType("BlogPost");
+
+<div class="blog-item">
+    <div class="box">
+        <div class="image">
+            <a href="@blogItem.Url()">
+                @if (blogItem.Value<IPublishedContent>("adSpotImage") != null)
+                {
+                    var blogImage = blogItem.Value<IPublishedContent>("adSpotImage");
+<img src="@blogImage.Url()" alt="@blogImage.Value("AltText")" />}
+                <div class="overlay-text">
+                    @blogItem.Value("DisplayTitle")
+                </div>
+            </a>
+        </div>
+        <p><time>@(blogItem.Value<DateTime>("DatePosted").ToString("dd MMMM yyyy"))</time> by <a href="@rent.Url()">@rent.Value("displayTitle")</a></p>
+        @{ var intro = blogItem.Value<string>("Introduction");
+                            if (intro != null)
+                            {
+                                string summary = string.Empty;
+
+                                int characterCount = 100;
+
+                                summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                if (summary.Length > characterCount)
+                                {
+                                    char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                    summary = summary.Truncate(characterCount).Trim(charsToTrim);
+                                }
+                                summary += string.Format(" <a href=\"" + @blogItem.Url + "\" aria-label=\"read more about " + @blogItem.Value("DisplayTitle") + "\"><strong>read more</strong></a>");
+            <p>@Html.Raw(summary)</p> } }
+    </div>
+</div>}
+
+</div>

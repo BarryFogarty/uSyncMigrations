@@ -1,0 +1,198 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.NewsListing>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+
+@{
+    Layout = "Master.cshtml";
+
+    var homeNode = Model.Root();
+    var items = homeNode.Descendants();
+}
+
+<main role="main" class="main-content">
+    <div class="grey-wrap">
+        <div class="container">
+            <div class="column-layout">
+                <div class="left">
+                    @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                    <h1>@Model.DisplayTitle</h1>
+                    @Model.Introduction
+                </div>
+                <div class="right">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <div class="news-list">
+                    @{
+                        //var pageSize = 10;
+                        //if (Model.HasValue("numberOfItemsPerPage"))
+                        //{
+                        //    pageSize = Model.Value<int>("numberOfItemsPerPage");
+                        //}
+
+                        //var page = 1; int.TryParse(Request.QueryString["page"], out page);
+
+                        //var totalPages = (int)Math.Ceiling((double)items.Count() / (double)pageSize);
+
+                        //if (page > totalPages)
+                        //{
+                        //    page = totalPages;
+                        //}
+                        //else if (page < 1)
+                        //{
+                        //    page = 1;
+                        //}
+
+                        foreach (var item in homeNode.Descendants().Where(x => x.IsVisible()))
+                        {
+                            <div class="news-item">
+                                <a href="@item.Url()" class="image">
+                                    @if (item.Value<IPublishedContent>("adSpotImage") != null)
+                                    {
+                                        var newsImage = item.Value<IPublishedContent>("adSpotImage");
+                                        <img src="@newsImage.Url()" alt="@newsImage.Value("AltText")" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                                    }
+                                </a>
+                                <span>
+                                    <a href="@item.Url()" aria-label="@item.Url()">
+                                        Page: @item.Value("DisplayTitle")   
+                                    </a>
+                                </span>
+
+                                <br />Content: @item.Value("mainContent")<br/>
+                                Titles:- @item.Value("titles")<br />
+                                Doc Links: Titles: @item.Value("documentLinks")<br />
+                                <div class="posted-on"></div>
+                                <div class="posted"><b>Status: @Html.Raw(item.Value("Status"))</b></div>
+                            </div>
+                            }
+
+                    }
+                </div>
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                </div>
+            <div class="right">
+                @*<ul>
+                <li class=""><a href="?Tag=true">Complete</a><div style="width:51px; margin-left:-10px"></div></li>
+                    </ul>*@
+                <!-- News Filter / Tags / -->
+                <div class="grey-aside alt blue">
+                    <h2>Search News</h2>
+                    <!-- anti forgery and validation summary-->
+                    <div class="white-inner">
+                        <div class="search-row">
+                            <input type="text" id="Search" onkeyup="newsSearch()" placeholder="Please enter a search term.." title="Type in a name" aria-label="search text">
+                        </div>
+
+                        <script>
+                            function newsSearch() {
+                                var input = document.getElementById("Search");
+                                var filter = input.value.toLowerCase();
+                                var nodes = document.getElementsByClassName('news-item');
+
+                                for (i = 0; i < nodes.length; i++) {
+                                    if (nodes[i].innerText.toLowerCase().includes(filter)) {
+                                        nodes[i].style.display = "block";
+                                    } else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+                            var today = new Date();
+                            days = 86400000;
+                            var nodes = document.getElementsByClassName('news-item');
+                            var week = new Date(new Date() - 60 * 60 * 24 * 7 * 1000);
+                            var yearAgo = new Date(today - (365 * days)).toLocaleDateString("en-GB");
+                            var monthAgo = new Date(today - (30 * days)).toLocaleDateString("en-GB");
+
+                            function weekSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    var elms = document.querySelectorAll("[id='posted']");
+                                    var d1 = Date.parse(elms[i].innerText);
+                                    var d3 = Date.parse(week);
+                                    if (d1 > d3) {
+                                        nodes[i].style.display = "block";
+                                    }
+                                    else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function monthSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    var elms = document.querySelectorAll("[id='posted']");
+                                    var d1 = Date.parse(elms[i].innerText);
+                                    var d2 = Date.parse(monthAgo);
+                                    if (d1 > d2) {
+                                        nodes[i].style.display = "block";
+                                    }
+                                    else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function yearSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    var elms = document.querySelectorAll("[id='posted']");
+                                    var d1 = Date.parse(elms[i].innerText);
+                                    var d2 = Date.parse(yearAgo);
+                                    if (d1 > d2) {
+                                        nodes[i].style.display = "block";
+                                    }
+                                    else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function clearSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    nodes[i].style.display = "block";
+                                }
+                            }
+                        </script>
+
+                        <strong>Date Filter</strong>
+                        <div class="filter-list" role="group" aria-label="date range filters">
+                            <div class="filter-item">
+                                <input type="radio" id="PastWeek" name="Range" value="week" onclick="weekSearch()" />
+                                <label for="PastWeek"><span></span>Past Week</label>
+                            </div>
+                            <div class="filter-item">
+                                <input type="radio" id="PastMonth" name="Range" value="month" onclick="monthSearch()" />
+                                <label for="PastMonth"><span></span>Past Month</label>
+                            </div>
+                            <div class="filter-item">
+                                <input type="radio" id="PastYear" name="Range" value="year" onclick="yearSearch()" />
+                                <label for="PastYear"><span></span>Past Year</label>
+                            </div>
+                            <div class="filter-item">
+                                <input type="radio" id="All" name="Range" value="" onclick="clearSearch()" />
+                                <label for="All"><span></span>All</label>
+                            </div>
+                        </div>
+                        @*<input type="submit" class="blue-btn" />*@
+
+                    </div>
+
+                </div>
+
+                <!--News Filter end-->
+
+                @Html.GetGridHtml(Model, "rcContent")
+            </div>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,62 @@
+﻿@using Umbraco.Web.PublishedModels
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ThreeColumnLinks>
+@{
+
+    var iconCodes = new Dictionary<string, string>
+{
+        {"Map Marker", "fa-map-marker"},
+        {"Question Circle", "fa-question-circle"},
+        {"Check Circle", "fa-check-circle"}
+    };
+}
+
+<section class="qmu_cmp_threecolumnlinks component-spacing" id="@Model.AnchorCode">
+    <div class="container">
+        @if (!string.IsNullOrWhiteSpace(Model.Title))
+        {
+            <h2 class="text-center">@Model.Title</h2>
+        }
+
+        @if(!String.IsNullOrEmpty(Model.Strapline))
+        {
+            <h3 class="text-center">@Model.Strapline</h3>
+            <div class="qmu_el_divider"></div>
+        }
+
+        <div class="column-links">
+
+            <div class="column-links__item">
+                <div class="column-links__item__header">
+                    <h3>@Model.LeftColumnLinks.Title</h3>
+                    <i class="fa @iconCodes[Model.LeftColumnLinks.Icon] fa-2x" aria-hidden="true"></i>
+                </div>
+                @foreach (var link in Model.LeftColumnLinks.Links)
+                {
+                    <p><a href="@link.Url">@link.Name</a></p>
+                }
+            </div>
+
+            <div class="column-links__item">
+                <div class="column-links__item__header">
+                    <h3>@Model.MiddleColumnLinks.Title</h3>
+                    <i class="fa @iconCodes[Model.MiddleColumnLinks.Icon] fa-2x" aria-hidden="true"></i>
+                </div>
+                @foreach (var link in Model.MiddleColumnLinks.Links)
+                {
+                    <p><a href="@link.Url">@link.Name</a></p>
+                }
+            </div>
+
+            <div class="column-links__item">
+                <div class="column-links__item__header">
+                    <h3>@Model.RightColumnLinks.Title</h3>
+                    <i class="fa @iconCodes[Model.RightColumnLinks.Icon] fa-2x" aria-hidden="true"></i>
+                </div>
+                @foreach (var link in Model.RightColumnLinks.Links)
+                {
+                    <p><a href="@link.Url">@link.Name</a></p>
+                }
+            </div>
+        </div>
+    </div>
+</section>

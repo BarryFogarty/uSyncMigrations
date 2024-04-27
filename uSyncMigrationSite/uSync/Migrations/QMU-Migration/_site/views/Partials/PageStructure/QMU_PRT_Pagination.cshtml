@@ -1,0 +1,118 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.ViewModels.QMU_VM_PaginatedResults>
+
+
+@*Form wrapper must include ".js--form-wrapper" for the pagination to work, and an input with the target input[name='page'] for the pagination to work *@
+@* When clicked, the pagination 'data-page' updates the input[name='page'] on the form, and submits the closest form to ".js--form-wrapper" (done with js at bottom of this view   *@
+@*This can then be used to submit a call to a controller, and example of this working can be found in _StudentProfileOverviewForm partial and StudentProfileOverviewController*@
+
+
+@{ 
+    string formWrapperClass = !String.IsNullOrEmpty(Model.FormWrapperClass) ? $".{Model.FormWrapperClass}" : ".js--form-wrapper";
+    int paginationTopScrollOffset = Model.PaginationTopScrollOffset;
+}
+
+<div class="qmu_pagination" role="navigation" aria-label="Pagination Navigation">
+
+    @*<a class="prev @(Model.CurrentPage == 0 ? "disabled " : "")" data-page="@(Model.CurrentPage - 1)" tabindex="0" role="button"><span>Prev</span></a>*@
+
+    @if (Model.TotalPages <= 6)
+    {
+        for (int i = 0; i < Model.TotalPages; i++)
+        {
+            <a class=" @(Model.CurrentPage == i ? "active" : "")" role="button" tabindex="0" data-page="@i" aria-label="Goto Page @(i + 1)">@(i + 1)</a>
+        }
+    }
+    else
+    {
+        @* Lower bound if statement *@
+        if (Model.CurrentPage < 2)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                <a class=" @(Model.CurrentPage == i ? "active" : "")" role="button" tabindex="0" data-page="@i" aria-label="Goto Page @(i + 1)">@(i + 1)</a>
+            }
+            <span>...</span>
+            <a class="" data-page="@(Model.TotalPages - 1)" tabindex="0" role="button" aria-label="Goto Page @(Model.TotalPages)">@(Model.TotalPages)</a>
+
+        }
+        @* Upper bound if statement *@
+        else if (Model.CurrentPage > Model.TotalPages - 4)
+        {
+            <a class="" data-page="0" tabindex="0" role="button" aria-label="Goto Page 1">1</a>
+            <span>...</span>
+            for (int i = Model.TotalPages - 5; i < Model.TotalPages; i++)
+            {
+                <a class="@(Model.CurrentPage == i ? "active" : "")" data-page="@i" tabindex="0" role="button" aria-label="Goto Page @(i + 1)">@(i + 1)</a>
+            }
+        }
+        @* Upper bound if statement *@
+        else
+        {
+            <a class="" data-page="0" role="button" tabindex="0" aria-label="Goto Page 1">1</a>
+            <span>...</span>
+            for (int i = Model.CurrentPage - 1; i < Model.CurrentPage + 2; i++)
+            {
+                <a class=" @(Model.CurrentPage == i ? "active" : "")" data-page="@i" role="button" tabindex="0" aria-label="Goto Page @(i + 1)">@(i + 1)</a>
+            }
+            <span>...</span>
+            <a class="" data-page="@(Model.TotalPages - 1)" role="button" tabindex="0" aria-label="Goto Page @(Model.TotalPages)">@(Model.TotalPages)</a>
+        }
+    }
+
+    @*<a class="next @(Model.CurrentPage >= Model.TotalPages - 1 ? "disabled " : "")" data-page="@(Model.CurrentPage+1)" tabindex="0">Next</a>*@
+</div>
+
+
+<script>
+
+
+    //Form wrapper class can be set in pagiantion model, if not it will default to ".js--form-wrapper"
+    const formWrapper = $("@(formWrapperClass)");
+    //Form resubmit on click
+    $('[data-page]:not(.disabled)').click(function (e) {
+        var form = $(this).closest(formWrapper).find("form");
+        var scrollTo = formWrapper.find('.js--for-pagiantion--form-results');
+
+        //If the top of the form isn't in view, scoll it into view before submitting, else just submit
+        //For this function to work, the results container must have '.js--for-pagiantion--form-results' on it
+        if (scrollTo.length && !form.isTopInViewport()) {
+       
+            scrollToTopOfForm(scrollTo);
+            updateFormPageAndSubmit($(this), form);
+        } else {
+            updateFormPageAndSubmit($(this), form);
+        }
+    });
+
+    //Accecibility - if page is tabbed through, submit if enter is pressed while focued on it
+    $('[data-page]:not(.disabled)').on("keydown", function (e) {
+        var form = $(this).closest(formWrapper).find("form");
+        if (e.key == "Enter") {
+            e.preventDefault();
+            updateFormPageAndSubmit($(this), form);
+        }
+    });
+
+    //Update the input[name='page'] input and submit form
+    function updateFormPageAndSubmit($el, form) {
+        form.find("input[name='page']").val($el.data('page'));
+        form.submit();
+    }
+
+    //Scroll so the top of the form is in view
+    //paginationTopScrollOffset can be set in Pagination Model, if not set it will default to 120
+    function scrollToTopOfForm(scrollTo) {
+
+        $('html, body').animate({
+            scrollTop: scrollTo.offset().top - @(paginationTopScrollOffset)
+        }, 0);
+    }
+
+
+    $.fn.isTopInViewport = function () {
+        var elementTop = $(this).offset().top;
+        var viewportTop = $(window).scrollTop();
+        return elementTop >= viewportTop;
+    };
+
+</script>

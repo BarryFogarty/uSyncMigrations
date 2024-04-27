@@ -1,0 +1,17 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@using System.Text.RegularExpressions
+@{
+	string source = string.Empty;
+	var ifc = Model.MacroParameters["iframeCode"];
+	if(ifc != null && ifc.ToString().Length > 0)
+	{
+		source = ifc.ToString();
+		if(!source.ToLower().Contains("title="))
+		{
+			source = Regex.Replace(source, "<iframe ", "<iframe title=\"Video\" ", RegexOptions.IgnoreCase);
+		}
+	}
+}
+<div class="video-item">
+	 @Html.Raw(source)
+</div>

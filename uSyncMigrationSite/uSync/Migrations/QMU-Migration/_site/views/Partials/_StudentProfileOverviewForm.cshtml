@@ -1,0 +1,135 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.ViewModels.QMU_VM_StudentProfilesOverview>
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Helpers
+
+@{
+    //Stops page bombing out if string is in page url Request - always returns an int
+    string pageFromUrl = HttpContext.Current.Request.QueryString["page"];
+    int pageFromUrlInt = int.TryParse(pageFromUrl, out pageFromUrlInt) ? pageFromUrlInt - 1 : 0;
+
+}
+
+<div class="js--form-wrapper">
+
+    @*For submittal returns results in partial view partials/_StudentProfileOverviewResults, replacing HTML in #student-profiles-results *@
+    @using (Ajax.BeginForm("GetStudentProfilesOvervieweResults", "StudentProfilesOverviewForm",
+               new AjaxOptions
+               {
+                   HttpMethod = "Get",
+                   InsertionMode = InsertionMode.Replace,
+                   UpdateTargetId = "student-profiles-results",
+                   OnComplete = "submitComplete"
+               },
+               new { id = "student-profiles-form" }))
+    {
+        <div class="student-profiles">
+            <div class="student-profile-row d-flex justify-content-end">
+                <div class="student-blue-box">
+                    <fieldset>
+                        @if (Model.TypeFilters != null)
+                        {
+
+                            <select class="mb-3 js--form-select" id="type" aria-label="Filter student stories by type" name="type">
+                                <option hidden value="">Filter by type</option>
+                                @foreach (var type in Model.TypeFilters)
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </select>
+                        }
+
+                        @if (Model.CourseFilters != null)
+                        {
+                            <select class="mb-3 js--form-select" id="course" aria-label="Filter student stories by course" name="course">
+                                <option hidden value="">Filter by course</option>
+                                @foreach (var course in Model.CourseFilters)
+                                {
+                                    <option value="@course">@course</option>
+                                }
+                            </select>
+                        }
+
+                        @if (Model.CountryFilters != null)
+                        {
+
+                            <select class="mb-3 js--form-select" id="country" aria-label="Filter student stories by country" name="country">
+                                <option hidden value="">Filter by country</option>
+                                @foreach (var country in Model.CountryFilters)
+                                {
+                                    <option value="@country">@country</option>
+                                }
+                            </select>
+                        }
+
+                        @if (Model.ThemesFilters != null)
+                        {
+
+                            <select class="mb-3 js--form-select" id="theme" aria-label="Filter student stories by theme" name="theme">
+                                <option hidden value="">Filter by theme</option>
+                                @foreach (var theme in Model.ThemesFilters)
+                                {
+                                    <option value="@theme">@theme</option>
+                                }
+                            </select>
+                        }
+                        <input type="hidden" name="pageId" id="pageId" value="@Model.PageId" />
+                        <input type="hidden" name="page" id="page" value="@(pageFromUrlInt)" />
+                        <button class="white-btn js--clear-filters" tabindex="0">Clear Filters</button>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+        <div class="student-prof-result js--for-pagiantion--form-results" id="student-profiles-results">
+
+        </div>
+    }
+</div>
+
+<script>
+    //Submit the form on load
+    $(window).bind("load", function () {
+        submitForm();
+    });
+
+
+    //Submits form when one of the dropdowns is selected from
+    $(document).on("change", ".js--form-select", function (e) {
+        resetPage();
+        submitForm();
+    });
+
+    //Clears all filters and submits form when 'Clear Filters' is clicked
+    $(document).on("click", ".js--clear-filters", function (e) {
+        resetAll();
+        submitForm();
+    });
+
+    //Function - submits form
+    function submitForm() {
+        var $form = $("#student-profiles-form");
+        $form.submit()
+    }
+
+    //Function - Resets all filters
+    function resetAll() {
+        resetPage();
+        restDropdowns();
+    }
+
+    //Function - Resets page value to 0
+    function resetPage() {
+        $("#page").val(0);
+    }
+
+    //Function - Resets all dropdowns to "" to show all results
+    function restDropdowns() {
+        $(".js--form-select").val("");
+    }
+
+    //Function - Resets form submitted to false on form oncomplete (fired on line 21), in preperation for new form submittion
+    function submitComplete() {
+        var $form = $("#student-profiles-form");
+        $form.data('submitted', false);
+    }
+
+</script>

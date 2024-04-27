@@ -1,0 +1,76 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Error404>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+
+    var searchPage = "/search/";
+    string query = Request.QueryString["query"];
+}
+
+<main role="main" class="main-content no-header">
+    <div class="error-wrap">
+        <div class="grey">
+            <div class="container">
+                <div class="inner">
+                    <h1>@Model.DisplayTitle</h1>
+                    <p>@Model.Introduction</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="inner">
+                <div class="grey-aside alt">
+                    <h2>Search site</h2>
+                    <div class="site-search">
+
+
+                        <form action="@(searchPage)" method="get" id="SiteSearchForm2">
+                            @Html.TextBoxFor(model => @query, new
+                            {
+                                placeholder = "Search...",
+                                id = "query404",
+                                name = "query",
+                                aria_label = "search text"
+                            })
+                            <input type="submit" value="Show Courses" aria-label="search" />
+                        </form>
+                    </div>
+                </div>
+
+                @if (Model.LinksList1.Any())
+                {
+                    <div class="grey-aside alt">
+                        <h2>@Model.LinksList1Title</h2>
+                        <div class="white-inner">
+                            @foreach (var link in Model.LinksList1)
+                            {
+                                <a href="@link.Url" target="@link.Target" class="white-strip">@link.Name</a>
+                            }
+                        </div>
+                    </div>
+                }
+                @if (Model.LinksList2.Any())
+                {
+                    <div class="grey-aside alt blue">
+                        <h2>@Model.LinksList2Title</h2>
+                        <div class="white-inner">
+                            <ul>
+                                @foreach (var link in Model.LinksList2)
+                                {
+                                    <li>
+                                        <a href="@link.Url" target="@link.Target">@link.Name</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                }
+                @Model.BodyCopy
+            </div>
+        </div>
+
+
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

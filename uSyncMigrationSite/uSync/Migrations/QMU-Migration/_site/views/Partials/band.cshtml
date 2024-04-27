@@ -1,0 +1,53 @@
+﻿@using Umbraco.Web.PublishedModels
+@using QMUCloud.Core.Helpers
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Band>
+@{
+    var bandClasses = new List<string> { "dark-band", "white-band", "light-band" };
+    var buttonColours = new List<string> { "white-btn", "blue-btn", "blue-btn" };
+    var orderClasses = new List<string> { "order-lg-1", "order-lg-2" };
+
+    var alignmentIndex = (int)ViewData["index"] % 2;
+    if (alignmentIndex > 0)
+    {
+        orderClasses = new List<string> { "order-lg-2", "order-lg-1" };
+    }
+
+    var colourIndex = (int)ViewData["index"] % 3;
+    var bandClass = bandClasses[colourIndex];
+    var buttonColour = buttonColours[colourIndex];
+}
+
+<div class="left-band @bandClass">
+    <div class="container banded-container">
+        <div class="row">
+            <div class="col-lg-8 col-12 @orderClasses[0]">
+                <div class="left-text">
+                    <h2>@Model.Title</h2>
+                    @Html.Raw(Model.Description)
+                </div>
+            </div>
+            <div class="col-lg-4 col-12 @orderClasses[1]">
+                <div>
+                    @if (!string.IsNullOrWhiteSpace(Model.VideoUrl) && !string.IsNullOrWhiteSpace(Model.VideoTitle))
+                    {
+                        <div class="band-iframe-wrapper">
+                            @Html.YoutubeLazyLoad(@Model.VideoUrl, @Model.VideoTitle)
+                        </div>
+                    }
+                    else if (Model.Image != null)
+                    {
+                        <img src="@Model.Image.Url()?width=720&amp;height=406&amp;center=0.5,0.5&amp;mode=crop" alt="@Model.Image.Value("altText")">
+                        <p class="caption"></p>
+                    }
+
+                    @if (Model.ButtonLink != null)
+                    {
+                        <p><a href="@Model.ButtonLink.Url" title="@Model.ButtonLink.Name" target="@Model.ButtonLink.Target"><span class="@buttonColour">@Model.ButtonLink.Name</span></a></p>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

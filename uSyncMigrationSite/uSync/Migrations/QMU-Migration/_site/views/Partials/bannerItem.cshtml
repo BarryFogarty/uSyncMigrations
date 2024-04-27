@@ -1,0 +1,362 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using QMUCloud.Core.Extensions
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{ var banner = Model.Banner;
+
+    var currentNode = Umbraco.AssignedContentItem.Root();
+    var root = currentNode.Root();
+    var tempID = Umbraco.AssignedContentItem.TemplateId;
+
+    var alias = Umbraco.AssignedContentItem.ToString();
+    var parentAlias = Umbraco.AssignedContentItem.Parent;
+
+    var khNode = Umbraco.Content(34970);
+
+    var bannerClass = string.Empty;
+
+    var settingsContent = Umbraco.GetSettingsNode();
+
+    if (alias == "Umbraco.Web.PublishedModels.Home")
+    {
+        bannerClass = "main";
+    }
+    else
+    {
+        bannerClass = "banner";
+    }
+
+    if (banner != null && banner.Image != null)
+    {
+        <header role="banner" class="banner">
+            <div class="@bannerClass-carousel">
+                <div class="item">
+                    @if (alias == "Umbraco.Web.PublishedModels.BlogPost")
+                    {
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="blog-post-overlay">
+                            <div class="container">
+                                @if (tempID == 33030 && Model.Parent != null && Model.Parent.GetProperty("displayTitle") != null)
+                                {
+                                    <div class="coloured-box"><span>@Model.Parent.DisplayTitle's blog</span></div>
+                                }
+                                else
+                                {
+                                    <div class="coloured-box"><span>QM KnowHow</span></div>
+                                }
+                                <h1>
+                                    @Model.DisplayTitle
+                                </h1>
+                            </div>
+                        </div> }
+                    else if (alias == "Umbraco.Web.PublishedModels.BlogBio")
+                    {
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="text-overlay" style="bottom:0; top:auto;">
+                            <div class="container">
+                                @if (Model.TemplateId == 39392)
+                                {
+                                    <div class="coloured-box"><span>QMYou</span></div>
+                                }
+                                else
+                                {
+                                    <div class="coloured-box"><span>Blogger Biography</span></div>
+                                }
+                                <h1>
+                                    @Model.DisplayTitle
+                                </h1>
+                                @if (!string.IsNullOrEmpty(Model.ExtraInformation))
+                                {
+                                    <div class="course" style="margin-left:20px; line-height:24px;">
+                                        <span>@Model.ExtraInformation</span>
+                                    </div>}
+                            </div>
+                        </div> }
+                    else if (alias == "Umbraco.Web.PublishedModels.CaseStudy")
+                    {
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="text-overlay" style="bottom:0; top:auto;">
+                            <div class="container">
+                                <div class="coloured-box"><span>@Model.Type</span></div>
+                                <h1>
+                                    @Model.DisplayTitle
+                                </h1>
+                            </div>
+                        </div> }
+                    else if (alias == "Umbraco.Web.PublishedModels.Subject")
+                    {
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img image">
+                            <div class="container">
+                                <div class="column-layout">
+                                    <div class="left">
+                                        @Html.Partial("breadcrumb")
+                                        <h1>@Model.DisplayTitle</h1>
+                                        <p class="lead">@Model.Introduction</p>
+                                    </div>
+                                    <div class="right">
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    }
+                    else if (alias == "Umbraco.Web.PublishedModels.Profile")
+                    {
+                        @* Old code *@
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="text-overlay" style="bottom:0; top:auto;">
+                            <div class="container" id="profileBanner">
+                                <div class="coloured-box"><span>@Model.Type</span></div>
+                                <h1>
+                                    @Model.DisplayTitle
+
+
+                                    @if (Model.CountryName != null)
+                                    {
+                                        if (@Model.CountryFlag != null)
+                                        {
+                                            <span class="flag-icon" id="flagIcon">
+                                                <img src="@Model.CountryFlag.Url" alt="@Model.CountryFlag.AltText" />
+                                            </span>
+                                        }
+                                        <small style="font-size:14px; vertical-align:middle;">@Model.CountryName</small>
+                                    }
+                                </h1>
+                                @if (!string.IsNullOrEmpty(Model.CourseTitle))
+                                {
+                                    <div class="course" style="margin-left:20px">
+                                        <span>@Model.CourseTitle</span>
+                                    </div>}
+                            </div>
+                        </div>
+
+
+                        @* New code *@
+                        @*CountryTag countryProfile = null;
+                        CourseTag courseProfile = null;
+                        StudentStoryTypeTag typeTag = null;
+                        if (Model.Country != null && Model.Country is CountryTag)
+                        {
+                            countryProfile = Model.Country as CountryTag;
+                        }
+
+                        if (Model.Course != null && Model.Course is CourseTag)
+                        {
+                            courseProfile = Model.Course as CourseTag;
+                        }
+
+                        if (Model.TypePicker != null && Model.TypePicker is StudentStoryTypeTag)
+                        {
+                            typeTag = Model.TypePicker as StudentStoryTypeTag;
+                        }
+
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="text-overlay text-overlay--profile-pg" style="bottom:0; top:auto;">
+                            <div class="container">
+                                <div class="text-overlay__meta-wrapper">
+                                    @if (typeTag != null)
+                                    {
+                                        <div class="coloured-box coloured-box--profile-pg"><span>@typeTag.Type</span></div>
+                                    }
+                                    <div class="text-overlay__meta-wrapper__header">
+                                        <h1>
+                                            @Model.DisplayTitle
+                                        </h1>
+
+                                        @if (countryProfile != null)
+                                        {
+                                            <div class="text-overlay__meta-wrapper__header__country">
+                                                @if (countryProfile.CountryFlag != null)
+                                                {
+                                                    var flag = countryProfile.CountryFlag as Image;
+                                                    <span class="flag-icon me-1" id="flagIcon">
+                                                        <img src="@flag.Url()" alt="@flag.AltText" />
+                                                    </span>
+                                                }
+                                                @if (!String.IsNullOrEmpty(countryProfile.Country))
+                                                {
+                                                    <small style="font-size:14px; vertical-align:middle;">@countryProfile.Country</small>
+                                                }
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                               @if (courseProfile != null && !String.IsNullOrEmpty(courseProfile?.CourseName) && courseProfile?.QualificationType != null)
+                               {
+                                   string courseName = courseProfile.CourseName;
+                                   string courseType = string.Join("/", courseProfile.QualificationType);
+
+                                    <div class="course course--profile-pg">
+                                        <span>@courseType @courseName</span>
+                                    </div>
+                                 }
+                            </div>
+                        </div>*@
+
+                    }
+                    else if (alias == "Umbraco.Web.PublishedModels.StaffProfile")
+                    {
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="text-overlay text-overlay--profile-pg" style="bottom:0; top:auto;">
+                            <div class="container">
+                                <div class="text-overlay__meta-wrapper">
+                                    @if (Model.Type != null)
+                                    {
+                                        <div class="coloured-box coloured-box--profile-pg"><span>@Model.Type</span></div>
+                                    }
+
+                                    <div class="text-overlay__meta-wrapper__header">
+                                        <h1>
+                                            @Model.DisplayTitle
+                                        </h1>
+                                    </div>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.Qualifications))
+                                {
+                                    <div class="course course--profile-pg">
+                                        <span>@Model.Qualifications</span>
+                                    </div>
+                                }
+                            </div>
+                        </div> 
+                    }
+                    else if (alias == "Umbraco.Web.PublishedModels.CountryProfile")
+                    {
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="text-overlay" style="bottom: 0;top: auto;">
+                            <div class="container">
+                                <div class="coloured-box"><span>Country</span></div>
+                                <h1>@Model.DisplayTitle</h1>
+                            </div>
+                        </div>
+                        <div class="welcome">
+                            <div class="container">
+                                <p>@banner.Title</p>
+                                <div class="map">
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else if (alias == "Umbraco.Web.PublishedModels.UndergraduateCourse" || alias == "Umbraco.Web.PublishedModels.PostgraduateResearchCourse" || alias == "Umbraco.Web.PublishedModels.PostgraduateTaughtCourse")
+                    {
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        if (@Model.CourseEntryLink1 != null && @Model.CourseEntryLink2 != null)
+                        {
+                            <div class="entry-overlay">
+                                <div class="container">
+                                    <p>Please select the course year you would like to view...</p>
+                                    <a href="@Model.CourseEntryLink1.Url" target="@Model.CourseEntryLink1.Target" class="entry-btn active">@Model.CourseEntryLink1.Name</a>
+                                    <a href="@Model.CourseEntryLink2.Url" target="@Model.CourseEntryLink2.Target" class="entry-btn" )*@">@Model.CourseEntryLink2.Name</a>
+                                </div>
+                            </div>
+                        }
+                        <div class="text-overlay">
+                            <div class="container">
+                                @if (!string.IsNullOrEmpty(banner.Title))
+                                {
+                                    <span class="large">@banner.Title</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        string bannerPosVertical = banner.TextPositionVertical == null ? "" : banner.TextPositionVertical.ToLower();
+                        string bannerPosHorizontal = banner.TextPositionVertical == null ? "" : banner.TextPositionHorizontal.ToLower();
+
+                        <span style="background-image: url(@banner.Image.Url)" class="bg-cover-img" role="img" aria-label="@banner.Image.AltText"></span>
+                        <div class="text-overlay @bannerPosVertical">
+                            <div class="container">
+
+                                <div class="@bannerPosHorizontal">
+
+
+                                    @if (banner.TextLink != null)
+                                    {
+                                        <a href="@banner.TextLink.Url" target="@banner.TextLink.Target">
+                                            @banner.TextLink.Name
+                                        </a> }
+                                    else
+                                    {
+                                        if (!string.IsNullOrEmpty(banner.Title))
+                                        {
+                                            <span class="large">@banner.Title</span>
+                                        }
+                                        if (!string.IsNullOrEmpty(banner.Description))
+                                        {
+                                            <div><span>@banner.Description</span></div>
+                                        }
+                                    }
+
+                                    @if (banner.Button != null)
+                                    {
+                                        <div>
+                                            <a href="@banner.Button.Url" target="@banner.Button.Target" class="trans-btn">@banner.Button.Name</a>
+                                        </div>}
+
+                                    @if (!string.IsNullOrEmpty(banner.VideoID))
+                                    {
+                                        <div>
+                                            <button id="js-modal-btn" class="trans-btn" data-video-id="@banner.VideoID">Play Video</button>
+                                        </div>}
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+
+                </div>
+            </div>
+        </header>
+    }
+    else
+    {
+        var defaultBanner = "https://www.qmu.ac.uk/media/8d884e63f6db5fb/qmu-exterior-filler.jpg";
+        var defaultBannerAlt = "A panoramic view of Queen Margaret University campus, Edinburgh";
+
+        <header role="banner" class="banner">
+            <div class="banner-carousel">
+                <div class="item">
+                    <span style="background-image: url(@defaultBanner" class="bg-cover-img" role="img" aria-label="@defaultBannerAlt"> </span>
+                    @Model.DisplayTitle
+                </div>
+            </div>
+        </header>
+    }
+}
+
+@{
+    string disclaimerText = settingsContent.Value("disclaimerText").ToString();
+    if (!string.IsNullOrEmpty(disclaimerText))
+    {
+        <div class="container">
+            <div class="alert" style="width:65%">
+                @Html.Raw(@disclaimerText)
+            </div>
+        </div>
+    }
+}
+
+<style>
+    #profileBanner {
+        padding: 0 460px 0 0;
+    }
+
+    #flagIcon {
+        display: inline-block;
+        box-shadow: 0 2px 10px 0 #adb3b9;
+        padding: 0;
+    }
+</style>

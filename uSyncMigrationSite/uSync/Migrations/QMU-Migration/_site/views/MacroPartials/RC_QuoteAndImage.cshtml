@@ -1,0 +1,34 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{ 
+	string imageUrl = string.Empty;
+	var image = Model.MacroParameters["image"];
+	if (image != null && image.ToString().Length > 0)
+	{
+		imageUrl = Helpers.GetMediaUrl(image);
+	}
+
+	string source = string.Empty;
+
+	var sourceName = Model.MacroParameters["source"];
+	if (sourceName != null && sourceName.ToString().Length > 0)
+	{
+		source = string.Format("<strong>{0}</strong>", sourceName.ToString());
+	}
+
+	var sourceExtra = Model.MacroParameters["sourceExtra"];
+	if (sourceExtra != null && sourceExtra.ToString().Length > 0)
+	{
+		source += string.Format(", {0}", sourceExtra.ToString());
+	}
+}
+<div class="side-quote">
+	<div class="image">
+		<img src="@imageUrl" alt="Image" />
+		<div class="caption"><span>@Html.Raw(source)</span></div>
+	</div>
+	<div class="quote-box">
+		<div class="inner">
+			“@Model.MacroParameters["text"]”
+		</div>
+	</div>
+</div>

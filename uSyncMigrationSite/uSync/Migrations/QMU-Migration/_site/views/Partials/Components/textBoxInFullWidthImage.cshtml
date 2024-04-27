@@ -1,0 +1,15 @@
+﻿@using Umbraco.Web.PublishedModels
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<TextBoxInFullWidthImage>
+
+
+<section class="qmu_cmp_textboxinfullwidthimage component-spacing full-width-100 background-container image-background-container d-flex align-items-end" id="@Model.AnchorCode" style="background-image: url(@Model.Image.Url())" role="img" aria-label="@Model.Image.Value("altText")">
+    <div class="container full-width full-width-100">
+        <div class="white-text-box-container">
+            <div class="white-text-box">
+                <h2>@Model.Title</h2>
+                <p>@Model.Text</p>
+            </div>
+        </div>
+    </div>
+</section>
+

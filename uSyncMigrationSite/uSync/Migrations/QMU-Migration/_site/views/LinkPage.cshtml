@@ -1,0 +1,151 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Error404>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = null;
+
+    var metaTitle = Model.Value<string>("metaTitle");
+    if (string.IsNullOrWhiteSpace(metaTitle))
+    {
+        metaTitle = Model.Name;
+    }
+    bool isBackgroundColorPicked = !String.IsNullOrEmpty(Model.BackgroundColour);
+    var backgroundColor = isBackgroundColorPicked ? Model.BackgroundColour : "37586D";
+
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>@metaTitle</title>
+</head>
+<body style="background-color:#@backgroundColor">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <main role="main" class="main-content" aria-label="main body content">
+        <div class="error-wrap">
+            <div class="container">
+                <div class="inner">
+                    <a href="/" class="logo" aria-label="logo link"><img src="/media/e42pozlf/square-logo.png" alt="QMU Logo" class="logo" /></a>
+                    <h1>&#64;@Model.LinksList1Title</h1>
+
+                    @if (Model.LinksList1.Any())
+                    {
+                        <div class="links-container">
+                            @foreach (var link in Model.LinksList1)
+                            {
+                                <div class="links @(isBackgroundColorPicked ? "links--grey-hover" : "")"><a href="@link.Url" target="@link.Target"><p>@link.Name</p></a></div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        body {
+            background-color: #37586D;
+            color: #fff;
+            text-align: center;
+            font-family: Helvetica, Arial;
+        }
+
+        .inner {
+            margin:48px 0;
+        }
+
+        .links {
+            color: #fff;
+            z-index: 0;
+            overflow: hidden;
+            margin-bottom: 16px;
+            transition: box-shadow 0.25s cubic-bezier(0.08, 0.59, 0.29, 0.99) 0s, color 0.25s cubic-bezier(0.08, 0.59, 0.29, 0.99) 0s, border-color 0.25s cubic-bezier(0.08, 0.59, 0.29, 0.99) 0s, transform 0.25s cubic-bezier(0.08, 0.59, 0.29, 0.99) 0s, background-color 0.25s cubic-bezier(0.08, 0.59, 0.29, 0.99) 0s;
+            border: 2px solid rgb(255, 255, 255);
+            background-color: rgb(255, 255, 255);
+            border-radius: 0px;
+            width: 540px;
+            min-height: 48px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+            .links:focus-within {
+                background: #fd0;
+                color: #0b0c0c;
+            }
+
+            .links:hover {
+                color: #ffffff !important;
+                background-color: #37586D;
+            }
+
+            .links:hover p {
+                color: #ffffff !important;
+            }
+
+            .links > a > p:hover {
+                color: #ffffff !important;
+                background-color: transparent;
+            }
+
+
+            .links--grey-hover:hover {
+                color: #37586D !important;
+                background-color: #F3F3F3 !important;
+            }
+
+            .links--grey-hover:hover p {
+                color: #37586D !important;
+            }
+
+            .links--grey-hover > a > p:hover {
+                color: #37586D !important;
+                background-color: transparent !important;
+            }
+
+            .links a {
+                text-decoration: none;
+            }
+
+            .links > a > p {
+                color: #37586D;
+                padding-left: 20px;
+                padding-right: 20px;
+                font-size: 20px;
+                margin: 0px;
+                line-height: 1.8;
+            }
+
+        .links-container {
+            display: inline-grid;
+        }
+
+        .logo {
+            border-radius: 50%;
+            width: 96px;
+            height: 96px;
+            object-fit: contain;
+            object-position: initial;
+            filter: none;
+        }
+
+        @@media screen and (max-width: 600px) {
+            .links > a > p {
+                font-size: 24px !important;
+            }
+
+            .links {
+                height: auto;
+                margin-bottom: 32px;
+                width: auto;
+            }
+
+        }
+    </style>
+
+</body>
+</html>

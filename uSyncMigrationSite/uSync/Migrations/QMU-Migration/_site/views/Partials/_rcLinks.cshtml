@@ -1,0 +1,26 @@
+﻿@inherits UmbracoViewPage<ContentModels.GeneralLandingPage>
+
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.PublishedModels
+@using Umbraco.Core.Models.PublishedContent
+@using System.Web.Mvc
+@using Umbraco.Web.Mvc
+
+@{
+    var links = Model.Value<IEnumerable<IPublishedElement>>("Links");
+
+    var level1 = @links.FirstOrDefault();
+
+    var level2 = @level1.Value("Link");
+}
+
+@foreach (var link in links){
+    var stuff = @link.GetProperty("Links");
+
+    <h1>@level2.ToString()</h1>
+    <h2>@stuff</h2>
+
+    var something = link.Value<IEnumerable<IPublishedElement>>("Links");
+
+}

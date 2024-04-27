@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.CourseComparisonPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content qmu_pg_course-comparison">
+    <div class="container">
+        <div class="column-layout">
+            <div id="left" class="left" style="padding-bottom:0px">
+
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+                <h1>@Model.DisplayTitle</h1>
+
+                @if (!String.IsNullOrEmpty(Model.Introduction.ToString()))
+                {
+                    @Html.Raw(Model.Introduction)
+                }
+
+            </div>
+
+            <div class="right">
+
+            </div>
+
+        </div>
+
+        <!-- Filter form -->
+        @Html.Action("GetCourseComparisonPartial", "CourseComparison")
+    </div>
+</main>
+
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

@@ -1,0 +1,68 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BlogBio>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Services
+
+@{
+    var sectionCssClass = "l-blue";
+
+    var page = Model.Id;
+
+    var blogsNode = Umbraco.Content(page);
+
+    var alias = Umbraco.AssignedContentItem.ToString();
+
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+
+    <section class="@sectionCssClass" style="height:580px" aria-label="related content full width block ">
+        <div class="container">
+            <h2>Related Blog Posts</h2>
+            <div class="image-row student-stories slick-fix">
+                @foreach (var blog in searchService.GetDescendantsWithType(blogsNode, "BlogPost"))
+                {
+                    var blogImage = blog.Value<IPublishedContent>("adSpotImage");
+                    <div class="item">
+                        <a href="@blog.Url()" class="image" aria-label="@blog.Name">
+                            @if (@blogImage != null)
+                            {
+                                <img src="@blogImage.Url()" alt="@blogImage.Value("altText")" />
+                            }
+                            else
+                            {
+                                <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                            }
+                        </a>
+                        @if (!string.IsNullOrEmpty(@blog.Name))
+                        {
+                            <div class="author">@Html.Raw(@blog.Name)</div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(@blog.Value<string>("Introduction")))
+                        {
+                            var intro = @blog.Value("Introduction").ToString();
+
+                            string summary = string.Empty;
+
+                            int characterCount = 100;
+
+                            summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Truncate(characterCount).Trim();
+
+
+                            summary += string.Format(" <a href=\"" + blog.Url() + "\" aria-label=\"read more about " + blog.Name + "\"><strong>read more</strong></a>");
+                            <p>@Html.Raw(summary)</p>
+                        }
+                        <strong><time>@(@blog.Value<DateTime>("DatePosted").ToString("dd MMMM yyyy"))</time></strong>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </section>
+}
+
+<style>
+    body > div > section.l-blue > div > div > div {
+        height: 425px;
+    }
+</style>

@@ -1,0 +1,11 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+<ul class="breadcrumbs">
+    @foreach (var content in Model.Ancestors().Reverse())
+    {
+        if (!content.IsDocumentType("newsFolder") && !content.IsDocumentType("courseFolder") && !content.IsDocumentType("schoolFolder") && !content.IsDocumentType("staffFolder") && !content.IsDocumentType("folders") && !content.IsDocumentType("filterFolder"))
+        {
+        <li><a href="@content.Url">@content.Value("ShortTitle")</a></li>
+        }
+    }
+<li class="active"><strong><a>@(Model.Value("ShortTitle") ?? Model.Name)</a></strong></li>
+</ul>

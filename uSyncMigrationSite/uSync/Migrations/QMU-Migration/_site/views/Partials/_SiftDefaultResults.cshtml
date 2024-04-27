@@ -1,0 +1,32 @@
+﻿@model SiftLibrary.Models.SearchResultNodes
+
+@*
+    This partial view provides the default search results for Sift. I recommend that you don't update it directly.
+    It's best to provide your own partial view and specify it using the "data-sift-result-partial" attribute on the main div.
+*@
+
+<p>
+    Number of results: @Model.NumberOfResults<br />
+    Page number: @(Model.Criteria.PageNumber + 1)<br />
+    Number of pages: @Model.NumberOfPages
+</p>
+
+<ul>
+    @foreach (var node in Model.Nodes)
+    {
+        if (node.ItemType == PublishedItemType.Content)
+        {
+            <li><a href="@node.Url(Model.Criteria.Culture)">@node.Name(Model.Criteria.Culture)</a></li>
+        }
+        else if (node.ItemType == PublishedItemType.Media)
+        {
+            <li><a href="@node.MediaUrl(Model.Criteria.Culture)">@node.Name(Model.Criteria.Culture)</a></li>
+        }
+    }
+</ul>
+
+@if (Model.Criteria.ResultsPerPage > 0)
+{
+    @Html.Partial("_SiftDefaultPagination", Model)
+}
+

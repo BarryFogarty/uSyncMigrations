@@ -1,0 +1,79 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.MemberLogin>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using System.Web.Mvc.Html
+@using ClientDependency.Core.Mvc
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using Umbraco.Web.Controllers
+@using QMUCloud.Core.Models.ViewModels;
+@{
+    Layout = "Master.cshtml";
+
+    var loginModel = new LoginModel();
+    loginModel.RedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
+}
+
+@section ExtraCss
+{
+    @* Put this in the header to stop the page being indexed by search engines *@
+    <meta name="robots" content="noindex, nofollow">
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+
+    <div class="container member-form">
+        <div class="column-layout">
+
+            <div class="left" id="left" tabindex="-1">
+
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+
+                @using (Html.BeginUmbracoForm<UmbLoginController>("HandleLogin"))
+                {
+                    @Html.HiddenFor(m => loginModel.RedirectUrl)
+                    <fieldset>
+                        <legend>Login</legend>
+
+                        @Html.ValidationSummary("loginModel", true)
+
+                        @Html.LabelFor(m => loginModel.Username)
+                        @Html.TextBoxFor(m => loginModel.Username)
+                        @Html.ValidationMessageFor(m => loginModel.Username)
+                        <br />
+
+                        @Html.LabelFor(m => loginModel.Password)
+                        @Html.PasswordFor(m => loginModel.Password)
+                        @Html.ValidationMessageFor(m => loginModel.Password)
+                        <br />
+
+                        <button>Login</button>
+                    </fieldset>
+                }
+
+            </div>
+
+        </div>
+    </div>
+
+    @* Pulls through lower banner partial if there is an image *@
+    @if (Model.HasValue("lowerBannerImage"))
+    {
+        var lbModel = new QMU_VM_LowerBannerModel
+        {
+            Title = Model.LowerBannerTitle,
+            Copy = Model.LowerBannerCopy.ToString(),
+            BannerImage = Model.LowerBannerImage,
+            MobileBannerImage = Model.LowerBannerImageMobile,
+            BoxPosition = Model.HorizontalAdPlacement,
+            IsInfographic = Model.UsingBannerForInfographic
+        };
+
+        @Html.CachedPartial("components/qmu_cmp_lowerBanner", lbModel, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+
+</main>
+
+

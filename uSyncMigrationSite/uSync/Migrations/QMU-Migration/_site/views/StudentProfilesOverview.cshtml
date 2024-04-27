@@ -1,0 +1,550 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.StudentProfilesOverview>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using QMUCloud.Core.Services
+@{
+    Layout = "Master.cshtml";
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <h1>@Model.DisplayTitle</h1>
+            @Model.Introduction
+
+            <div class="student-profiles">
+                <div class="student-profile-row">
+                    @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                    <div class="student-blue-box">
+                        <select id="type" aria-label="filter by type">
+                            <option hidden>Filter by type</option>
+                            @foreach (IPublishedContent studentProfile in searchService.GetDescendantsWithType(Model, "Profile", "type"))
+                            {
+                                var type = studentProfile.Value("type");
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                        <p></p>
+                        <select id="course" aria-label="filter by course">
+                            <option hidden>Filter by course</option>
+                            @foreach (IPublishedContent studentProfile in searchService.GetDescendantsWithType(Model, "Profile", "courseTitle"))
+                            {
+                                var course = studentProfile.Value("courseTitle");
+                                <option value="@course">@course</option>
+                            }
+                        </select>
+                        <p></p>
+                        <select id="country" aria-label="filter by country">
+                            <option hidden>Filter by country</option>
+                            @foreach (IPublishedContent studentProfile in searchService.GetDescendantsWithType(Model, "Profile", "countryName"))
+                            {
+                                var country = studentProfile.Value("countryName");
+                                <option value="@country">@country</option>
+                            }
+                        </select>
+                        <p></p>
+                        <a href="/study-here/student-stories/" class="white-btn">Clear Filter</a>
+                    </div>
+                </div>
+            </div>
+            <div id="search-message"></div>
+            <p></p>
+            <div id="no-results"></div>
+
+
+            <div class="student-grid">
+                @foreach (IPublishedContent studentProfile in searchService.GetDescendantsWithType(Model, "Profile", "createDate", Examine.Search.SortType.Long, false))
+                {
+                    var type = studentProfile.Value<string>("type");
+                    var course = studentProfile.Value<string>("CourseTitle");
+                    var country = studentProfile.Value<string>("CountryName");
+
+                    if (course == Request["course"] && type == Request["type"] && country == Request["country"])
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (course == Request["course"] && type == Request["type"] && Request["country"] == null)
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (Request["course"] == null && type == Request["type"] && Request["country"] == null)
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (course == Request["course"] && Request["type"] == null && Request["country"] == null)
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (Request["course"] == null && Request["type"] == null && country == Request["country"])
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (Request["course"] == null && type == Request["type"] && country == Request["country"])
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (course == Request["course"] && Request["type"] == null && country == Request["country"])
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    if (Request["course"] == null && Request["type"] == null && Request["country"] == null)
+                    {
+                        <div class="student-item">
+                            <div class="image">
+                                <div>
+                                    <a href="@studentProfile.Url" class="student-item-link">
+                                        @if (studentProfile.Value<IPublishedContent>("adSpotImage") != null)
+                                        {
+                                            var studentImage = studentProfile.Value<IPublishedContent>("adSpotImage");
+                                            <img src="@studentImage.Url()" alt="@studentProfile.Value("displayTitle") portrait">
+                                        }
+                                    </a>
+                                    <div class="overlay-text">
+                                        @studentProfile.Value("displayTitle")
+
+                                        @if (!string.IsNullOrEmpty(@studentProfile.Value<string>("countryName")))
+                                        {
+                                            var countryImage = studentProfile.Value<IPublishedContent>("countryFlag");
+                                            if (@countryImage != null)
+                                            {
+                                                <span class="flag-icon">
+                                                    <img src="@countryImage.Url()" alt="@countryImage.Value("altText")" />
+                                                </span> }
+
+                                            <small style="font-size:14px;vertical-align:middle;">@studentProfile.Value("CountryName")</small>}
+                                    </div>
+                                    <div class="title">@studentProfile.Value("CourseTitle")</div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+            <button id="more" class="show-more" aria-label="show more stories"><i class="fa fa-plus-circle fa-3x"></i></button>
+            <button id="less" class="show-less" aria-label="show fewer stories"><i class="fa fa-minus-circle fa-3x"></i></button>
+            <div class="full-width-content">
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<!-- Script -->
+
+<script>
+    $(document).ready(function () {
+
+        // GET PARAMETERS FROM URL
+
+        var params = {};
+
+        if (location.search) {
+            var parts = location.search.substring(1).split('&');
+
+            for (var i = 0; i < parts.length; i++) {
+                var nv = parts[i].split('=');
+                if (!nv[0]) continue;
+                params[nv[0]] = nv[1] || true;
+            }
+        }
+
+        // FILTER BY COURSE
+
+        $("#course").change(function () {
+            var url = window.location.pathname;
+            var str = $("option:selected", this).text();
+            // MULTIPLE PARAMETER
+            window.location.href = url + "?course=" + str + querystring('country', '&') + querystring('type', '&');
+            // SINGLE PARAMETER
+            //window.location.href = url + "?course=" + str;
+        });
+
+        // FILTER BY COUNTRY
+
+        $("#country").change(function () {
+            var url = window.location.pathname;
+            var str = $("option:selected", this).text();
+            // MULTIPLE PARAMETER
+            window.location.href = url + "?country=" + str + querystring('course', '&') + querystring('type', '&');
+            // SINGLE PARAMETER
+            //window.location.href = url + "?course=" + str;
+        });
+
+        //  FILTER BY TYPE
+
+        $("#type").change(function () {
+            var url = window.location.pathname;
+            var str = $("option:selected", this).text();
+            // MULTIPLE PARAMETER
+            window.location.href = url + "?type=" + str + querystring('course', '&') + querystring('country', '&');
+            // SINGLE PARAMETER
+            //window.location.href = url + "?course=" + str;
+        });
+
+        // MULTIPLE PARAMETER FUNCTION
+
+        function querystring(name, prefix) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.search);
+            if (results == null)
+                return '';
+            else
+                return (prefix || '') + name + '=' + decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+
+        // SHOW FILTERS USED
+
+        var typeVal = "";
+        var courseVal = "";
+        var countryVal = "";
+
+        var flag = "";
+
+        if (params.type) {
+            typeVal = unescape(params.type);
+            flag = 1;
+        }
+        if (params.course) {
+            courseVal = unescape(params.course);
+            flag = 1;
+        }
+        if (params.country) {
+            countryVal = unescape(params.country);
+            flag = 1;
+        }
+
+        if (flag == 1) {
+            document.getElementById("search-message").innerHTML = "Showing results for " + "<span class='filter-tag'>" + typeVal + "</span>" + " " + "<span class='filter-tag'>" + courseVal + "</span>" + " " + "<span class='filter-tag'>" + countryVal + "</span>";
+            document.getElementById("type").value = typeVal;
+            document.getElementById("course").value = courseVal;
+            document.getElementById("country").value = countryVal;
+        }
+
+        // REMOVE DROPDOWN DUPLICATES
+
+        [].slice.call($('#course option,#country option,#type option'))
+            .map(function (a) {
+                if (this[a.innerText]) {
+                    a.innerText = '';
+                } else {
+                    this[a.innerText] = 1;
+                }
+            }, {});
+
+        // REMOVE DROPDOWN WHITE SPACE
+
+        $('select option')
+            .filter(function () {
+                return !this.value || $.trim(this.value).length == 0 || $.trim(this.text).length == 0;
+            })
+            .remove();
+
+        // SHOW ONLY 12 STAFF ITEMS
+
+        items = $('.student-grid');
+        $.each(items, function (key, value) {
+            $(this)
+                .find('.student-item')
+                .slice(12)
+                .hide();
+        });
+
+        // CHECK IF MORE THEN 12 ITEMS
+
+        var items = $('.student-item').length;
+        var x = document.getElementById("more");
+
+        if (items > 12) {
+            x.style.display = "block";
+        }
+
+        // CHECK IF ZERO TO SHOW NO RESULTS MESSAGE
+
+        if (items == 0) {
+            document.getElementById("no-results").innerHTML = "<p>Sorry, there were no items that matched your filter criteria. You can <a href='/study-here/student-stories/'>clear the filters</a> to search again.</p>";
+        }
+
+        var headerOffset = 92 + 30;
+        if (viewport().width <= 900) {
+            headerOffset = 10;
+        }
+        else if (viewport().width <= 1250) {
+            headerOffset = 76 + 20;
+        }
+
+        // SHOW MORE
+        $('.show-more').click(function () {
+            // show all the cards
+            // show the "less" link and hide the "more" link
+
+            var showMoreHasFocus = false;
+            var focusVisible = $.find(":focus-visible");
+            if (focusVisible.length > 0) {
+                showMoreHasFocus = focusVisible[0].id == "more";
+            }
+
+            var firstHidden = $('.student-item').parent().find(".student-item:hidden:first");
+
+            $('.student-item').parent().find(":hidden").show();
+
+            $('.show-less').css('display', 'block');
+
+            $(this).hide();
+
+            var offset = 1900;
+
+            if (firstHidden.length) {
+                var firstLink = firstHidden.find("a:first");
+                if (firstLink.length) {
+                    if (showMoreHasFocus) {
+                        firstLink.focus();
+                    }
+                    offset = firstLink.offset().top - headerOffset;
+                }
+            }
+
+            $("html, body").animate({ scrollTop: offset }, 800);
+        });
+
+        // SHOW LESS
+
+        $('.show-less').click(function () {
+
+            var showLessHasFocus = false;
+            var focusVisible = $.find(":focus-visible");
+            if (focusVisible.length > 0) {
+                showLessHasFocus = focusVisible[0].id == "less";
+            }
+
+            $(this).parent()
+                .find('.student-item')
+                .slice(12)
+                .hide();
+
+            var lastShown = $('.student-item').parent().find(".student-item:not(:hidden):last");
+
+            $('.show-more').show();
+            $(this).hide();
+
+            var offset = 600;
+
+            if (lastShown.length) {
+                var lastLink = lastShown.find("a:first");
+                if (lastLink.length) {
+                    if (showLessHasFocus) {
+                        lastLink.focus();
+                    }
+                    offset = lastLink.offset().top - headerOffset;
+                }
+            }
+
+            $("html, body").animate({ scrollTop: offset }, 800);
+
+        });
+
+    });</script>

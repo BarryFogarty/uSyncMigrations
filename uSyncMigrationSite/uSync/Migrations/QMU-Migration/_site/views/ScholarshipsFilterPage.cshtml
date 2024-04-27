@@ -1,0 +1,106 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.ScholarshipsFilterPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+}
+
+@section ExtraCss
+{
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container bs-body scholarship-results sift sift-update-on-change sift-auto-load-on-page-load"
+         id="left"
+         data-sift-result-document-type="scholarship"
+         data-sift-result-partial="_SiftScholarshipResults">
+
+        <div class="row">
+            <div class="col-md-11">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                @Model.Introduction
+            </div>
+        </div>
+
+        <div class="grey-aside alt blue">
+            <div class="white-inner">
+                <form class="sift-criteria">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="row gy-3">
+
+                        <div class="col-12">
+                            <div class="search-row">
+                                <input type="text"
+                                       id="searchScholarshipText"
+                                       class="sift-criterion sift-wildcard"
+                                       data-sift-match-property="displayTitle,shortTitle,introduction,overview,details,whatSIncludedInTheScholarship,howToApply,selectionProcess"
+                                       data-sift-min-change-letters="0"
+                                       placeholder="Please enter a search term..."
+                                       title="Type in a name"
+                                       aria-label="search text">
+                            </div>
+                            <p><strong>Or use filters below...</strong></p>
+                        </div>
+
+                    </div>
+
+                    <div class="row gy-3">
+                        <div class="col-md-4">
+                            <select name="applicant-type" id="applicantType"
+                                    class="sift-criterion"
+                                    data-sift-match-property="applicantType"
+                                    data-sift-default-option="All Applicant Types">
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <select name="level-of-study" id="levelOfStudy"
+                                    class="sift-criterion"
+                                    data-sift-match-property="levelOfStudy"
+                                    data-sift-default-option="All Levels of Study">
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <select name="fee-category" id="feeCategory" disabled
+                                    class="sift-criterion"
+                                    data-sift-match-property="feeCategory"
+                                    data-sift-default-option="All Fee Categories">
+                            </select>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="sift-result">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    $("#applicantType").change(function () {
+        if ($(this).val() == "Staff") {
+            $("#feeCategory").val("");
+            $("#feeCategory").attr("disabled", true);
+        }
+        else {
+            $("#feeCategory").removeAttr("disabled");
+        }
+    });
+</script>
+
+<script src="~/scripts/sift-qmu.js" type="text/javascript"></script>
+<script src="~/scripts/sift.js" type="text/javascript"></script>

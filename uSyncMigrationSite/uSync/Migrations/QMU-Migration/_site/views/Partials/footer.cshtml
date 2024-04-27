@@ -1,0 +1,122 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using QMUCloud.Core.Extensions
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    var settingsContent = Umbraco.GetSettingsNode();
+
+    var footer = Umbraco.GetNavigationNode("Footer");
+    if (footer != null)
+    {
+        foreach (var item in footer.Children(x => x.ContentType.Alias == "navigationItem"))
+        {
+            var itemList = item.Children(x => x.ContentType.Alias == "navigationItem");
+            var navLink = item.Value<Umbraco.Web.Models.Link>("Link");
+            <div class="col">
+                <h2>@item.Name</h2>
+                <ul>
+                    @foreach (var more in itemList)
+                    {
+                        var linky = more.Value<Umbraco.Web.Models.Link>("Link");
+                        if(linky != null)
+                        {
+                            <li>
+                                <a href="@linky.Url">
+                                    @more.Name
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        }
+    }
+
+    <div class="btm">
+        <div class="ftr-items-right">
+            <div class="mob-left">
+                @{
+                    var whiteButton1 = settingsContent.Value<Umbraco.Web.Models.Link>("footerWhiteButton1");
+                    var whiteButton2 = settingsContent.Value<Umbraco.Web.Models.Link>("footerWhiteButton2");
+                    var whiteButton3 = settingsContent.Value<Umbraco.Web.Models.Link>("footerWhiteButton3");
+                    if (whiteButton1 != null)
+                    {
+                        <a href="@whiteButton1.Url" class="white-btn">@whiteButton1.Name</a>
+                    }
+                    if (whiteButton2 != null)
+                    {
+                        <a href="@whiteButton2.Url" class="white-btn">@whiteButton2.Name</a>
+                    }
+                    if (whiteButton3 != null)
+                    {
+                        <a href="@whiteButton3.Url" class="white-btn">@whiteButton3.Name</a>
+                    }
+
+                    var blueButton1 = settingsContent.Value<Umbraco.Web.Models.Link>("footerBlueButton1");
+                    if (blueButton1 != null)
+                    {
+                        <a href="@blueButton1.Url" class="blue-btn">@blueButton1.Name</a>
+                    }
+                }
+            </div>
+            <div class="mob-right">
+                <strong>Engage with QMU</strong>
+                <div class="social-box">
+                    @{ var socItems = settingsContent.Value<IEnumerable<IPublishedElement>>("footerSocialMedia");
+
+                        foreach (var item in socItems)
+                        {
+                            <a href="@item.Value("scUrl")" class="icon-item @item.Value("Title")" target="_blank" aria-label="social link @item.Value("Title")"></a> } }
+                </div>
+            </div>
+        </div>
+
+        <ul>
+            @{
+                var bottomNavigation = Umbraco.GetNavigationNode("Bottom Navigation");
+                if (bottomNavigation != null)
+                {
+                    foreach (var item in bottomNavigation.Children(x => x.ContentType.Alias == "navigationItem"))
+                    {
+                        var navLink = item.Value<Umbraco.Web.Models.Link>("Link");
+                        <li>
+                            @if (navLink != null)
+                            {
+                                <a href="@navLink.Url" target="@navLink.Target">
+                                    <span>@navLink.Name</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a>
+                                    <span>
+                                        @item.Name
+                                    </span>
+                                </a>
+                            }
+                        </li>
+                    }
+                }
+            }
+        </ul>
+
+        <div>
+            &copy; @settingsContent.Value("footerCopyrightYear") <strong>@settingsContent.Value("footerCopyrightName")</strong> <span>@settingsContent.Value("footerCopyrightAddress")</span> <span><strong>Tel</strong> @settingsContent.Value("footerCopyrightTelephone")</span>
+        </div>
+        <div>
+            @settingsContent.Value("footerTextLine2")
+        </div>
+    </div>
+
+}
+

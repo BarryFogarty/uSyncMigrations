@@ -1,0 +1,61 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ImageGrid>
+@using Umbraco.Web.PublishedModels
+@using QMUCloud.Core.Helpers
+
+<section class="qmu_cmp_imagegrid component-spacing" id="@Model.AnchorCode">
+    @if (!String.IsNullOrEmpty(Model.Title))
+    {
+        <h2 class="text-center">@Model.Title</h2>
+    }
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                @foreach (var link in Model.LeftColumnImages)
+                {
+                    var webpImage = Url.GetCropUrlWebp(link.Image, "Image grid small");
+                    var fallbackImage = link.Image.GetCropUrl("Image grid small");
+
+                    <div class="imagegrid__item">
+                        <a class="imagegrid__item__image" href="@link.Link.Url" target="@link.Link.Target">
+
+                            <img src="@webpImage" data-webp-fallback="@fallbackImage" alt="@link.Image.Value("altText")" loading="lazy">
+                            <span class="imagegrid__item__image__title">@link.Link.Name</span>
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-4">
+                @foreach (var link in Model.MiddleColumnImages)
+                {
+                    var webpImage = Url.GetCropUrlWebp(link.Image, "Image grid large");
+                    var fallbackImage = link.Image.GetCropUrl("Image grid large");
+
+                    <div class="imagegrid__item imagegrid__item--centre-column">
+                        <a class="imagegrid__item__image" href="@link.Link.Url" target="@link.Link.Target">
+                            <img src="@webpImage" data-webp-fallback="@fallbackImage" alt="@link.Image.Value("altText")" loading="lazy">
+                            <span class="imagegrid__item__image__title">@link.Link.Name</span>
+                        </a>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-4">
+                @foreach (var link in Model.RightColumnImages)
+                {
+
+                    var webpImage = Url.GetCropUrlWebp(link.Image, "Image grid small");
+                    var fallbackImage = link.Image.GetCropUrl("Image grid small");
+
+                    <div class="imagegrid__item">
+                        <a class="imagegrid__item__image" href="@link.Link.Url" target="@link.Link.Target">
+                            <img src="@webpImage" data-webp-fallback="@fallbackImage" alt="@link.Image.Value("altText")" loading="lazy">
+                            <span class="imagegrid__item__image__title">@link.Link.Name</span>
+                        </a>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</section>

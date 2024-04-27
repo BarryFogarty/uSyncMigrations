@@ -1,0 +1,328 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Course>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+
+    var stuff = this.Model;
+    IPublishedContent contact = this.Model;
+
+
+
+    //Only undergraduate courses should show 'study abroad' in the Course Overview
+    var showStudyAbroad = false;
+    if (Model is UndergraduateCourse)
+    {
+        showStudyAbroad = true;
+    }
+
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                <!-- Alert using why CMU in here -->
+                @if (Model.HasValue("Alert"))
+                {
+                    <div class="alert">@Html.Raw(Model.Alert)</div>
+                }
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @if (Model.IsDocumentType("undergraduateCourse"))
+                {
+                    var courseType = "Undergraduate";
+                    <div class="coloured-box"><span>@courseType</span></div>
+                }
+                else if (Model.IsDocumentType("postgraduateTaughtCourse"))
+                {
+                    <div class="coloured-box"><span>Postgraduate Taught</span></div>
+                }
+                else if (Model.IsDocumentType("postgraduateResearchCourse"))
+                {
+                    <div class="coloured-box"><span>Postgraduate Research</span></div>
+                }
+                else if (Model.IsDocumentType("cpdCourse"))
+                {
+                    <div class="coloured-box"><span>CPD</span></div>
+                }
+                else if (Model.IsDocumentType("microCredentialCourse"))
+                {
+                    <div class="coloured-box"><span>Short Course</span></div>
+                }
+                <h1>@Model.DisplayTitle</h1>
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+                <div class="accordion-list">
+                    @foreach (var item in Model.CentralBlocks)
+                    {
+                        if (!string.IsNullOrEmpty(item.Content.ToString()))
+                        {
+                            <div class="accordion-item">
+                                <h2 tabindex="0">@item.Title</h2>
+                                <div class="drop">@Html.Raw(item.Content)</div>
+                            </div>}
+                    }
+                </div>
+                @Model.BodyBottom
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+            </div>
+            <div class="right">
+
+                @if (!Model.HideApplicationBox)
+                {
+                    <div class="application-box">
+
+                        <h2>Start Your Application</h2>
+
+                        @if (Model.ApplicationText != null && !string.IsNullOrWhiteSpace(Model.ApplicationText.ToString()))
+                        {
+                            @Html.Raw(Model.ApplicationText)
+                        }
+
+                        @if (Model.ApplyNow != null)
+                        {
+                            <a href="@Model.ApplyNow.Url" target="@Model.ApplyNow.Target" class="white-btn" aria-label="Apply for this Course">Apply for this Course</a>
+                        }
+
+                        <div>
+                            @if (Model.AdmissionsFaq != null)
+                            {
+                                <a href="@Model.AdmissionsFaq.Url" target="@Model.AdmissionsFaq.Target" class="link" aria-label="Admissions FAQs">Admissions FAQs</a>
+                            }
+                            @if (Model.HowToApply != null)
+                            {
+                                <a href="@Model.HowToApply.Url" target="@Model.HowToApply.Target" class="link" aria-label="How to Apply for this course">How to Apply</a>
+                            }
+                        </div>
+
+                    </div>
+                }
+
+                @if (!Model.IsDocumentType("cpdCourse"))
+                {
+                    <div class="grey-aside">
+                        <h2>Course Overview</h2>
+                        <div class="white-inner">
+                            @if (!string.IsNullOrEmpty(@Model.Delivery))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-delivery"></span>Delivery</div><div class="right-col">@Model.Delivery</div></div>
+                            }
+                            @if (!string.IsNullOrEmpty(@Model.Duration))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-hourglass"></span>Duration</div><div class="right-col">@Model.Duration</div></div>
+                            }
+                            @if (!@Model.HasValue("StartDate") && !@Model.HasValue("StartDate2") && !@Model.HasValue("StartDate3"))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-calendar"></span>Start Date</div><div class="right-col">To be Confirmed</div></div>
+                            }
+                            @if (@Model.HasValue("StartDate"))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-calendar"></span>Start Date</div><div class="right-col">@Model.StartDate.ToString("MMMM yyyy")</div></div>
+                            }
+                            @if (@Model.HasValue("StartDate2"))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-calendar"></span>Start Date</div><div class="right-col">@Model.StartDate2.ToString("MMMM yyyy")</div></div>
+                            }
+                            @if (@Model.HasValue("StartDate3"))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-calendar"></span>Start Date</div><div class="right-col">@Model.StartDate3.ToString("MMMM yyyy")</div></div>
+                            }
+                            @if (!string.IsNullOrEmpty(@Model.Location))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-marker"></span>Location</div><div class="right-col">@Model.Location</div></div>
+                            }
+
+                            @if (showStudyAbroad == true)
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-globe"></span>Study Abroad</div>
+                                    <div class="right-col">
+                                         @(Model.StudyAbroad == true ? "Yes" : "No")
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(@Model.School))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-hat"></span>School</div><div class="right-col">@Model.School</div></div>
+                            }
+                            @if (@Model.Division != null)
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-hat"></span>Division</div><div class="right-col"><a href="@Model.Division.Url" aria-label="@Model.Division.Name division">@Model.Division.Name</a></div></div>
+                            }
+                            @if (@Model.Subject != null)
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-hat"></span>Subject Area</div><div class="right-col"><a href="@Model.Subject.Url">@Model.Subject.Name</a></div></div>
+                            }
+                            @if (@Model.Fees != null)
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-moneybag"></span>Fees & Funding</div><div class="right-col"><a href="@Model.Fees.Url">@Model.Fees.Name</a></div></div>
+                            }
+                            @if (!string.IsNullOrEmpty(@Model.UcasCode))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-search"></span>UCAS Code</div><div class="right-col">@Model.UcasCode</div></div>
+                            }
+                            @if (@Model.HasValue("scqfLevel"))
+                            {
+                                <div class="overview-row"><div class="left-col"><span class="icon-certificate"></span>SCQF Level</div><div class="right-col">@Model.Value("scqfLevel")</div></div>
+                            }
+                        </div>
+                        <!-- Accredited -->
+                    </div>
+                }
+                @Html.GetGridHtml(Model, "rcContent")
+
+                @{ var relCourses = Model.RelatedSimilarCourses;
+
+                    if (relCourses != null && relCourses.Count() > 0)
+                    {
+                        <div class="grey-aside blue">
+                            <h2>Courses You Might Also Like</h2>
+                            <div class="white-inner">
+                                <ul>
+                                    @foreach (var course in relCourses)
+                                    {
+                                        <li><a href="@course.Url()">@course.Name</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</main>
+
+@if (!string.IsNullOrEmpty(Model.UnistatsCourseId))
+{
+    <section class="grey" aria-label="unistats">
+        <div class="container">
+            <div class="ad-box">
+                <div class="desktop-block">
+                    <iframe class="kis-widgets-item-frame" src="https://discoveruni.gov.uk/widget/10005337/@Model.UnistatsCourseId/horizontal/small/en-GB" width="620" height="154" scrolling="no" title="unistats"></iframe>
+                </div>
+                <div class="mobile-block">
+                    <iframe src="https://discoveruni.gov.uk/widget/10005337/@Model.UnistatsCourseId/vertical/small/en-GB" width="190" height="500" frameborder="0" title="unistats mobile"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+@Html.CachedPartial("_relatedContent2", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<style>
+    .accordion {
+        background-color: #e7e7e7;
+        color: #6990b2;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 24px;
+        transition: 0.4s;
+        margin-bottom: 12px;
+    }
+
+        .accordion:after {
+            font-family: "FontAwesome";
+            content: '\f0d8';
+            color: #6990b2;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .accordion:hover {
+            background-color: #6990b2;
+            color: #fff;
+        }
+
+            .accordion:hover:after {
+                color: #fff;
+            }
+
+    .panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+    }
+
+    /* Style the tab content */
+    .tabcontenty {
+        display: none;
+        padding: 0px 12px;
+        border-top: none;
+    }
+
+        .tabcontenty p {
+            margin-top: 0px;
+        }
+
+    .tab {
+        padding: 10px;
+    }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            font-size: 16px;
+            background-color: #fff;
+        }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+                background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+                background-color: #fff;
+                color: #37495c;
+                position: relative;
+                -moz-transition: color, 0.2s;
+                -o-transition: color, 0.2s;
+                -webkit-transition: color, 0.2s;
+                transition: color, 0.2s;
+                font-weight: bold;
+                border-bottom: 3px solid rgba(128, 128, 128, 0.4);
+                font-size: 16px;
+            }
+</style>
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+
+    function openCourse(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontenty");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinksy");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>

@@ -1,0 +1,81 @@
+﻿@model SiftLibrary.Models.SearchResultNodes
+@using System.Text.RegularExpressions
+@{ 
+    // 1. Upcoming closing dates in order
+    // 2. Previous closing dates in month/day order (after today)
+    // 3. No date specified
+    var nodes = Model.Nodes.Select(n => (Scholarship)n);
+    var orderedNodes = nodes.OrderBy(n => n.ClosingDate >= DateTime.Today ? n.ClosingDate : 
+                                      (n.ClosingDate.Month > DateTime.Today.Month ? new DateTime(DateTime.Today.Year + 100, n.ClosingDate.Month, n.ClosingDate.Day) :
+                                      (n.ClosingDate > DateTime.MinValue ? new DateTime(DateTime.Today.Year + 101, n.ClosingDate.Month, n.ClosingDate.Day) :
+                                      DateTime.MaxValue)));
+}
+
+<div class="filter-grid row gx-5">
+
+    @foreach (var scholarship in orderedNodes)
+    {
+        <div class="filter-item scholarship-item col-sm-6 col-lg-4 mb-5">
+            <div class="d-flex h-100 accented-boxes">
+
+                <div class="box w-100">
+
+                    <a href="@scholarship.Url()">
+
+                        <div class="image">
+                            <div class="overlay-text-accent">
+                                @scholarship.DisplayTitle
+                            </div>
+                        </div>
+
+                        <div class="text">
+
+                            @{
+                                var dateFormat = "d MMMM yyyy";
+                                if (scholarship.ClosingDate < DateTime.Today)
+                                {
+                                    dateFormat = "MMMM";
+                                }
+                            }
+
+                            @if (scholarship.OpeningDate > DateTime.MinValue)
+                            {
+                                <p>Opening Date: <strong>@scholarship.OpeningDate.ToString(dateFormat)</strong></p>
+                            }
+
+                            @if (scholarship.ClosingDate >= DateTime.Today)
+                            {
+                                <p>Closing Date: <strong>@scholarship.ClosingDate.ToString(dateFormat)</strong></p>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(scholarship.ClosingText))
+                            {
+                                <p>Closing Date: <strong>@scholarship.ClosingText</strong></p>
+                            }
+                            else if (scholarship.ClosingDate > DateTime.MinValue)
+                            {
+                                <p>Closing Date: <strong>@scholarship.ClosingDate.ToString(dateFormat)</strong></p>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(scholarship.SummaryText))
+                            { 
+                                <p>@scholarship.SummaryText</p>
+                            }
+
+                        </div>
+
+                    </a>
+                </div>
+
+                @if (scholarship.NonQmufund)
+                {
+                    <div class="scholarship-item-flag">
+                        Non-QMU Fund
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+
+</div>
+

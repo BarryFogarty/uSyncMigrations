@@ -1,0 +1,683 @@
+.bcTitle{
+    color:#fab327;
+    font-weight:700 !important;
+    font-size:200px !important;
+    background:none !important;
+    box-shadow:none !important;
+    }
+    
+    .bcSub{
+        color:#c60f7d;
+        line-height:0.5;
+        font-weight:700;
+        font-size:65px;
+    }
+    
+    .bcSub::first-letter{
+        font-size:200px;
+    }
+
+    .bcHeaderLinks {
+        text-align: center;
+        padding: 5px;
+        height: auto;
+        font-size: 40px;
+        color: White;
+        background-color: #374a5c;
+    }
+    
+    .bcHeaderLinks > a {
+        color:white;
+        padding:10px;
+        font-weight:600;
+        font-size:40px;
+    }
+
+    .bcHeaderLinks > a:focus-visible {
+        color: #0b0c0c;
+    }
+
+    .bcHeaderLinks > a:hover {
+        color: white;
+        text-decoration: underline;
+    }
+
+    .main-content a.bcButton {
+        width: 175px;
+        font-weight: 600;
+        color: #374a5c;
+        border-radius: 5px;
+        background: buttonface;
+        display: inline-block;
+        border-bottom:none;
+    }
+    
+    .main-content a.bcButton:focus-visible {
+        background: #fd0;
+        color: #0b0c0c;
+    }
+    
+    .bcLines{
+    width: 19px;
+    height: 23px;
+    position: absolute;
+    top: 50%;
+    margin-top: -7px;
+    right: 0;
+    color:black;
+    }
+    
+    nav .quick-links ul li a{
+        color:#374a5c;
+        text-decoration: none;
+    }
+
+    nav .quick-links ul li a:hover {
+        text-decoration: underline;
+    }
+    
+    nav .menu-btn .lines span{
+    border-bottom: 3px solid #374a5c;
+    }
+
+    nav .study-here-menu-btn {
+        width: 75px;
+        background: white;
+    }
+
+    nav .study-here-menu-btn:focus-visible {
+        background: #fd0;
+	    border: 1px solid #5376A1;
+    }
+
+    nav .study-here-logo:focus-visible {
+	    border: 1px solid #5376A1;
+    }
+
+    @media (max-width: 1250px) {
+    nav .study-here-menu-btn {
+            width: 50px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        nav .study-here-menu-btn {
+            width: 30px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        nav .study-here-menu-btn {
+            width: 26px;
+        }
+    }
+
+    nav .study-here-menu-btn div {
+        width: 45px;
+        left: 30px;
+    }
+    @media (max-width: 1250px) {
+        nav .study-here-menu-btn div {
+            width: 32px;
+            left: 18px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        nav .menu-btn.study-here-menu-btn div {
+            width: 19px;
+            left: 11px;
+            text-indent: 0px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        nav .study-here-menu-btn div {
+            width: 17px;
+            left: 9px;
+        }
+    }
+
+    nav .study-here-home-btn {
+        width: 75px;
+        height: 100%;
+        left: 75px;
+        top: 0;
+        position: absolute;
+    }
+
+    @media (max-width: 1250px) {
+        nav .study-here-home-btn {
+            width: 50px;
+            left: 50px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        nav .study-here-home-btn {
+            display: none;
+        }
+    }
+
+    nav .study-here-home-btn a {
+        position: absolute;
+        left: 0;
+        top: 30%;
+    }
+
+    nav .study-here-home-btn a:focus-visible {
+	    border: 1px solid #5376A1;
+    }
+
+    @media (max-width: 900px) {
+        nav .study-here-home-btn a {
+            top: 25%;
+        }
+    }
+
+    .left-text{
+        color:#374a5c;
+    }
+    
+    .left-band{
+        color:#374a5c;
+    }
+    
+    .right-band{
+        color:#374a5c;
+    }
+    
+    .h1{
+        color:#374a5c;
+        font-weight:600;
+        font-size:75px;
+    }
+
+    h1.full-width-h1 {
+        text-align: center;
+        font-weight: 600;
+        font-size: 70px;
+    }
+
+    .article-list article .image span{
+        color:white;
+        background-color:#374a5c;
+        box-shadow: 10px 0 0 #374a5c, -20px 0 0 #374a5c;
+    }
+    
+    .storyBtn{
+        width:100%;
+        color:#374a5c;
+        font-weight:600;
+        margin-bottom:20px;
+    }
+    
+    .main-content > p > a{
+        border-bottom:none;
+    }
+    
+    .moreSs{
+        float:right;
+        color:#374a5c;
+        font-size:32px;
+    }
+    
+   @media only screen and (max-width: 600px) {
+     #vid1
+     {
+    height:250px !important;
+     }
+     #studentstory{
+    height:290px !important;
+    }
+    
+    .storyBtn{
+    
+    }
+
+    #journey{
+    height:740px !important;
+    }
+
+    h1 {
+        font-size: 50px !important;
+    }
+
+    h3{
+    font-size: 50px !important;
+    }
+    
+    .bcButton{
+    margin:2px;
+    }
+    
+    #difference{
+    font-size: 25px !important;
+    }
+    
+    #tourVid{
+    height:250px !important;}
+    
+    #midImg{
+    height:250px !important;
+    }
+    
+    article{
+    height:100% !important;
+    width:100% !important;
+    }
+    
+    #bannerImg{
+    height:120px !important;
+    }
+     
+    .article-list article .image img{
+     aspect-ratio:auto !important;   
+    }
+     
+    }
+
+.stories.article-list article a.image:focus-visible {
+    border-style: solid;
+    border-width: 4px;
+    border-color: #fd0;
+}
+
+.bottom-margin {
+    margin-bottom: 20px;
+}
+
+.container.full-width.full-width-95 {
+    max-width: 95%;
+}
+
+.container.full-width.full-width-100 {
+    max-width: 100%;
+}
+
+.container.full-width a.blue-btn {
+    color:white;
+    border-radius:5px; 
+    border-bottom: none;
+    text-decoration: none;
+}
+
+.container.full-width a.blue-btn:focus-visible {
+    color: #37495c;
+}
+
+.spacer {
+    background-color: #374a5c;
+    height: 5px;
+}
+
+.main-content {
+    color: #374a5c;
+}
+
+.main-content a {
+    text-decoration: none;
+}
+
+.band-title {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.band-title h2 {
+    font-weight: 600;
+    font-size: 70px;
+}
+
+.full-width-links-container {
+    background-color: #374a5c;
+}
+
+.full-width-links-buttons {
+    width: 50%;
+    margin-left: auto!important;
+    margin-right: auto!important;
+}
+
+@media (max-width: 1540px) {
+
+    .full-width-links-buttons {
+        width: 60%;
+    }
+}
+
+@media (max-width: 1275px) {
+
+    .full-width-links-buttons {
+        width: 75%;
+    }
+}
+
+@media (max-width: 991px) {
+
+    .full-width-links-buttons {
+        width: 50%;
+    }
+}
+
+@media (max-width: 575px) {
+
+    .full-width-links-buttons {
+        width: 100%;
+    }
+}
+
+.container.full-width .full-width-links {
+    color: White;
+    text-align: center;
+    padding: 30px;
+}
+
+.container.full-width .full-width-links h2 {
+    color: white;
+    font-weight: 600;
+    font-size: 75px;
+    padding-bottom: 5px;
+}
+
+.container.full-width .image-background {
+    text-align: center;
+    background-color: #374a5c;
+    opacity: 0.73;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 1px;
+}
+
+.container.full-width .image-background h2 {
+    font-weight: 600;
+    color: white;
+    font-size: 75px;
+}
+
+.background-container {
+    background-size: cover;
+    background-position: center;
+}
+
+.background-container.bottom-margin {
+    margin-bottom: 20px;
+}
+
+.background-container .image-background-text {
+    background-color: white;
+    opacity: 0.73;
+    font-weight: 600;
+    padding: 20px;
+}
+
+.overlapping-text {
+    height: 120px;
+}
+
+.overlapping-text .dark-border {
+    background-color: #374a5c;
+    height: 90px;
+}
+
+.overlapping-text h2 {
+    font-weight: 600;
+    font-size: 75px;
+    padding-top: 15px;
+}
+
+.overlapping-text p {
+    margin-bottom: 0;
+    font-weight: 600;
+    padding-bottom: 15px;
+}
+
+.overlapping-text .inner-box {
+    text-align: center;
+    background-color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    top: -80px;
+    z-index: 10;
+}
+
+.image-background-container {
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    position: relative;
+}
+
+.image-background-container p.cut-in-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 0;
+    font-weight: 600;
+    text-align: center;
+    background: white;
+    width: 50%;
+    font-size: 32px;
+    padding: 10px;
+}
+
+.container.image-grid .image-link {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 5%;
+}
+
+.container.image-grid .image-link.centre-link {
+    margin-bottom: 10%;
+}
+
+.container.image-grid .image-link .image {
+    position: relative;
+    display: block;
+    overflow: hidden;
+}
+
+.container.image-grid .image-link .image:focus-visible {
+    outline: 4px solid #5376A1;
+}
+
+.container.image-grid .image-link .image img {
+    aspect-ratio: 1.6860;
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    -moz-transition: transform 0.3s ease-in-out;
+    -o-transition: transform 0.3s ease-in-out;
+    -webkit-transition: -webkit-transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    -moz-transition: opacity, 0.25s;
+    -o-transition: opacity, 0.25s;
+    -webkit-transition: opacity, 0.25s;
+    transition: opacity, 0.25s;
+}
+
+.container.image-grid .image-link .image:hover img {
+    -moz-transform: scale(1.08);
+    -ms-transform: scale(1.08);
+    -o-transform: scale(1.08);
+    -webkit-transform: scale(1.08);
+    transform: scale(1.08);
+    opacity: 0.3;
+}
+
+.container.image-grid .image-link.centre-link .image img {
+    aspect-ratio: 1.2462;
+}
+
+.container.image-grid .image-link .image .text {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    text-align: center;
+}
+
+.container.image-grid .image-link .image span {
+    color: white;
+    background-color: #374a5c;
+    font-weight: 600;
+    font-size: 24px;
+    box-shadow: 10px 0px #374a5c, -10px 0px #374a5c;
+    box-decoration-break: clone;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    -webkit-box-decoration-break : clone;
+}
+
+.container.image-grid .image-link a.image:focus-visible span {
+    background: #fd0;
+    color: #0b0c0c;
+}
+
+.dark-background {
+    background-color: #374a5c;
+}
+
+.container .story {
+    padding-top: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-bottom: 20px;
+}
+
+.container .story .image {
+    display: block;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.container .story a .story-button {
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 24px;
+    width: 100%;
+    color: #374a5c;
+    font-weight: 600;
+    background-color: ButtonFace;
+}
+
+.container .story a:focus-visible .story-button {
+    background-color: #fd0;
+    color: #0b0c0c;
+}
+
+.container .story a:hover {
+    text-decoration: underline;
+}
+
+.container .story a.image:focus-visible {
+    border-style: solid;
+    border-width: 4px;
+    border-color: #fd0;
+}
+
+.container .story .image img {
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    -moz-transition: transform 0.3s ease-in-out;
+    -o-transition: transform 0.3s ease-in-out;
+    -webkit-transition: -webkit-transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    -moz-transition: opacity, 0.25s;
+    -o-transition: opacity, 0.25s;
+    -webkit-transition: opacity, 0.25s;
+    transition: opacity, 0.25s;
+}
+
+.container .story .image:hover img {
+    -moz-transform: scale(1.08);
+    -ms-transform: scale(1.08);
+    -o-transform: scale(1.08);
+    -webkit-transform: scale(1.08);
+    transform: scale(1.08);
+    opacity: 0.3;
+}
+
+.container .centre-button {
+    font-size: 42px;
+    border-radius: 5px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.container .centre-button:after {
+    top: 10%;
+    margin-top:0;
+}
+
+.container .white-text-box {
+    background-color: white;
+    font-weight: 600;
+    padding: 0 10px 10px 10px;
+}
+
+.container .white-text-box h2 {
+    font-size: 75px;
+}
+
+.container.white-text-box-container {
+    position: absolute;
+    left: 3%;
+    bottom: 15%;
+    width: 50%;
+}
+
+@media (max-width: 992px) {
+    .container.white-text-box-container {
+        width: 90%;
+        position: relative;
+        left: unset;
+        bottom: unset;
+        top: 10%;
+    }
+}
+
+.centred-text .inner-box {
+    text-align: center;
+    background-color: white;
+}
+
+.centred-text h2 {
+    font-weight: 600;
+    font-size: 75px;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+.centred-text p {
+    font-weight: 600;
+    font-size: 32px;
+    padding-bottom: 1.5em;
+}
+
+.centred-text div.divider {
+    border-bottom-style: solid;
+    border-bottom-color: #374a5c;
+    border-bottom-width: 1px;
+    margin-bottom: 1em;
+    width: 6%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.three-column-links .column-links {
+    text-align: center;
+    background-color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.three-column-links .column-links h3 {
+    font-size: 75px;
+    font-weight: 600;
+}
+

@@ -1,0 +1,34 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Division>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+                @Html.CachedPartial("linkBlocks", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Model.BodyBottom
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+                @Html.GetGridHtml(Model, "rcContent")
+            </div>
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedStaff", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

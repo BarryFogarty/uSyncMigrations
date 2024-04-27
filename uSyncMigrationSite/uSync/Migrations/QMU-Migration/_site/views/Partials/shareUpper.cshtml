@@ -1,0 +1,21 @@
+﻿@{
+    bool showPrint = false;
+    var showPrintViewData = ViewData["showPrint"];
+    if (showPrintViewData != null)
+    {
+        showPrint = (bool)showPrintViewData;
+    }
+}
+<div class="share-page">
+    <div class="share-wrap">
+        <div class="share-btn" tabindex="0">Share</div>
+        <div class="share-menu">
+            <div class="inner">
+                <strong>Share this Page...</strong>
+                <div class="addthis_toolbox addthis_default_style">
+                   @Html.Partial("shareButtons", new ViewDataDictionary { { "showPrint", showPrint } })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits UmbracoViewPage<ContentModels.UsefulLinks>
+@using ContentModels = Umbraco.Web.PublishedModels;
+
+@{
+    var links = Model.Usefuls;
+    bool darkTheme = Model.Value<bool>("useDarkTheme");
+    string themeClass = "alt";
+    string title = Model.Value<string>("Title");
+
+
+    if (darkTheme == true)
+    {
+        themeClass = "blue";
+    }
+
+    if (links != null)
+    {
+    <div class="grey-aside @themeClass">
+        @if (!string.IsNullOrWhiteSpace(title))
+        {
+            <h2>@title</h2>
+        }
+        else
+        {
+            <h2>Useful Links</h2>
+        }
+        <div class="white-inner">
+            <ul>
+                @{
+                    foreach (var link in links)
+                    {
+                        <li>
+                            <a href="@link.Url" title="@link.Name" target="@link.Target">@link.Name</a>
+                        </li>
+                    }
+                  }
+            </ul>
+        </div>
+    </div>
+    }
+    }

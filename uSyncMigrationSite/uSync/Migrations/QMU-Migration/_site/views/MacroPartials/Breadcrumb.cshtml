@@ -1,0 +1,45 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+
+@*
+    This snippet makes a breadcrumb of parents using an unordered html list.
+
+    How it works:
+    - It uses the Ancestors() method to get all parents and then generates links so the visitor can go back
+    - Finally it outputs the name of the current page (without a link)
+*@
+
+@{ 
+	var selection = CurrentPage.Ancestors();
+}
+
+@if (selection.Any())
+{
+    <ul class="breadcrumbs">
+        @* For each page in the ancestors collection which have been ordered by Level (so we start with the highest top node first) *@
+        @foreach (var item in selection.OrderBy("Level"))
+		{
+			string title = item.Name;
+
+			if (item.HasValue("shortTitle"))
+			{
+				title = item.ShortTitle;
+			}
+
+			if (item.TemplateId != null && item.TemplateId > 0)
+			{
+				<li><a href="@item.Url">@title</a></li>
+			}
+		}
+
+        @* Display the current page as the last item in the list *@
+		@{ 
+			string currentPageName = CurrentPage.Name;
+
+			if (CurrentPage.HasValue("shortTitle"))
+			{
+				currentPageName = CurrentPage.ShortTitle;
+			}
+		}
+        <li class="active"><strong><a>@currentPageName</a></strong></li>
+    </ul>
+}

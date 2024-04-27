@@ -1,0 +1,446 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BandedArticle>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+
+@{
+    Layout = "Master.cshtml";
+
+    <link rel="stylesheet" type="text/css" href="/css/banded-article.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+}
+
+<div class="qmu_pg_banded">
+    <header role="banner" class="banner">
+        <div class="item">
+            <span style="background-image: url(/media/8d884e61d7fccee/current-students-b.jpg)" class="bg-cover-img" role="img" aria-label="A Queen Margaret University student raising their hand with a question for the lecturer"> </span>
+            <div class="text-overlay">
+                <div class="container">
+                    <h1 class="bannerTitle">Why QMU?</h1>
+
+                    <div class="banner-intro">
+                        <p>There are lots of reasons to study at Queen Margaret University – from our friendly and supportive staff, to our purpose-built campus <a data-id="1237" href="/campus-life/qmu-sports-centre/" title="QMU Sports Centre">with sports facilities</a>; and from our <a data-id="3065" href="/study-here/learning-facilities/library/" title="Library">Learning Resource Centre</a> which hosts a range of <a data-id="1257" href="/study-here/learning-facilities/" title="Learning Facilities">excellent learning facilities</a> to the career-enhancing <a data-id="1638" href="/campus-life/careers-and-employability/jobs-work-experience-and-volunteering/" title="Jobs, Work Experience and Volunteering">extracurricular opportunities</a> that we offer. And our courses are designed to ensure that our graduates have the skills and knowledge that employers value, reflected in our strong graduate employment statistics.</p>
+                        <a data-id="1538" href="/footer/contact-us/" title="Contact Us">
+                            <span class="blue-btn">
+                                <span class="lead-big">Contact us</span> &nbsp;
+                            </span>
+                        </a>
+                            &nbsp; &nbsp; &nbsp; &nbsp;
+                            <a href="/study-here/course-a-z/" title="Course A-Z" data-udi="umb://document/487e2bea1e1c42cfb06db3f42aa96544">
+                                <span class="lead-big blue-btn">Find your perfect course</span>
+                            </a>
+                        </p>
+                        <p>
+                            <a href="/open-days-and-meeting-us/" title="Attend a QMU Open Day">
+                                <span class="lead-big blue-btn">Attend a QMU Open Day</span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <main role="main" class="main-content">
+        <div class="qmu_pg_banded__bands banded-container">
+            <div class="column-layout">
+                <div class="banded-left" id="left" tabindex="-1">
+
+                    <div class="umb-grid">
+                        <div class="grid-section">
+                            <div class="left-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d87a66f0a4e7ca/courses-and-placements-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A young woman holding two canvas bags in front of a wall of books">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text">
+
+
+
+                                                <h2>Reason #1: Great Courses and Placements</h2>
+
+
+                                                <p>Queen Margaret University delivers relevant degrees to prepare you for a successful and rewarding career. Offering the perfect blend of both theory and practice, many of our courses include practical work placements and/or are accredited by professional bodies.</p>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text" style="color:White;">
+
+
+
+                                                <h2>Reason #2: Successful Careers</h2>
+
+
+
+
+
+
+                                                <p>At 2%, QMU (along with two other universities) has the lowest level of unemployment in Scotland for its graduates 15 months after they have graduated. The average figure for Scotland is 5%. And we are in top 6 of Scottish universities for the number of graduates in full-time employment 15 months after they have graduated. (Source: Graduate Outcome Statistics 2020/1 published by HESA in 2023).</p>
+
+
+
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d87a66ee65fdc3/successful-careers-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University student blowing into an air mask on a dummy">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="left-band" style="background-color: #5376A1;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7e251362/learning-facilities-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="Two Queen Margaret University students standing in a busy library, deep in conversation">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text" style="color:White;">
+
+
+
+                                                <h2>Reason #3: First Class Learning Facilities</h2>
+
+
+
+
+
+
+                                                <p>Located in beautiful landscaped grounds just 6 minutes’ away from the centre of Edinburgh, our modern campus has everything you need for a fulfilling and fun student experience. Our purpose-built facilities boast innovative spaces for teaching and learning, while our on-campus student accommodation offers a secure and comfortable living space just a moment’s walk away from your classes. And don’t forget the students’ union and state-of-the-art sports facilities, all within easy reach in one vibrant academic village.</p>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text">
+
+
+
+                                                <h2>Reason #4: A Well-Ranking Institution</h2>
+
+
+
+
+
+
+                                                <p>In the Daily Mail University Guide (published 2023) we are ranked as the 8th top small university in the UK. In the Times and Sunday Times Good University Guide 2024, we are in the top 40 in the UK for satisfaction with teaching quality, and in the top 50 for the wider undergraduate experience. We are one of the top five highest climbers year on year in the Guardian University Guide 2024, and we are ranked in the top 57% of universities in the world in the QS World Rankings 2024. </p>
+
+
+
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7faf39ec/top-ranking-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="left-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7dbf0d60/learn-from-experts-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University student sitting at a laptop and talking confidently to a small group of people">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text" style="color:White;">
+
+
+
+                                                <h2>Reason #5: Learn from the Experts</h2>
+
+
+
+
+
+
+                                                <p>Our staff are renowned in their field and are actively involved in research activities, ensuring that our courses are up to date and relevant. Queen Margaret University is home to strategic research that informs policy and practice which impacts everyday life.</p>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-band" style="background-color: #5376A1;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text" style="color:White;">
+
+                                                <h2>Reason #6: Friendly Campus Community</h2>
+
+                                                <p>Thanks to our size, you will never get lost in the crowd at QMU. There is a strong sense of community at our campus, and you will quickly get to know our staff and your fellow students. Plus, our broad range of societies and clubs mean you will have plenty of opportunities to make lifelong friends. As the Times and Sunday Times Good University Guide 2024 puts it: “Community spirit and on-campus socialising a stone’s throw from Edinburgh’s hard-to-beat culture and nightlife is a persuasive combination for QMU students.” </p>
+
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed797cdc47/community-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A group of Queen Margaret University students sitting on a couch in on-site accommodation">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="left-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7ca7157e/ideal-location-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A young woman cycling through a field of yellow flowers on Queen Margaret University campus">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text">
+
+
+
+                                                <h2>Reason #7: Ideal Location</h2>
+
+
+
+
+
+
+                                                <p>Our green campus is perfectly situated with both a breathtaking coastline and the centre of Scotland’s capital within easy reach. Fewer than six minutes by train from Edinburgh city centre, we are within walking distance of Musselburgh town centre and have easy access to East Lothian's beautiful coast and countryside. Want to explore further? Rent out one of our affordable bikes, available right on campus.</p>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text" style="color:White;">
+
+
+
+                                                <h2>Reason #8: Innovative Teaching Methods</h2>
+
+
+
+
+
+
+                                                <p>As a student at Queen Margaret University, you will benefit from a range of teaching methods to make the most of your chosen course, including work-based learning and an online virtual learning environment.</p>
+
+
+
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7d18bfba/innovative-methods-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University student looking intently at a computer monitor in the university atrium">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="left-band" style="background-color: #5376A1;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7eb32239/socially-responsible-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="Two Queen Margaret University students sitting on a bench and chatting under some leafy green trees">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text" style="color:White;">
+
+
+
+                                                <h2>Reason #9: Socially Responsible University</h2>
+
+
+
+
+
+
+                                                <p>We are renowned for relevant research and knowledge exchange work which makes a positive impact on society, and focus on courses which will produce graduates ready to make a difference in the world. Plus, our new campus is regarded as one of Scotland’s most sustainable, earning a BREEAM (Building Research Establishment's Environmental Assessment Method) rating of “excellent” (the highest score of any university in the UK).</p>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text">
+
+
+
+                                                <h2>Reason #10: Extracurricular Opportunities</h2>
+
+
+
+
+
+
+                                                <p>We offer an impressive range of career-enhancing extracurricular opportunities including awards, scholarships, internships and overseas travel. You will also find a Business Gateway and Business Innovation Zone on campus to meet the needs of entrepreneurial students and graduates.</p>
+
+
+
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7bb42353/extracurricular-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A woman and a man looking at some paper in Queen Margaret University's Business Gateway">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="left-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d88bed7c229a59/feel-supported-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University wellbeing advisor talking to a student">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text" style="color:White;">
+
+
+
+                                                <h2>Reason #11: Feel Supported</h2>
+
+
+
+
+
+
+                                                <p>As part of our comprehensive range of student support services, every student is assigned a Personal Academic Tutor (PAT) who will help guide you through your studies. Your PAT will normally be your main source of advice and guidance relating to your academic studies and can also refer you to other support services if needed.</p>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="right-band" style="background-color:#fff;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+
+                                              <div class="right-text">
+
+
+
+                                                <h2>Reason #12: Looking for more reasons to study at QMU?</h2>
+                                                <p> Check out our <a href="https://www.qmu.ac.uk/study-here/student-stories/" title="student and graduate testimonials">student and graduate testimonials</a></p>
+
+
+
+                                            </div>
+                                        </div>            
+                                        <div class="col-md-4 column">
+                                            <div>
+
+
+                                                <img src="/media/8d884e638fff29e/lrcchat-banner.jpg?width=300&height=200&center=0.5,0.5&mode=crop" alt="Group of students smiling and talking together, QMU campus, Edinburgh">
+                                                <p class="caption"></p>
+
+
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

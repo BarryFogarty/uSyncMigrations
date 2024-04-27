@@ -1,0 +1,248 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = null;
+}
+
+@* the fun starts here *@
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BandedArticle>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+
+@{
+    Layout = "Master.cshtml";
+
+    <link rel="stylesheet" type="text/css" href="/css/banded-article.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+}
+
+<div class="qmu_pg_banded">
+    <header role="banner" class="banner">
+        <div class="item">
+            <span style="background-image: url(/media/8d88fe9d0f33d25/banner-ref2021.jpg)" class="bg-cover-img" role="img" aria-label="REF2021 logo - Research Excellence Framework"> </span>
+            <div class="text-overlay">
+                <div class="container">
+                    <h1 class="bannerTitle">QMU REF 2021 Submission Facts</h1>
+
+                    <div class="banner-intro">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main role="main" class="main-content">
+        <div class="qmu_pg_banded__bands banded-container">
+            <div class="column-layout">
+                <div class="banded-left" id="left" tabindex="-1">
+                    <div class="umb-grid">
+                        <div class="grid-section">
+                            <!-- first band here -->
+                            <div class="left-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12 column">
+                                            <p><h1><strong>The Research Excellence Framework (REF) 2021 is a process of expert peer review for assessing the quality of research in UK higher education institutions.</h1></strong></p>
+                                            <p><h2>The results of REF 2021 were published in May 2022. QMU is recognised as a world-leading and internationally excellent research university.</h2></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- second band here -->
+                                <div class="right-band" style="background-color:#374a5c;">
+                                    <div class="container">
+                                        <div class="row clearfix">
+                                            <div class="col-md-12 column">
+                                                <div class="right-text" style="color:White;">
+                                                    <h1>Here are some key statistics relating to our submission to Units of Assessment (UoA) in REF 2021:</h1>
+                                                </div>
+                                            </div>
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- third band here-->
+                                <div class="left-band" style="background-color: #5376A1;">
+                                    <div class="container">
+                                        <div class="row clearfix">
+                                            <div class="col-md-12 column">
+                                            </div>
+                                        </div>            <div class="col-md-12 column">
+                                            <div class="left-text" style="color:White;">
+                                                <h1>Research Income and Outputs</h1>
+                                                <ul>
+                                                    <li><strong>£14,011,894</strong> total research income reported in the REF 2021 census period – an increase of <strong>87% </strong>since REF 2014.</li>
+                                                    <li><strong>194</strong> research outputs selected from a pool of <strong>1300 </strong>outputs.</li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <img src="/media/m0ede43c/ref-2021-web-banner-1.jpg" alt="Two Queen Margaret University students standing in a busy library, deep in conversation">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- fourth band -->
+                            <div class="right-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12 column">
+                                            <div class="right-text">
+                                                <h1>Staff and Submission Governance</h1>
+                                                <ul>
+                                                    <li><strong>88</strong> full-time equivalent staff submitted.</li>
+                                                    <li><strong>Submission governed</strong> by an Equality, Diversity and Inclusion Code of Practice.</li>
+                                                    <li><strong>Female staff</strong> comprised <strong>67% </strong>of REF 2021 submission.</li>
+                                                </ul>
+                                            </div>
+                                        </div>            <div class="col-md-12 column">
+                                            <div>
+                                                <img src="/media/mmzd00nk/ref-2021-web-banner-2.jpg" alt="An outside view of Queen Margaret University, Edinburgh">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- fifth band -->
+                            <div class="left-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12 column">
+                                        </div>            <div class="col-md-12 column">
+                                            <div class="left-text" style="color:White;">
+
+                                                <h1>Units of Assessment (UoA) and Environment Statements</h1>
+                                                <ul>
+                                                    <li><strong>7</strong> interdisciplinary UoA submitted across 3 main disciplinary panels.</li>
+                                                    <li><strong>7</strong> UoA Research Environment Statements submitted.</li>
+                                                    <li><strong>1</strong> Institutional Level Research Environment Statement submitted.</li>
+                                                </ul>
+                                                <div>
+                                                    <img src="/media/1ecn2br4/ref-2021-web-banner-3.jpg" alt="A Queen Margaret University student sitting at a laptop and talking confidently to a small group of people">
+                                                    <p class="caption"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- sixth band -->
+                            <div class="right-band" style="background-color: #5376A1;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12 column">
+                                            <div class="right-text" style="color:White;">
+                                                <h1>Impact, Policy and Research Degrees</h1>
+                                                <ul>
+                                                    <li><strong>14</strong> Impact Case Studies submitted underpinned by <strong>140</strong> items of corroborating evidence.</li>
+                                                    <li>QMU research was cited in <strong>62</strong> UK, <strong>9</strong> European and <strong>17</strong> international policy documents in the REF 2021 census period.</li>
+                                                    <li><strong>126</strong> research degrees awarded in the REF 2021 census period.</li>
+                                                </ul>
+                                            </div>
+                                        </div>            <div class="col-md-12 column">
+                                            <div>
+                                                <img src="/media/dgef3fij/ref-2021-web-banner-4.jpg" alt="A group of Queen Margaret University students sitting on a couch in on-site accommodation">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- seventh band -->
+                            <div class="left-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12 column">
+                                        </div>            <div class="col-md-12 column">
+                                            <div class="left-text">
+                                                <h1>Reach, Significance and Excellence</h1>
+                                                <ul>
+                                                    <li>The reach and significance of our research has had an impact across <strong>6</strong> continents.</li>
+                                                    <li>Excellence in our research impact shapes and influences <strong>culture, global challenges, business, public and international policy, health and the environment</strong>.</li>
+                                                </ul>
+                                            </div>
+                                            <div>
+                                                <img src="/media/jzdbtv4i/ref-2021-web-banner-5.jpg" alt="A young woman cycling through a field of yellow flowers on Queen Margaret University campus">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- eigth band -->
+                            <div class="right-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-12 column">
+                                            <div class="right-text" style="color:White;">
+                                                <h1>International Collaboration</h1>
+                                                <p> Our impact has included international collaboration with the Red Cross, World Health Organisations, European Commission, European Parliament, multiple NGOs, NATO, World Bank and Brazilian Government and Federal Police.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ninth band -->
+                        <div class="left-band" style="background-color: #5376A1;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column">
+                                        <div class="left-text" style="color:White;">
+                                            <h1>Research Impact - in the UK</h1>
+                                            <p>In the UK our research has had an impact on the work of <strong>Creative Scotland</strong> | <strong>Arts Council of Wales</strong> |  <strong>BACS Payments UK</strong> | <strong>Scottish Legal Complains Complaints Commission</strong> | <strong>UK and Scottish Government</strong> |  <strong>House of Commons</strong> |  <strong>Public Health Scotland</strong> | <strong>Scottish Refugee Council</strong> | <strong>Irish Health Service</strong> | <strong>Food Standards Agency</strong> |  Scottish Trade Union Congress | Health Improvement Scotland | Department for International Development | Legal Ombudsman | Department of Work and Pensions |  Scottish Public Sector Ombudsman |  Family Business United and the Home Office.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- tenth band -->
+                        @*<div class="right-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text">
+                                                <h1>COURSE TITLE</h1>
+                                                <p>COURSE COPY</p>
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+                                                <img src="/media/8d88bed7bb42353/extracurricular-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A woman and a man looking at some paper in Queen Margaret University's Business Gateway">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <!-- eleventh band -->
+                        @*<div class="left-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+                                                <img src="/media/8d88bed7c229a59/feel-supported-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University wellbeing advisor talking to a student">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text" style="color:White;">
+                                                <h1>COURSE TITLE</h1>
+                                                <p>COURSE COPY</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <!-- end eleventh band -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>

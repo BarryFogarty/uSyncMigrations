@@ -1,0 +1,164 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.GeneralLandingPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using QMUCloud.Core.Models.ViewModels;
+@{
+    Layout = "Master.cshtml";
+}
+
+@* THIS IS A LIBRARY LANDING PAGE *@
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div id="overlay">
+        <!-- overlay code in here -->
+    </div>
+    <div class="container">
+        <div class="column-layout">
+            <div class="left">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                @Model.Introduction
+
+                <!-- Library Search -->
+
+
+                <div>
+                    <script type="text/javascript">
+                        //<![CDATA[
+                        function limittoFullText(myForm) {
+                            if (myForm.fulltext_checkbox.checked) myForm.clv0.value = "Y";
+                            else myForm.clv0.value = "N";
+                        }
+                        function limittoScholarly(myForm) {
+                            if (myForm.scholarly_checkbox.checked) myForm.clv1.value = "Y";
+                            else myForm.clv1.value = "N";
+                        }
+                        function limittoCatalog(myForm) {
+                            if (myForm.catalog_only_checkbox.checked) myForm.clv2.value = "Y";
+                            else myForm.clv2.value = "N";
+                        } function ebscoPreProcess(myForm) {
+                            myForm.bquery.value = myForm.search_prefix.value + myForm.uquery.value;
+                        }
+
+                        //]]>
+                    </script>
+                    <!-- BEGIN: General Custom Search Box =============================== -->
+                    <!-- Inputs for EDS URL structure -->
+
+                    <form action="https://search.ebscohost.com/login.aspx" method="get" target="_blank" onsubmit="ebscoPreProcess(this)">
+                        <!-- Dropdown menu to prepend the selected value below to the user's search term -->
+                        <input name="direct" value="true" type="hidden">
+                        <input name="scope" value="site" type="hidden">
+                        <input name="site" value="eds-live" type="hidden">
+                        <!-- Authentication and Profile Values -->
+
+                        <div class="library-scope">
+                            <select onchange="#" size="1" name="search_prefix" aria-label="search scope">
+                                <option selected="selected" value="">Keyword</option>
+                                <option value="TI ">Title</option>
+                                <option value="AU ">Author</option>
+                            </select>
+                        </div>
+
+
+                        <input name="authtype" value="ip,shib" type="hidden">
+                        <input name="custid" value="s1234290" type="hidden">
+                        <input name="groupid" value="main" type="hidden">
+                        <input name="profile" value="eds" type="hidden">
+                        <input name="type" value="0" type="hidden">
+                        <!-- Limiter: Full Text -->
+                        <input name="cli0" value="FT" type="hidden">
+                        <input name="clv0" value="N" type="hidden">
+                        <!-- Limiter: Scholarly/Peer-Reviewed -->
+                        <input name="cli1" value="RV" type="hidden">
+                        <input name="clv1" value="N" type="hidden">
+                        <!-- Limiter: Catalog Only -->
+                        <input name="cli2" value="FC" type="hidden">
+                        <input name="clv2" value="N" type="hidden">
+                        <!-- search box and submit button -->
+
+
+
+                        <div class="library-search">
+                            <input name="bquery" value="" type="hidden">
+                            <input name="uquery" size="35" type="text" placeholder="Search library resources..." aria-label="search text">
+                            <input type="submit" aria-label="search">
+                        </div>
+
+                        <!-- Limiter: Full text check box set the above value to Y -->
+
+                        <div class="library-filter">
+
+                            <div class="library-filter-item">
+                                <input name="catalog_only_checkbox" id="catalog_only_checkbox" onclick="limittoCatalog(this.form)" type="checkbox">
+                                <label for="catalog_only_checkbox" tabindex="0"><span></span>Search QMU library only</label>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </form>
+                </div>
+
+
+
+                <!--    LS END -->
+                @Model.BodyTop
+                @Html.CachedPartial("FocusPanels", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Model.BodyBottom
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+                @Html.GetGridHtml(Model, "rcContent")
+            </div>
+        </div>
+
+    </div>
+    @* Pulls through lower banner partial if there is an image *@
+    @if (Model.HasValue("lowerBannerImage"))
+    {
+        var lbModel = new QMU_VM_LowerBannerModel
+        {
+            Title = Model.LowerBannerTitle,
+            Copy = Model.LowerBannerCopy.ToString(),
+            BannerImage = Model.LowerBannerImage,
+            MobileBannerImage = Model.LowerBannerImageMobile,
+            BoxPosition = Model.HorizontalAdPlacement,
+            IsInfographic = Model.UsingBannerForInfographic
+        };
+
+        @Html.CachedPartial("components/qmu_cmp_lowerBanner", lbModel, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+    <script>
+
+        $(".library-filter-item label").keypress(function (event) {
+            if (event.key == "Enter" || event.key == " ") {
+
+                var checkboxValue = $("#catalog_only_checkbox").prop('checked');
+
+                if (checkboxValue) {
+                    $("#catalog_only_checkbox").prop('checked', false);
+                    $("input[name=clv2]").val("N");
+                }
+                else {
+                    $("#catalog_only_checkbox").prop('checked', true);
+                    $("input[name=clv2]").val("Y");
+                }
+
+                event.preventDefault();
+            }
+        });
+
+    </script>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+@Html.CachedPartial("_relatedContent2", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

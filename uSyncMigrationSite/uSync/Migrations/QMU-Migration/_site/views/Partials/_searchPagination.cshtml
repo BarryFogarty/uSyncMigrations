@@ -1,0 +1,67 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.PaginatedSearchResults>
+
+@{
+    int maxPageButtons = 7;         // Needs to be an odd number
+    int firstPageButton = 1;
+    int lastPageButton = Model.TotalPages;
+    if (lastPageButton > maxPageButtons)
+    {
+        firstPageButton = Model.CurrentPage - (maxPageButtons / 2);
+        if (firstPageButton < 1)
+        {
+            firstPageButton = 1;
+            lastPageButton = maxPageButtons;
+        }
+        else
+        {
+            lastPageButton = Model.CurrentPage + (maxPageButtons / 2);
+            if (lastPageButton > Model.TotalPages)
+            {
+                firstPageButton = Model.TotalPages - (maxPageButtons - 1);
+                lastPageButton = Model.TotalPages;
+            }
+        }
+    }
+}
+
+@if (Model.TotalPages > 1)
+{
+    <div class="search-paging">
+        <ul>
+            @if (Model.CurrentPage > 1)
+            {
+                <li><a href="@(Model.Url())?query=@(Model.EncodedSearchTerm)&page=@(Model.CurrentPage-1)" title="Previous Page"><</a></li>
+            }
+
+            @if (firstPageButton > 1)
+            {
+                <li><a href="@(Model.Url())?query=@(Model.EncodedSearchTerm)&page=1">1</a></li>
+                if (firstPageButton > 2)
+                {
+                    <li class="ellipses">...</li>
+                }
+            }
+
+            @for (int btn = firstPageButton; btn <= lastPageButton; btn++)
+            {
+                var activeClass = btn == Model.CurrentPage ? "active" : "";
+                <li class="@activeClass"><a href="@(Model.Url())?query=@(Model.EncodedSearchTerm)&page=@(btn)">@btn</a></li>
+            }
+
+            @if (lastPageButton < Model.TotalPages)
+            {
+                if (lastPageButton < Model.TotalPages - 1)
+                {
+                    <li class="ellipses">...</li>
+                }
+                <li><a href="@(Model.Url())?query=@(Model.EncodedSearchTerm)&page=@(Model.TotalPages)">@(Model.TotalPages)</a></li>
+            }
+
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <li><a href="@(Model.Url())?query=@(Model.EncodedSearchTerm)&page=@(Model.CurrentPage+1)" title="Next Page">></a></li>
+            }
+
+        </ul>
+    </div>
+}

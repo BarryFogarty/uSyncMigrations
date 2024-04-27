@@ -1,0 +1,32 @@
+﻿@using Umbraco.Web.PublishedModels
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<FullWidthLinks>
+
+
+<section class="qmu_cmp_fullwidthlinks component-spacing" @(!String.IsNullOrEmpty(Model.AnchorCode) ? $"id={Model.AnchorCode}" : "")>
+    <div class="container">
+       
+        @if (!string.IsNullOrWhiteSpace(Model.Title))
+        {
+            <h2>@Model.Title</h2>
+        }
+
+        @if(Model.SingleLink != null || Model.HorizontalLinks != null)
+            {
+
+                <div class="qmu_cmp_fullwidthlinks__links">
+                    @if (Model.SingleLink != null)
+                    {
+                       <a class="qmu_cmp_fullwidthlinks__links__highlighted btn cyan-btn no-arrow-btn pill-btn block-btn" href="@Model.SingleLink.Url" target="@Model.SingleLink.Target">@Model.SingleLink.Name</a>
+                    }
+
+
+                    @foreach (var link in Model.HorizontalLinks)
+                    {
+                        <a class="white-btn no-arrow-btn pill-btn block-btn" href="@link.Url" target="@link.Target" >@link.Name</a>
+                    }
+
+                </div>
+            }
+    </div>
+</section>
+

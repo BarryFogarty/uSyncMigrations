@@ -1,0 +1,41 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Error404>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+
+    bool isBackgroundColorPicked = !String.IsNullOrEmpty(Model.BackgroundColour);
+    var backgroundColor = isBackgroundColorPicked ? Model.BackgroundColour : "37586D";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content link-page" style="background-color:#@backgroundColor">
+
+    <div id="left" class="container">
+
+        <h1>&#64;@Model.LinksList1Title</h1>
+
+        @if (Model.LinksList1.Any())
+        {
+            <div class="links-container">
+                @foreach (var link in Model.LinksList1)
+                {
+                    <div class="link @(isBackgroundColorPicked ? "links--grey-hover" : "")"><a href="@link.Url" target="@link.Target"><p>@link.Name</p></a></div>
+                }
+            </div>
+        }
+
+    </div>
+
+</main>
+
+<style>
+    .links--grey-hover > a:hover p
+    .links--grey-hover > a > p:hover,
+    .links--grey-hover:hover,
+    .links--grey-hover:hover p {
+        border-color: #F3F3F3 !important;
+        color: #37586D !important;
+        background-color: #F3F3F3 !important;
+    }
+</style>

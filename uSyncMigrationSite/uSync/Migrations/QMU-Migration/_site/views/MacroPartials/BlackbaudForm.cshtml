@@ -1,0 +1,25 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{
+    var formCode = "";
+    var param = Model.MacroParameters["formCode"];
+    if (param != null)
+    {
+        if (Guid.TryParse(param.ToString(), out Guid guid))
+        {
+            formCode = guid.ToString("D");
+        }
+    }
+}
+
+@if (!string.IsNullOrWhiteSpace(formCode))
+{
+    <div id="blackbaud-donation-form_@formCode"></div>
+
+    <script src="https://sky.blackbaudcdn.net/static/donor-form-loader/1/main.js"></script>
+
+    <script>BBDonorFormLoader.newBlackbaudDonationFormZoned('renxt', 'p-I8NNswfZdE6L1fsmjN5sBg', '@formCode', 'eur')</script>
+}
+else
+{
+    <p><strong>Incorrect Blackbaud form code</strong></p>
+}

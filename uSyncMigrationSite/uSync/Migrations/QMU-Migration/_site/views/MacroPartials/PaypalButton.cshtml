@@ -1,0 +1,5 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+<div>
+    @Html.Raw(Server.HtmlDecode(Model.MacroParameters["paypalCode"].ToString()))
+
+</div>

@@ -1,0 +1,217 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.ManualListing>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <h1>@Model.DisplayTitle</h1>
+            @Model.Introduction
+            <div id="search-message"></div>
+            <p></p>
+            <div id="no-results"></div>
+            <div class="student-grid">
+                @if (Model.ContentItems != null)
+                {
+                    foreach (var item in Model.ContentItems)
+                    {
+                        var itemImage = item.Value<IPublishedContent>("adSpotImage");
+                        var linkcontent = Umbraco.Content(item);
+                        <div class="student-item">
+                            <a href="@item.Url()">
+                                @if (item.Value<IPublishedContent>("adSpotImage") != null)
+                                {
+                                    var imageAlt = itemImage.Value<string>("altText");
+                                    <img src="@itemImage.Url()" alt="@imageAlt" class="listingLink" />
+                                }
+                                else
+                                {
+                                    <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" class="listingLink" />
+                                }
+                                <div class="image">
+                                    <div>
+                                        <div class="overlay-text-new">
+                                            <div class="who">@item.Value("Introduction")</div>
+                                            <div class="name">@item.Value("displayTitle")</div>
+                                            <p class="course">@item.Value("Type")</p>
+                                            <div class="year">@item.Value("ExtraInformation")</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+            <button id="more" class="show-more" aria-label="show more stories"><i class="fa fa-plus-circle fa-3x"></i></button>
+            <button id="less" class="show-less" aria-label="show fewer stories"><i class="fa fa-minus-circle fa-3x"></i></button>
+            @*<div class="full-width-content">
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>*@
+        </div>
+
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<style>
+    .student-grid .student-item {
+        margin-bottom: 50px;
+    }
+
+    .listingLink:hover {
+        opacity: 0.7 !important;
+    }
+
+    .overlay-text-new {
+        background: #696969;
+        position: relative;
+        z-index: 300;
+        padding: 10px;
+        bottom: 0;
+        left: 0;
+        color: #fff;
+        font-size: 24px;
+        font-weight: normal;
+    }
+
+    .who {
+    }
+
+        .who p {
+            line-height: 1.5em;
+            margin: 5px;
+            font-size: 20px;
+        }
+
+    .year {
+        margin-left: 5px;
+        font-size: 16px;
+    }
+
+    .course {
+        margin-left: 5px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .name {
+        margin-left: 5px;
+        margin-top: 25px;
+        font-weight: bold;
+    }
+</style>
+
+<script>
+
+    // SHOW ONLY 12 STAFF ITEMS
+
+    items = $('.student-grid');
+    $.each(items, function (key, value) {
+        $(this)
+            .find('.student-item')
+            .slice(6)
+            .hide();
+    });
+
+    // CHECK IF MORE THEN 12 ITEMS
+
+    var items = $('.student-item').length;
+    var x = document.getElementById("more");
+
+    if (items > 6) {
+        x.style.display = "block";
+    }
+
+    // CHECK IF ZERO TO SHOW NO RESULTS MESSAGE
+
+    if (items == 0) {
+        document.getElementById("no-results").innerHTML = "<p>Sorry, there were no items that matched your filter criteria. You can <a href='/study-here/student-stories/'>clear the filters</a> to search again.</p>";
+    }
+
+    var headerOffset = 92 + 30;
+    if (viewport().width <= 900) {
+        headerOffset = 10;
+    }
+    else if (viewport().width <= 1250) {
+        headerOffset = 76 + 20;
+    }
+
+    // SHOW MORE
+
+    $('.show-more').click(function () {
+        // show all the cards
+        // show the "less" link and hide the "more" link
+
+        var showMoreHasFocus = false;
+        var focusVisible = $.find(":focus-visible");
+        if (focusVisible.length > 0) {
+            showMoreHasFocus = focusVisible[0].id == "more";
+        }
+
+        var firstHidden = $('.student-item').parent().find(".student-item:hidden:first");
+
+        $('.student-item').parent().find(":hidden").show();
+
+        $('.show-less').css('display', 'block');
+
+        $(this).hide();
+
+        var offset = 800;
+        if (firstHidden.length) {
+            var firstLink = firstHidden.find("a:first");
+            if (firstLink.length) {
+                if (showMoreHasFocus) {
+                    firstLink.focus();
+                }
+                offset = firstLink.offset().top - headerOffset;
+            }
+        }
+
+        $("html, body").animate({ scrollTop: offset }, 800);
+    });
+
+    // SHOW LESS
+
+    $('.show-less').click(function () {
+
+        var showLessHasFocus = false;
+        var focusVisible = $.find(":focus-visible");
+        if (focusVisible.length > 0) {
+            showLessHasFocus = focusVisible[0].id == "less";
+        }
+
+        $(this).parent()
+            .find('.student-item')
+            .slice(6)
+            .hide();
+
+        var lastShown = $('.student-item').parent().find(".student-item:not(:hidden):last");
+
+        $('.show-more').show();
+        $(this).hide();
+
+        var offset = 600;
+
+        if (lastShown.length) {
+            var lastLink = lastShown.find("a:first");
+            if (lastLink.length) {
+                if (showLessHasFocus) {
+                    lastLink.focus();
+                }
+                offset = lastLink.offset().top - headerOffset;
+            }
+        }
+
+        $("html, body").animate({ scrollTop: offset }, 800);
+    });
+
+</script>
+

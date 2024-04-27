@@ -1,0 +1,198 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.FullWidthPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = null;
+    var searchPage = Model.Root().FirstChildOfType("searchResults");
+    var metaTitle = Model.Value<string>("metaTitle");
+    if (string.IsNullOrWhiteSpace(metaTitle))
+    {
+        metaTitle = Model.Name;
+    }
+    var metaDescription = Model.Value<string>("metaDescription");
+
+    var ogImageUrl = "";
+    var adSpotImage = Model.Value<IPublishedContent>("adSpotImage");
+    if (adSpotImage != null)
+    {
+        ogImageUrl = adSpotImage.Url(mode: UrlMode.Absolute);
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <meta name="description" content="@metaDescription">
+    <title>@metaTitle</title>
+
+    <meta property="og:title" content="@metaTitle" />
+    <meta property="og:description" content="@metaDescription" />
+    <meta property="og:url" content="@Model.Url(mode: UrlMode.Absolute)" />
+
+    @if (!string.IsNullOrWhiteSpace(ogImageUrl))
+    {
+        <meta property="og:image" content="@ogImageUrl" />
+    }
+
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+
+    @* NEW SASS FILES *@
+    <link rel="stylesheet" href="/stylesheets/main.min.css?v=12.7.23">
+
+
+
+    <!-- Google Consent Mode - deny consent by default -->
+    <script>
+        // Include the following lines to define the gtag() function when
+        // calling this code prior to your gtag.js or Tag Manager snippet
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+
+        // Call the default command before gtag.js or Tag Manager runs to
+        // adjust how the tags operate when they run. Modify the defaults
+        // per your business requirements and prior consent granted/denied, e.g.:
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied'
+        });
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MWD3PBP');
+    </script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="qmu_th_brand-campaign qmu_pg_fullwidth">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MWD3PBP"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    @* Similar to Master, but with a white background *@
+    <nav role="navigation" style="background-color:white;">
+        <a class="skip-main" href="#left">Skip to main content</a>
+        <div class="menu-btn study-here-menu-btn" role="button" aria-label="Open menu" tabindex="0">
+            <div>
+                <span class="lines" style="position:relative; padding:5px;">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+        </div>
+        <div class="study-here-home-btn" style="background:white;">
+            <a class="pt-1 ps-1" href="/" aria-label="home page"><i class="fa fa-home fa-2x" style="color:#374a5c; margin-left:0;"></i></a>
+        </div>
+
+        <a href="/" class="logo study-here-logo" aria-label="logo link"><img class="py-2" src="~/Images/logo-inverted-charcoal.png" alt="QMU Logo"></a>
+
+        <div class="quick-links">
+            <ul>
+                <li class="mob-title">Staff &amp; Students</li>
+                @Html.CachedPartial("_topNav", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+            </ul>
+        </div>
+
+        @if (searchPage != null)
+        {
+
+            string searchUrl = searchPage.Url();
+
+            <div class="search-area">
+                <button class="search-open" style="background-image: url(https://www.qmu.ac.uk/images/search-icon-mob.png);" tabindex="0" aria-label="Open search"></button>
+                <button class="search-close" aria-label="Close search" tabindex="-1"></button>
+                <div class="search-box">
+                    <form action="@(searchUrl)" method="get" id="CourseSearchForm">
+                        <input aria-label="keyword" id="query" name="query" placeholder="Search..." type="search" tabindex="-1" />
+                        <input type="submit" value="Search" tabindex="-1" />
+                    </form>
+                </div>
+            </div>
+        }
+
+        <div class="scroll-nav-qmu">
+            <div class="main-nav-wrapper">
+                <ul class="main-nav">
+                    <li class="active"><a href="/" class="nav-menu-first" tabindex="-1">Home</a></li>
+                    @* Main nav moved into partial as cachedPartial was causing probs when deployed with umbraco cloud *@
+                    @Html.Partial("_mainNav", Model)
+                </ul>
+                <ul class="smaller-nav">
+                    @Html.CachedPartial("_leftNav", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+
+    @Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+    <main role="main" class="main-content">
+
+        @if (Model.AnchorLinks.Count() > 0)
+        {
+            <div class="bcHeaderLinks">
+                @foreach (var link in Model.AnchorLinks)
+                {
+                    <a href="#@link.AnchorCode">@link.LinkName</a>
+                }
+
+            </div>
+        }
+
+        @* Anchor Links and H1 *@
+        <section class="qmu-fwp-intro component-spacing pb-0">
+            <div class="container">
+                <h1 class="text-center mb-0">@Model.DisplayTitle</h1>
+            </div>
+        </section>
+
+        @foreach (var band in Model.Bands)
+        {
+            @Html.Partial("Components/" + band.ContentType.Alias, band)
+        }
+
+    </main>
+
+    <button class="back-to-top" aria-label="Back to top" tabindex="-1"></button>
+    <footer>
+        <div class="container">
+            <div class="footer-contents">
+                @Html.CachedPartial("footer", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+            </div>
+
+        </div>
+    </footer>
+
+
+    <script type="text/javascript" src="~/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/scripts/main.js?v=4"></script>
+    <script type="text/javascript" src="~/scripts/idevice-detection.js"></script>
+    <script type="text/javascript" src="~/scripts/slick.min.js"></script>
+    <script src="~/scripts/bootstrap.bundle.min.js"></script>
+
+    @* TODO: 04/07/23 - don't think this is used *@
+    @*<script type="text/javascript" src="~/scripts/modal-video.js"></script>*@
+    @*<script type="text/javascript" src="~/scripts/modernizr.custom.js"></script>*@
+
+    @* Uses Modernizr to detect if browser is using webp images  *@
+    <script type="text/javascript" src="~/scripts/modernizr.webp.js"></script>
+
+    <!-- Civic Cookie Control -->
+    @Html.Partial("PageStructure/CookiesSettings")
+</body>
+</html>

@@ -1,0 +1,50 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BlogBio>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Model.Introduction
+                @Model.BodyContent
+                <!-- Page tags to go here -->
+            </div>
+
+            <div class="right">
+                @if (Model.SocialMedia.Count() > 0)
+                {
+                    <div class="social-updates-box">
+                        <p>
+                            View my social media updates or contact me.
+                        </p>
+                        <div class="contact-row">
+                            @foreach (var item in Model.SocialMedia)
+                            {
+
+                                if(!String.IsNullOrEmpty(item.ScUrl) && item.Type != null)
+                                {
+                                     <a href="@item.ScUrl" class="@item.Type.ToLower() mb-2" target="_blank" title="social link @item.Type.ToLower()" aria-label="social link @item.Type.ToLower()" aria-describedby="Opens in a new window"></a>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- search goes here -->
+            </div>
+        </div>
+    </div>
+
+</main>
+
+@Html.CachedPartial("_relatedPosts", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)   

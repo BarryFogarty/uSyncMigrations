@@ -1,0 +1,726 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = null;
+    var searchPage = Model.Root().FirstChildOfType("searchResults"); }
+
+<html lang="en">
+<head>
+    <title>Study Here</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    @* NEW SASS FILES *@
+    <link rel="stylesheet" href="/stylesheets/main.min.css?v=12.7.23">
+    <script type="text/javascript" src="~/scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="~/scripts/main.js?v=4"></script>
+    <script type="text/javascript" src="~/scripts/modal-video.js"></script>
+    <script type="text/javascript" src="~/scripts/modernizr.custom.js"></script>
+
+    <script type="text/javascript" src="~/scripts/idevice-detection.js"></script>
+    <script type="text/javascript" src="~/scripts/slick.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-MWD3PBP');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body class="qmu_th_brand-campaign">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MWD3PBP"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <nav role="navigation" style="background-color:white;">
+        <div class="menu-btn study-here-menu-btn" role="button" aria-label="Open menu" tabindex="0">
+            <div>
+                <span class="lines" style="position:relative; padding:5px;">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+        </div>
+        <div class="study-here-home-btn" style="background:white;">
+            <a href="https://www.qmu.ac.uk" aria-label="home page"><i class="fa fa-home fa-2x" style="color:#374a5c; margin-left:0;"></i></a>
+        </div>
+
+        <a href="/" class="logo study-here-logo" aria-label="logo link"><img src="https://www.qmu.ac.uk/media/gsoppetg/logo-dark.png" alt="QMU Logo"></a>
+        <div class="quick-links" style="display: block;">
+            <ul>
+                <li class="mob-title">Staff &amp; Students</li>
+
+                <li>
+                    <a href="https://hub.qmu.ac.uk" target="_blank">
+                        <span>HUB</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://v3.pebblepad.co.uk/login/qmu/Login" target="_blank">
+                        <span>ePortfolio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/study-here/learning-facilities/it-services/qmu-portal/">
+                        <span>QMU Portal</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/study-here/learning-facilities/it-services/remote-access/">
+                        <span>Remote Access</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://outlook.com/owa/qmu.ac.uk">
+                        <span>Webmail</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/study-here/learning-facilities/library/">
+                        <span>Library</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/study-here/learning-facilities/it-services/">
+                        <span>IT Services</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        @if (searchPage != null)
+        {
+
+            string searchUrl = searchPage.Url();
+
+            <div class="search-area">
+                <button class="search-open" style="background-image: url(https://www.qmu.ac.uk/images/search-icon-mob.png);" tabindex="0" aria-label="Open search"></button>
+                <button class="search-close" aria-label="Close search" tabindex="-1"></button>
+                <div class="search-box">
+                    <form action="@(searchUrl)" method="get" id="CourseSearchForm">
+                        <input aria-label="keyword" id="query" name="query" placeholder="Search..." type="search" tabindex="-1" />
+                        <input type="submit" value="Search" tabindex="-1" />
+                    </form>
+                </div>
+            </div>
+        }
+        <div class="scroll-nav-qmu">
+            <div class="main-nav-wrapper">
+                <ul class="main-nav">
+                    <li class="active"><a href="/" class="nav-menu-first" tabindex="-1">Home</a></li>
+                    @* Main nav moved into partial as cachedPartial was causing probs when deployed with umbraco cloud *@
+                    @Html.Partial("_mainNav", Model)
+                </ul>
+                <ul class="smaller-nav">
+                    @Html.CachedPartial("_leftNav", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+
+    <header role="banner" class="banner">
+        <div class="item" id="bannerImg" style="background-color:#009db7; background-image: url(https://www.qmu.ac.uk/media/01ofe5xh/qmu-are-welcome-banner.jpg)">
+            <div class="text-overlay">
+                <div class="container" style="height:400px;">
+                    <!--<h1 class="bcTitle">QM</h1>
+                    <p class="bcSub">UBELONG</p> -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main role="main" class="main-content">
+
+        <!-- Band 1 -->
+        <div class="left-band">
+
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+
+                    <div class="bcHeaderLinks" style="color:White;background-color:#374a5c;">
+                        <a href="#why">Why QMU</a> | <a href="#courses">Courses & Subjects  </a> | <a href="#campus">Our Campus</a> | <a href="#studentstories">Student Stories</a> | <a href="#nextsteps">Next Steps</a>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+        </div>
+        <!-- end of band 1 -->
+        <!-- band 2 -->
+        <div class="left-band">
+            <div class="container" style="max-width:95%; width:98%">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="left-text" style="">
+                            <h1 style="text-align:center; font-weight:600; font-size:70px;">Study at QMU, Edinburgh</h1>
+                            <p>At Queen Margaret University (QMU), we offer a variety of <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/">undergraduate</a> and <a href="https://www.qmu.ac.uk/study-here/postgraduate-study/">postgraduate</a> courses in a <a href="https://www.qmu.ac.uk/study-here/qmu-subject-areas/">range of subject areas,</a> including: business, nursing and the allied health professions, health sciences, education, social sciences, media, marketing and communication, and performing arts.</p>
+                            <p>We also offer <a href="https://www.qmu.ac.uk/study-here/postgraduate-research-study/">postgraduate research degrees</a> and <a href="https://www.qmu.ac.uk/study-here/continuing-professional-development-cpd-courses/">continuing professional development (CPD) and short courses</a> for those looking to upskill or retrain and switch career paths. </p>
+                            <p>Located only six minutes by train from Edinburgh, Scotland's capital city, our vibrant campus offers a friendly and supportive community environment, where you can become your best you.</p>
+                            <a href="https://www.qmu.ac.uk/open-days-and-meeting-us/" style="color:white;">
+                                <div class="blue-btn" style="border-radius:5px; margin-bottom:20px;">Come along to one of our open days</div></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- spacer -->
+        <div class="left-band" style="background-color:#374a5c; height:5px;">
+            <div class="container" style="max-width:95%; width:98%">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <div class="left-text" style="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- spacer end -->
+        <!-- band 3 -->
+        <div class="left-band" style="background-color:white;" id="why">
+            <div class="container" style="max-width:95%;width:98%;">
+                <div class="row clearfix">
+                    <div class="col-md-12 column" style="text-align:center;">
+                        <h2 style="font-weight:600; font-size:70px;">Why QMU?</h2>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div>
+                            <iframe id="vid1" width="100%" height="500" style="padding:10px;" src="https://www.youtube.com/embed/Wzi1YEhjoZo?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" title="Queen Margaret University, Edinburgh - #QMUBelong"></iframe>
+                        </div>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div>
+                            <p>You'll enjoy:</p>
+                            <ul>
+                                <li>
+                                    <p><a href="https://www.qmu.ac.uk/study-here/qmu-subject-areas/">Career-focused courses</a> - our students enjoy a blend of both theory and practice: many of our courses include practical work placements and/or are accredited by professional bodies.</p>
+                                </li>
+                                <li>
+                                    <p><a href="https://www.qmu.ac.uk/study-here/student-services/">Friendly and supportive staff</a> - you will have access to comprehensive personal wellbeing, mental health, and study support trhoughout your QMU journey; you're never just a number when you study with us!</p>
+                                </li>
+                                <li>
+                                    <p><a href="https://www.qmu.ac.uk/campus-life/">A green and spacious campus</a> - with on-site sports facilities, places to eat and drink, and student residences; as well as all academic buildings and student resource services. </p>
+                                </li>
+                                <li>
+                                    <p><a href="https://www.qmu.ac.uk/campus-life/students-union/">A very active students’ union</a> - with a wide extra-curricular activities, sports and cultural societies. </p>
+                                </li>
+                                <li>
+                                    <p>A 97.1% graduate employment rate (HESA, 2018) - our graduates are career-ready and have the skills and knowledge that employers value. </p>
+                                </li>
+                            </ul>
+                            <p><b>With QMU, you can go far</b> - our students go into meaningful careers. As a university that champions social justice, we are proud to develop people who want to make a better tomorrow.</p>
+
+                            <a href="https://www.qmu.ac.uk/study-here/why-study-at-qmu/" style="color:white;">
+                                <div class="blue-btn" style="border-radius:5px; margin-bottom:20px;">Reasons to study at QMU</div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- band 4 -->
+        <div class="right-band" id="courses">
+
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="" style="color:White;background-color:#374a5c; text-align:center; padding:30px;">
+                        <h2 style="color:white; font-weight:600; font-size:75px;">Find your perfect course - study QMU</h2>
+
+                        <p>
+                            <a href="https://www.qmu.ac.uk/study-here/course-a-z/" class="bcButton">Course A-Z</a>
+                        </p>
+
+                        <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/" class="bcButton">Undergraduate</a>
+                        <a href="https://www.qmu.ac.uk/study-here/postgraduate-study/" class="bcButton">Postgraduate</a>
+                        <a href="https://www.qmu.ac.uk/study-here/postgraduate-research-study/" class="bcButton">Research Degrees</a>
+                        <a href="https://www.qmu.ac.uk/study-here/continuing-professional-development-cpd-courses/" class="bcButton">CPD/Short Courses</a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- band 5 -->
+        <div class="left-band" id="campus" style="background-image: url(https://www.qmu.ac.uk/media/xn3jenga/msc-play-therapy-b.jpg)">
+            <div class="container" style="max-width:95%;width:98%;">
+                <div class="row clearfix">
+                    <div class="col-md-12 column" style="text-align:center; background-color:#374a5c; opacity: 0.73; margin:20px;">
+                        <h2 style="font-weight:600; color: white; font-size:75px;">Tour the QMU campus</h2>
+                    </div>
+                    <div class="col-md-6 column" style="background-color:white; opacity: 0.73; font-weight:600; margin-bottom:20px;">
+                        <div>
+                            <br />
+                            <p>QMU's campus has everything students need - from the Learning Resource Centre (Library) to our food court, 1875, Maggie's Bar and Café, and easy access to Edinburgh's vibrant city centre directly from our campus by train (six minute journey) or bus. </p>
+                            <p>QMU is also close to Edinburgh's buzzing seaside suburbs at Portobello and Musselburgh, with cafés, restaurants and plenty of things to do. </p>
+                            <p>Our warm and inviting main atrium boasts lots of study spaces, computers and a Starbucks.</p>
+                            <p>Budding entrepreneurs can take advantage of our Business Innovation Zone where many successful QMU student start-up businesses were born.</p>
+                            <p>We also have a versatile sports centre, gym and outdoor sports ground.</p>
+                            <p></p>
+                            <p>On site accommodation is just minutes from the main academic building, so no need to rush in the mornings. Our lecture theatres and study halls are purpose-built, bright and flexible.</p>
+                            <a href="https://www.qmu.ac.uk/campus-life" style="color:white;">
+                                <div class="blue-btn" style="border-radius:5px; margin-bottom:20px;">QMU campus</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div class="left-text" style="color:White;">
+                            <iframe id="tourVid" width="100%" height="400" style="padding:10px;" src="https://www.youtube.com/embed/7VYOPOlifek?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" title="Enjoy a virtual tour of Queen Margaret University Edinburgh's campus!"></iframe>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- band 6 -->
+        <div class="right-band" style="background-color:#374a5c; height:90px; margin-bottom:25px;">
+
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div style="text-align:center; background-color:white;margin-right:20px;">
+                        <h2 style="margin-top:10px; font-weight:600; padding-top:15px; font-size:75px;">Become your best you</h2>
+                        <p style="margin-bottom:0; font-weight:600;padding-bottom:15px;">Supportive learning and our small and friendly campus will help you flourish!</p>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <!-- band 7 -->
+        <div class="right-band" style="background-image: url(https://www.qmu.ac.uk/media/fvtjwhcs/brand-campaign-banner-2022.png); height:500px; background-size:cover;">
+        </div>
+
+        <!-- band 8 -->
+        <div class="right-band" style="">
+            <p style="margin-bottom:0; font-weight:600;padding-bottom:15px; text-align:center; margin-top:-40px;background:white; width:50%;font-size:32px;padding:10px;">Step inside</p>
+
+            <div class="row clearfix">
+                <div class="col-md-4 column">
+                    <div style="text-align:center;">
+                        <div class="article-list">
+                            <div class="row">
+                                <article aria-label="Accommodation" style="min-height:244.703px; width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/study-here/learning-facilities/">
+                                        <img src="https://www.qmu.ac.uk/media/u1wgk24n/learning-facilities.jpg" alt="Students working in the QMU LRC (Library) area">
+                                        <div class="text" style="font-weight:600;">
+                                            <span>Learning Facilities</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px; width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/campus-life/">
+                                        <img src="https://www.qmu.ac.uk/media/mvfaoerz/campus-life-580-x-344.png" alt="QMU students walking and cycling on campus grounds">
+                                        <div class="text" style="font-weight:600; ">
+                                            <span style="">Campus Life</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px;width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/study-here/student-services/">
+                                        <img src="https://www.qmu.ac.uk/media/svin1vac/adspot-lrc-helpdesk-with-students.jpg" alt="QMU Librarian at his desk smiling and chatting with two women">
+                                        <div class="text" style="font-weight:600; ">
+                                            <span>Services for Students</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px;width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/study-here/fees-and-funding/">
+                                        <img src="https://www.qmu.ac.uk/media/gmrkazrm/accommodation-laptop-2019-fp.jpg" alt="A laptop and headphones on a student desk in Queen Margaret University accommodation">
+                                        <div class="text" style="font-weight:600; ">
+                                            <span>Fees and Funding</span>
+                                        </div>
+                                    </a>
+                                </article>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div style="text-align:center;">
+                        <div class="article-list">
+                            <div class="row">
+                                <article aria-label="Accommodation" style="min-height:244.703px;width:80%; margin-bottom:5px;margin-left:30px; height:450px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/undergraduate-study/undergraduate-subject-overviews/">
+                                        <img id="midImg1" style="height:390px; object-fit:cover; object-position:center;" src="https://www.qmu.ac.uk/media/npslngc4/tile-undergraduate-subject.jpg" alt="Health professions student administering care">
+                                        <div class="text" style="font-weight:600; ">
+                                            <span>Undergraduate Subjects</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px;width:80%; margin-bottom:5px;margin-left:30px; height:450px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/postgraduate-study/postgraduate-subject-overviews/">
+                                        <img id="midImg2" style="height:390px; object-fit:cover; object-position:center;" src="https://www.qmu.ac.uk/media/ipehje0d/postgraduate-studies-500-x-390-px.png" alt="Students enjoying a break between classes">
+                                        <div class="text" style="font-weight:600;">
+                                            <span>Postgraduate Subjects</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px;width:80%; margin-bottom:5px;margin-left:30px;height:450px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/continuing-professional-development-cpd-courses/">
+                                        <img id="midImg3" style="height:390px; object-fit:cover; object-position:center;" src="https://www.qmu.ac.uk/media/rbipfgqy/cpd-and-other-short-courses-500-x-390-px.png" alt="QMu students taking seminar notes on notepads and laptops">
+                                        <div class="text" style="font-weight:600; ">
+                                            <span>CPD and other Short Courses</span>
+                                        </div>
+                                    </a>
+                                </article>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-4 column">
+                    <div style="text-align:center;">
+                        <div class="article-list">
+                            <div class="row">
+                                <article aria-label="Accommodation" style="min-height:244.703px; width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/study-here/access-to-higher-education/college-leavers-and-mature-students/">
+                                        <img src="https://www.qmu.ac.uk/media/wdjf3aaa/college-leavers-and-mature-students.png" alt="QMU student with baby in the seating area in University Square">
+                                        <div class="text" style="font-weight:600;">
+                                            <span>College Leavers and Mature Students</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px; width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/study-here/international-students/">
+                                        <img src="https://www.qmu.ac.uk/media/cfoh2jg3/adspot-shop.jpg" alt="Students looking at university branded clothing in the university shop">
+                                        <div class="text" style="font-weight:600;">
+                                            <span>International Students</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px; width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/study-here/how-to-apply">
+                                        <img src="https://www.qmu.ac.uk/media/5scefy5b/how-to-apply-580-x-344.png" alt="Prospective Student using laptop">
+                                        <div class="text" style="font-weight:600;">
+                                            <span>How to Apply</span>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article aria-label="Accommodation" style="min-height:244.703px;width:80%; margin-bottom:5px;margin-left:30px;">
+                                    <a class="image" style="margin-bottom:26px;" href="https://www.qmu.ac.uk/open-days-and-meeting-us/">
+                                        <img src="https://www.qmu.ac.uk/media/hn5hqobq/open-days-and-meeting-us-580-x-344.png" alt="Students chatting outside QMU Lecture Theatres and Seminar Rooms">
+                                        <div class="text" style="font-weight:600; ">
+                                            <span>Open Days and Meeting Us</span>
+                                        </div>
+                                    </a>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- band 9 -->
+        <div class="right-band" style="background-image: url(https://www.qmu.ac.uk/media/jzbpksti/you-will-grow-banner.png); height:500px; background-size:cover;">
+
+            <div class="container" style="max-width:95%;width:98%;">
+                <div class="row clearfix">
+                    <div class="col-md-12 column" style="text-align:center; background-color:#374a5c; opacity: 0.73; margin:20px;">
+                        <h2 style="font-weight:600; color: white; font-size:75px;">You will grow at QMU</h2>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- band 10 -->
+        <div class="right-band" id="studentstory" style="height:150px; text-align:center;">
+            <h2 style="font-weight:800; padding:12px; font-size:75px;">Student stories</h2>
+        </div>
+        <!-- band 11 -->
+        <div class="right-band" style="background-color:#374a5c;">
+            <div class="container" style="max-width:95%;width:98%;">
+                <div class="row clearfix">
+                    <div class="col-md-12 column" style="">
+                        <div class="article-list stories" style="margin-bottom:20px;">
+                            <div class="row">
+                                <article aria-label="Rowann's story" style="min-height:244.703px; width:20%; margin-bottom:5px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/student-stories/rowann-sinclair-bsc-nursing/">
+                                        <img style="width:auto; margin:auto;" src="https://www.qmu.ac.uk/media/qosho10u/rowann-sinclair-student-story.png" alt="Nursing student Rowann Sinclair">
+                                    </a>
+                                    <a href="https://www.qmu.ac.uk/study-here/student-stories/rowann-sinclair-bsc-nursing/"><div class="storyBtn" style="border-radius:5px; padding:15px; font-size:24px">Rowann's story ></div></a>
+
+                                </article>
+
+                                <article aria-label="William's story" style="min-height:244.703px; width:20%; margin-bottom:5px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/student-stories/william-torrie-bsc-hons-psychology/">
+                                        <img style="width:auto; margin:auto;" src="https://www.qmu.ac.uk/media/kb0amur3/william-torrie-student-story.png" alt="William Torrie">
+                                    </a>
+                                    <a href="https://www.qmu.ac.uk/study-here/student-stories/william-torrie-bsc-hons-psychology/"><div class="storyBtn" style="border-radius:5px; padding:15px; font-size:24px">William's story ></div></a>
+                                </article>
+                                <article aria-label="Ryan's story" style="min-height:244.703px;width:20%; margin-bottom:5px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/student-stories/ryan-lee-pgde-secondary-home-economics/">
+                                        <img style="width:auto; margin:auto;" src="https://www.qmu.ac.uk/media/l4mpiq4b/ryan-lee-student-story.png" alt="Home Economics teacher Ryan Lee">
+                                    </a>
+                                    <a href="https://www.qmu.ac.uk/study-here/student-stories/ryan-lee-pgde-secondary-home-economics/"><div class="storyBtn" style="border-radius:5px; padding:15px; font-size:24px">Ryan's story ></div></a>
+                                </article>
+                                <article aria-label="Michael's story" style="min-height:244.703px;width:20%; margin-bottom:5px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/student-stories/michael-grant-bsc-film-and-media/">
+                                        <img style="width:auto;margin:auto;" src="https://www.qmu.ac.uk/media/m3tdz4dl/michael-grant-student-story.png" alt="Michael Grant founder and producer of Raw Film Productions">
+                                    </a>
+                                    <a href="https://www.qmu.ac.uk/study-here/student-stories/michael-grant-bsc-film-and-media/"><div class="storyBtn" style="border-radius:5px;padding:15px; font-size:24px">Michael's story ></div></a>
+                                </article>
+                                <article aria-label="Lauren's story" style="min-height:244.703px;width:20%; margin-bottom:5px;">
+                                    <a class="image" href="https://www.qmu.ac.uk/study-here/student-stories/lauren-leisk-ba-hons-business-management/">
+                                        <img style="width:auto; margin:auto;" src="https://www.qmu.ac.uk/media/2aspz2lp/lauren-leisk-student-story.png" alt="Lauren Leisk founder of Fodilicious Ltd">
+                                    </a>
+                                    <a href="https://www.qmu.ac.uk/study-here/student-stories/lauren-leisk-ba-hons-business-management/"><div class="storyBtn" style="border-radius:5px;padding:15px; font-size:24px">Lauren's story ></div></a>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- white spacer -->
+        <div class="right-band" style="height:175px; text-align:center;">
+            <div class="col-md-12 column" style="text-align:center; background-color:white; padding-bottom:20px; margin-top:-20px;">
+                <a href="https://www.qmu.ac.uk/study-here/student-stories/" class="blue-btn" style="font-size:42px; border-radius:5px; margin-top:50px;">More student stories</a>
+            </div>
+
+        </div>
+        <!-- band 12
+        <div class="right-band" style="background-image: url(https://www.qmu.ac.uk/media/vusp0s5m/rowan-sinclair-banner.png); height:500px;">
+            <div class="container" style="max-width:95%; width:98%">
+                                    <div class="row clearfix">
+            <div class="col-md-6 column" style="background-color:white; opacity: 0.73; font-weight:600; margin:20px;">
+                                            <div>
+                                                <p>Insert some text/quote, source, source extra</p>
+                                            </div>
+                                        </div>
+                                        </div>
+                                        </div>
+         </div>
+                <!-- band 13 -->
+
+        <div class="right-band" id="nextsteps" style="background-image: url(https://www.qmu.ac.uk/media/hiajhs4y/qmu-graduates.jpg); height:500px;background-size:cover;">
+            <div class="container" style="max-width:95%; width:98%">
+                <div class="row clearfix">
+                    <div class="col-md-6 column" style="background-color:white; font-weight:600; margin:20px; margin-top:15%;">
+                        <div>
+                            <h2 style="font-size:75px;">You will go far</h2>
+                            <p>QMU is ranked 5th in Scotland for Learning Community in the National Student Survey 2022 and has a 97.1% graduate employment rate (HESA, 2018).</p>
+                        </div>
+                        <!--                                     <a href="https://www.qmu.ac.uk/study-here/how-to-apply/" class="blue-btn" style="font-size:24px; border-radius:5px;">QMU Facts and Figures</a>
+                        -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- band 14 -->
+        <div class="right-band" id="journey" style="height:275px; text-align:center;">
+            <div class="container" style="max-width:95%; width:98%">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <h2 style="font-weight:800; margin-top:30px; font-size:75px;">Start your QMU journey, today</h2>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <br />
+            <p style="font-size:32px; font-weight:600;">You can make it happen</p>
+            <br />
+            <p style="color:#374a5c;font-weight:600;">________________</p>
+        </div>
+        <!-- band 15 -->
+        <div class="right-band" style="background-color:#374a5c; text-align:center;">
+            <div class="container" style="max-width:95%; width:98%">
+                <div class="row clearfix">
+                    <div class="col-md-4 column" style="background-color:white; font-weight:600; margin-bottom:20px; margin-top:20px;">
+                        <div>
+                            <h3 style="font-size:75px; font-weight:600;">Attend an event</h3>
+                            <i class="fa fa-map-marker fa-3x" aria-hidden="true"></i>
+                            <p><a href="https://www.qmu.ac.uk/open-days-and-meeting-us/undergraduate-open-days/">Attend an Undergraduate Open Day</a></p>
+                            <p> <a href="https://www.qmu.ac.uk/open-days-and-meeting-us/postgraduate-open-events/">Attend a Postgraduate Open Event</a></p>
+                            <p><a href="https://www.qmu.ac.uk/campus-life/ask-a-student-a-question/">Attend an ‘Ask a Student LIVE’ online session (Tuesdays at 4pm)</a></p>
+                            <p><a href="https://www.qmu.ac.uk/study-here/international-students/opportunities-to-meet-us/">Online events & drop in support sessions for international students</a></p>
+                            <p><a href="https://www.qmu.ac.uk/study-here/campus-tours/">Take a campus tour</a></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column" style="background-color:white; font-weight:600; margin-bottom:20px;margin-top:20px;">
+                        <div>
+                            <h3 style="font-size:75px; font-weight:600;">Ask us a question</h3>
+                            <i class="fa fa-question-circle fa-3x" aria-hidden="true"></i>
+                            <p><a href="https://www.qmu.ac.uk/open-days-and-meeting-us/student-recruitment-form/">Speak to admissions</a></p>
+                            <p><a href="https://www.qmu.ac.uk/open-days-and-meeting-us/international-student-recruitment-form/">Ask our international team a question</a></p>
+                            <p><a href="https://www.qmu.ac.uk/campus-life/ask-a-student-a-question/">Ask a QMU student</a></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 column" style="background-color:white; font-weight:600; margin-bottom:20px;margin-top:20px;">
+                        <div>
+                            <h3 style="font-size:75px; font-weight:600;">Helpful information</h3>
+                            <i class="fa fa-check-circle fa-3x" aria-hidden="true"></i>
+                            <p><a href="https://www.qmu.ac.uk/study-here/how-to-apply">How to apply</a></p>
+                            <p><a href="https://www.qmu.ac.uk/news-and-events/downloads/">Download a prospectus</a></p>
+                            <p><a href="https://www.qmu.ac.uk/study-here/request-prospectus/">Order prospectus</a></p>
+                            <p><a href="https://www.qmu.ac.uk/study-here/postgraduate-study/make-2022-your-year/">Postgraduate courses starting in January 2023 </a></p>
+                            <p><a href="https://www.qmu.ac.uk/study-here/continuing-professional-development-cpd-courses/arts-social-sciences-and-management-short-courses/">Arts, Social Sciences and Management short courses</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <button class="back-to-top" aria-label="Back to top" tabindex="-1"></button>
+    <footer>
+        <div class="container">
+            <div class="footer-contents">
+                @Html.CachedPartial("footer", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, false)
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>
+
+<style>
+    .bcTitle {
+        color: #fab327;
+        font-weight: 700 !important;
+        font-size: 200px !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+
+    .bcSub {
+        color: #c60f7d;
+        line-height: 0.5;
+        font-weight: 700;
+        font-size: 65px;
+    }
+
+        .bcSub::first-letter {
+            font-size: 200px;
+        }
+
+    .bcHeaderLinks {
+        text-align: center;
+        padding: 5px;
+        height: auto;
+        font-size: 40px;
+    }
+
+    .bcHeaderLinks > a {
+        color: white;
+        padding: 10px;
+        font-weight: 600;
+        font-size: 40px;
+    }
+
+    .bcHeaderLinks > a:focus-visible {
+        color: #0b0c0c;
+    }
+
+    .bcButton {
+        width: 175px;
+        font-weight: 600;
+        color: #374a5c;
+    }
+
+        .bcButton a {
+            color: #374a5c;
+        }
+
+    .bcLines {
+        width: 19px;
+        height: 23px;
+        position: absolute;
+        top: 50%;
+        margin-top: -7px;
+        right: 0;
+        color: black;
+    }
+
+    nav .quick-links ul li a {
+        color: #374a5c;
+    }
+
+    nav .quick-links ul li a:focus-visible {
+	    border: 1px solid #5376A1;
+    }
+
+    nav .menu-btn .lines span {
+        border-bottom: 3px solid #374a5c;
+    }
+
+    .left-text {
+        color: #374a5c;
+    }
+
+    .left-band {
+        color: #374a5c;
+    }
+
+    .right-band {
+        color: #374a5c;
+    }
+
+    .h1 {
+        color: #374a5c;
+        font-weight: 600;
+        font-size: 75px;
+    }
+
+    .article-list article .image span {
+        color: white;
+        background-color: #374a5c;
+        box-shadow: 10px 0 0 #374a5c, -20px 0 0 #374a5c;
+    }
+
+    .article-list article a:focus-visible div {
+        background: #fd0;
+        color: #0b0c0c;
+    }
+
+    .storyBtn {
+        width: 100%;
+        color: #374a5c;
+        font-weight: 600;
+        margin-bottom: 20px;
+        background-color: ButtonFace;
+    }
+
+    .main-content > p > a {
+        border-bottom: none;
+    }
+
+    .moreSs {
+        float: right;
+        color: #374a5c;
+        font-size: 32px;
+    }
+
+    a.blue-btn:focus-visible {
+        border: 1px solid #5376A1;
+    }
+
+
+</style>
+
+

@@ -1,0 +1,32 @@
+@model Umbraco.Forms.Mvc.Models.FieldViewModel
+@using Umbraco.Forms.Mvc
+@using Umbraco.Forms.Web
+@using Umbraco.Web.Composing
+
+@{
+    var configuration = Current.Factory.GetInstance<Umbraco.Forms.Core.IFacadeConfiguration>();
+    var allowUnsafeHtmlRendering = configuration.GetSetting("TitleAndDescriptionAllowUnsafeHtmlRendering").ToLowerInvariant() != "false";
+
+    var settings = Model.AdditionalSettings;
+    var hasCaption = (settings.ContainsKey("Caption") && !string.IsNullOrEmpty(settings["Caption"]));
+    var hasBody = (settings.ContainsKey("BodyText") && !string.IsNullOrEmpty(settings["BodyText"]));
+    var captionTag = Model.GetSettingValue<string>("CaptionTag", "h2");
+}
+
+<div id="@Model.Id" data-umb="@Model.Id" class="@Html.GetFormFieldClass(Model.FieldTypeName)">
+    @if (hasCaption)
+    {
+        @Html.Raw("<" + captionTag + ">")@settings["Caption"]@Html.Raw("</" + captionTag + ">")
+    }
+    @if (hasBody)
+    {
+        if (allowUnsafeHtmlRendering)
+        {
+            <p>@Html.Raw(settings["BodyText"].Replace(System.Environment.NewLine, "<br />"))</p>
+        }
+        else
+        {
+            <p>@settings["BodyText"]</p>
+        }
+    }
+</div>

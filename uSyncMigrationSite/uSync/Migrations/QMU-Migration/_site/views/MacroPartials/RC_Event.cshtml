@@ -1,0 +1,94 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{ 
+	string imageUrl = string.Empty;
+	var image = Model.MacroParameters["image"];
+	if (image != null && image.ToString().Length > 0)
+	{
+		imageUrl = Helpers.GetMediaUrl(image);
+	}
+
+	string location = string.Empty;
+	string startDate = string.Empty;
+	string endDate = string.Empty;
+	string cost = string.Empty;
+
+	var eventNodeId = Model.MacroParameters["event"];
+	if (eventNodeId != null && eventNodeId.ToString().Length > 0)
+	{
+		var eventNode = Umbraco.TypedContent(eventNodeId);
+
+		location = eventNode.GetPropertyValue<string>("location");
+		cost = eventNode.GetPropertyValue<string>("cost");
+
+		var eventStartDate = eventNode.GetPropertyValue<DateTime>("eventStartDate");
+		if (startDate != null)
+		{
+			startDate = Helpers.FormatDateTime(eventStartDate);
+		}
+
+		var eventEndDate = eventNode.GetPropertyValue<DateTime>("eventEndDate");
+		if (endDate != null)
+		{
+			endDate = Helpers.FormatDateTime(eventEndDate);
+		}
+	}
+
+	bool isExternalLink = false;
+	string linkUrl = string.Empty;
+	string linkText = string.Empty;
+
+	var linkInternal = Model.MacroParameters["linkInternal"];
+	if (linkInternal != null && linkInternal.ToString().Length > 0)
+	{
+		var linkInternalNode = Umbraco.TypedContent(linkInternal);
+		linkUrl = linkInternalNode.Url;
+	}
+
+	var linkExternal = Model.MacroParameters["linkExternal"];
+	if (linkExternal != null && linkExternal.ToString().Length > 0)
+	{
+		linkUrl = linkExternal.ToString();
+		isExternalLink = true;
+	}
+}
+<h2>@Model.MacroParameters["title"]</h2>
+<div class="event-detail-box" style="background-image: url(@imageUrl);">
+	<div class="inner-white">
+		<strong>@Model.MacroParameters["subTitle"]</strong>
+		@Html.Raw(Model.MacroParameters["freeText"])
+		@if (!string.IsNullOrEmpty(location))
+		{
+			<div class="detail-block location">
+				<strong>Location</strong>
+				@Html.Raw(location)
+			</div>
+		}
+		@if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
+		{
+			<div class="detail-block calendar">
+				<strong>Date &amp; Time</strong>
+				@if (!string.IsNullOrEmpty(startDate))
+				{
+					<strong><sub>Start</sub></strong>
+					@Html.Raw(startDate)
+				}
+				@if (!string.IsNullOrEmpty(endDate))
+				{
+					<strong><sub>End</sub></strong>
+					@Html.Raw(endDate)
+				}
+			</div>
+		}
+		@if (!string.IsNullOrEmpty(cost))
+		{
+			<div class="detail-block moneybag">
+				<strong>Cost</strong>
+				@Html.Raw(cost)
+			</div>
+		}
+		@if (!string.IsNullOrEmpty(linkUrl))
+		{
+			<a href="@linkUrl" @((isExternalLink) ? "target=\"_blank\"" : "") class="blue-btn">@Model.MacroParameters["linkText"]</a>
+		}
+	</div>
+</div>

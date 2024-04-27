@@ -1,0 +1,89 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.PaginatedSearchResults>
+@using System.Text.RegularExpressions
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content" aria-label="main body content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <h1>@Model.DisplayTitle</h1>
+
+            <div class="search-form">
+
+                @Html.Partial("_searchPagination", Model)
+
+                <div class="search-results" id="search-results">
+
+                    @if (Model.Results.Any())
+                    {
+                        <p>
+                            Your search for "<strong>@Model.SearchTerm</strong>" found @Model.TotalResults results
+                        </p>
+
+                        <ul>
+                            @foreach (var node in Model.Results)
+                            {
+                                var searchImage = node.Value<IPublishedContent>("adSpotImage");
+                                var url = node.Url();
+                                if (node.ContentType.Alias == "externalCourse")
+                                {
+                                    url = node.Value<string>("externalURL");
+                                }
+                                <li>
+                                    <div class="left">
+                                        <a href="@url" aria-label="@node.Name">
+                                            @if (searchImage != null)
+                                            {
+                                                <img src="@searchImage.Url()" alt="@searchImage.Value("AltText")" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                                            }
+                                        </a>
+                                    </div>
+                                    <div class="right">
+                                        <h2>
+                                            <a href="@url">@node.Name</a>
+                                            @*<br />Relevance - (@result.Score)*@
+                                        </h2>
+                                        @{var intro = node.Value<string>("Introduction");
+                                            if (intro != null)
+                                            {
+                                                string summary = string.Empty;
+
+                                                int characterCount = 300;
+
+                                                summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                                if (summary.Length > characterCount)
+                                                {
+                                                    char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                                    summary = summary.Truncate(characterCount).Trim(charsToTrim);
+                                                }
+                                                summary += string.Format(" <a href=\"" + url + "\" aria-label=\"" + node.Name + "\"><strong>read more</strong></a>");
+                                                <p> @Html.Raw(summary) </p>
+                                                <a href="@url" class="blue-btn" aria-label="@node.Name">View page</a>
+                                            }
+                                        }
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p> No results found for query <strong>@Model.SearchTerm</strong></p>
+                    }
+                </div>
+
+                @Html.Partial("_searchPagination", Model)
+
+            </div>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,17 @@
+.paypal_btn {
+display: inline-block;
+font-family: Helvetica, Arial;
+font-size: 24px;
+font-weight: bold;
+color: #fff;
+text-align: center;
+padding: 12px 16px;
+margin: 0;
+background: #ff6600;
+border: 0;
+cursor: pointer;
+outline: none;
+}
+.paypal_btn:hover{ background: #e05c04; }
+
+        

@@ -1,0 +1,44 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits UmbracoViewPage<ContentModels.Quotes>
+@using ContentModels = Umbraco.Web.PublishedModels;
+
+@{ var quotes = Model.Quote;
+
+    if (quotes != null)
+    {
+            var image = quotes.Value<IPublishedContent>("image");
+
+        <div class="student-carousel">
+            <div class="student-area">
+                <div class="image">
+                    @if (image != null)
+                    {
+                        <img src="@image.Url()" alt="@image.Value("altText")" />
+                    }
+                    else
+                    {
+                        <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                    }
+                </div>
+                <div class="inner-white">
+                    <div class="student-quote">
+                        “@quotes.Value("quoteText")”
+                    </div>
+                    <div class="student-details">
+                        <strong>@quotes.Value("source")</strong>
+                        @quotes.Value("sourceExtra")
+                    </div>
+                </div>
+                </div>
+        </div>
+            } }
