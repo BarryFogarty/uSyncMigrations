@@ -5,7 +5,6 @@
 
 .vscode/
 
-uSyncMigrationSite/uSync/
 uSyncMigrationSite/Views/
 uSync.BackOffice.Assets/wwwroot/
 uSyncSource.Site/App_Plugins/
@@ -265,3 +264,5 @@ $RECYCLE.BIN/
 /uSyncMigrationSite/config
 /uSyncMigrationSite/Views
 
+TestSite.v13
+uSyncMigrationSite/uSync/Migrate
