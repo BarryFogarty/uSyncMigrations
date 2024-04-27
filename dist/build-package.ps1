@@ -67,7 +67,7 @@ dotnet pack ..\uSync.Migrations\uSync.Migrations.csproj --no-restore --no-build 
 ## will copy to c:\source\localgit (assuming it exists)
 
 ""; "##### Copying to LocalGit folder"; "----------------------------------" ; ""
-XCOPY "$outFolder\*.nupkg" "C:\Source\localgit" /Q /Y 
+XCOPY "$outFolder\*.nupkg" "X:\nuget-local\" /Q /Y 
 
 ## only works if you have authorization to actuall push to the nightly repo.
 if ($push) {
