@@ -14,16 +14,16 @@ namespace MyMigrations;
 ///  Excludes "bandedContent" proprety (we will replace this manually with a blockList)
 ///  TODO:  Scaffold a blocklist editor for banded Content?
 /// </summary>
-public class QmuMigrationProfile : ISyncMigrationPlan
+public class QmuMigrationPlan : ISyncMigrationPlan
 {
     private readonly SyncMigrationHandlerCollection _migrationHandlers;
 
-    public QmuMigrationProfile(SyncMigrationHandlerCollection migrationHandlers)
+    public QmuMigrationPlan(SyncMigrationHandlerCollection migrationHandlers)
     {
         _migrationHandlers = migrationHandlers;
     }
 
-    public string Name => "QMU Migration Profile";
+    public string Name => "QMU Migration Plan";
 
     public string Icon => "icon-cloud color-blue";
 
@@ -33,22 +33,22 @@ public class QmuMigrationProfile : ISyncMigrationPlan
 
     public MigrationOptions Options => new()
     {
+        // TODO:  Enable as an in-place convert (?)
+        //Group = "Convert",
+        //Source = "uSync/v9",
+
         SourceVersion = 8, // only run on v8 to v10+ migrations
 
         // write out to the same folder each time.
         Target = $"{uSyncMigrations.MigrationFolder}/QMU-Migration",
 
-        // load all the handlers just enable the content ones.
-        Handlers = _migrationHandlers
-                        .Handlers
-                        .Select(x => x.ToHandlerOption(true))
-                        .ToList(),
+        Handlers = _migrationHandlers.SelectGroup(8, string.Empty),
 
         // for this migrator we want to use our custom grid to BlockList migrator.
         PreferredMigrators = new Dictionary<string, string>()
         {
             { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid, nameof(GridToBlockListMigrator) },
-            //{ Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.NestedContent, nameof(NestedToBlockListMigrator) }
+            { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.NestedContent, nameof(NestedToBlockListMigrator) } // NC to BlockList too
         },
 
         // add a list of properties we are ignoring on all content

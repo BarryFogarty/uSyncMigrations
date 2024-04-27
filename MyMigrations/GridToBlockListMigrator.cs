@@ -1,5 +1,5 @@
 ﻿using Umbraco.Cms.Core.Composing;
-
+using Umbraco.Cms.Core.Models;
 using uSync.Migrations.Core.Context;
 using uSync.Migrations.Core.Migrators;
 using uSync.Migrations.Core.Migrators.Models;
@@ -19,6 +19,9 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
     /// </remarks>
     public override string GetEditorAlias(SyncMigrationDataTypeProperty propertyModel, SyncMigrationContext context)
         => Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList;
+
+    public override string GetDatabaseType(SyncMigrationDataTypeProperty dataTypeProperty, SyncMigrationContext context)
+        => nameof(ValueStorageType.Ntext);
 
     // TODO: Convert the grid config to block list grid. 
     public override object? GetConfigValues(SyncMigrationDataTypeProperty dataTypeModel, SyncMigrationContext context)
