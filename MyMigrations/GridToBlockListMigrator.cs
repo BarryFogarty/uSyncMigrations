@@ -28,8 +28,30 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
         => nameof(ValueStorageType.Ntext);
 
     // TODO: Convert the grid config to block list grid. 
-    public override object? GetConfigValues(SyncMigrationDataTypeProperty dataTypeModel, SyncMigrationContext context)
-        => base.GetConfigValues(dataTypeModel, context);
+    public override object? GetConfigValues(SyncMigrationDataTypeProperty dataTypeProperty, SyncMigrationContext context)
+    {
+        _logger.LogDebug(">> {method}", nameof(GetConfigValues));
+
+        if (dataTypeProperty.ConfigAsString == null)
+        {
+            _logger.LogDebug("Config is null, returning empty block grid config");
+            return new BlockListConfiguration();
+        }
+
+        var excludedAliases = new List<string>() { "Test - Rich Text Block", "RC Test" };
+        if (excludedAliases.Contains(dataTypeProperty.DataTypeAlias))
+        {
+            _logger.LogDebug($"{dataTypeProperty.DataTypeAlias} datatype is excluded from conversion as it is not utilised.  Returning empty block grid config");
+            return new BlockListConfiguration();
+        }
+
+        var gridConfiguration = JsonConvert
+            .DeserializeObject<GridConfiguration>(dataTypeProperty.ConfigAsString);
+
+        // TODO: Make a blocklist config based on the grid datatype config (i.e. add the allowed blocks / settings etc
+
+        return new BlockListConfiguration();
+    }
 
     // TODO: Convert grid content to blocklist grid content
     public override string? GetContentValue(SyncMigrationContentProperty contentProperty, SyncMigrationContext context)

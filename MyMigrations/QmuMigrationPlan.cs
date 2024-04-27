@@ -45,17 +45,18 @@ public class QmuMigrationPlan : ISyncMigrationPlan
         Handlers = _migrationHandlers.SelectGroup(8, string.Empty),
 
         // for this migrator we want to use our custom grid to BlockList migrator.
+        // We also want to include NC to BlockList
         PreferredMigrators = new Dictionary<string, string>()
         {
             { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.Grid, nameof(GridToBlockListMigrator) },
-            { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.NestedContent, nameof(NestedToBlockListMigrator) } // NC to BlockList too
+            { Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.NestedContent, nameof(NestedToBlockListMigrator) }
         },
 
         // add a list of properties we are ignoring on all content
-        IgnoredProperties = new List<string>
-        {
-            "bandedContent"
-        },
+        //IgnoredProperties = new List<string>
+        //{
+        //    "bandedContent"
+        //},
     };
 
 }
