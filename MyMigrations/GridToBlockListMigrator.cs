@@ -1,16 +1,14 @@
 ﻿using Lucene.Net.Util;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
-using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Extensions;
+
 using uSync.Migrations.Core.Context;
 using uSync.Migrations.Core.Legacy.Grid;
 using uSync.Migrations.Core.Migrators;
 using uSync.Migrations.Core.Migrators.Models;
 using uSync.Migrations.Core.Models;
-
 
 namespace MyMigrations;
 
@@ -37,7 +35,7 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
     public override string GetEditorAlias(SyncMigrationDataTypeProperty propertyModel, SyncMigrationContext context)
         => Umbraco.Cms.Core.Constants.PropertyEditors.Aliases.BlockList;
 
-    // TODO: Convert the grid config to block list grid. 
+    // Convert the grid config to block list grid. 
     public override object? GetConfigValues(SyncMigrationDataTypeProperty dataTypeProperty, SyncMigrationContext context)
     {
         _logger.LogDebug(">> {method}", nameof(GetConfigValues));
@@ -48,18 +46,13 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
             return new BlockListConfiguration();
         }
 
-        var excludedAliases = new List<string>() { "Test - Rich Text Block", "RC Test" };
+        var excludedAliases = new List<string>() { "Test - Rich Text Block", "RC Test" }; // These datatypes are not utilised, exclude them
         if (excludedAliases.Contains(dataTypeProperty.DataTypeAlias))
         {
-            _logger.LogDebug($"{dataTypeProperty.DataTypeAlias} datatype is excluded from conversion as it is not utilised.  Returning empty block grid config");
+            string message = $"{dataTypeProperty.DataTypeAlias} datatype is excluded from conversion as it is not utilised.  Returning empty block grid config";
+            _logger.LogDebug(message);
             return new BlockListConfiguration();
         }
-
-        var gridConfiguration = JsonConvert.DeserializeObject<GridConfiguration>(dataTypeProperty.ConfigAsString);
-
-        // TODO: Make a blocklist config based on the grid datatype config (i.e. add the allowed blocks etc)
-
-        var legacyGridEditorsConfig = GetGridConfig(context);
 
         // Default config
         var config = new BlockListConfiguration()
@@ -71,22 +64,19 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
             },
         };
 
-        switch (dataTypeProperty.DataTypeAlias)
+        // Implement specific config based on datatype alias
+        config.Blocks = dataTypeProperty.DataTypeAlias switch
         {
-            case "Right Column Layout - Grid":
-                config.Blocks = AddSidebarBlocks(context);
-                break;
-            case "Banded Article":
-                config.Blocks = AddArticleBlocks(context);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException($"Unknown Grid datatype encountered: {dataTypeProperty.DataTypeAlias}");
-        }
+            "Right Column Layout - Grid" => SidebarBlockListConfig(context),
+            "Banded Article" => ArticleBlockListConfig(context),
+            _ => throw new ArgumentOutOfRangeException($"Unknown Grid datatype encountered: {dataTypeProperty.DataTypeAlias}"),
+        };
 
         return config;
     }
 
-    private BlockListConfiguration.BlockConfiguration[] AddSidebarBlocks(SyncMigrationContext context)
+    #region Datatype config
+    private static BlockListConfiguration.BlockConfiguration[] SidebarBlockListConfig(SyncMigrationContext context)
     {
         // Would be best to get this from config, but for now let's just gen a hardcoded list of blocks
         // TODO:  Detect / warn for any _Content_ blocks that do not have a matching config item
@@ -142,7 +132,7 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
         return blocks.ToArray();
     }
 
-    private BlockListConfiguration.BlockConfiguration[] AddArticleBlocks(SyncMigrationContext context)
+    private static BlockListConfiguration.BlockConfiguration[] ArticleBlockListConfig(SyncMigrationContext context)
     {
         var bandedImageBlockAlias = "bandedImageBlock";
         var contentElementTypeKey = context.ContentTypes.GetKeyByAlias(bandedImageBlockAlias);
@@ -198,15 +188,11 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
 
         return newContentType;
     }
+    #endregion
 
     // TODO: Convert grid content to blocklist grid content
     public override string? GetContentValue(SyncMigrationContentProperty contentProperty, SyncMigrationContext context)
         => base.GetContentValue(contentProperty, context);
-
-    private ILegacyGridEditorsConfig GetGridConfig(SyncMigrationContext context)
-    {
-        return _gridConfig.EditorsByContext(context);
-    }
 
 
 }
