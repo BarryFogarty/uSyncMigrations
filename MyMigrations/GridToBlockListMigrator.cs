@@ -1,13 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Lucene.Net.Util;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.PropertyEditors;
-
+using Umbraco.Extensions;
 using uSync.Migrations.Core.Context;
 using uSync.Migrations.Core.Legacy.Grid;
 using uSync.Migrations.Core.Migrators;
 using uSync.Migrations.Core.Migrators.Models;
+using uSync.Migrations.Core.Models;
 
 
 namespace MyMigrations;
@@ -142,25 +144,59 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
 
     private BlockListConfiguration.BlockConfiguration[] AddArticleBlocks(SyncMigrationContext context)
     {
-        var blocks = new List<BlockListConfiguration.BlockConfiguration>();
+        var bandedImageBlockAlias = "bandedImageBlock";
+        var contentElementTypeKey = context.ContentTypes.GetKeyByAlias(bandedImageBlockAlias);
 
-        //foreach (var item in configuration)
-        //{
-        //    var alias = context.ContentTypes.GetReplacementAlias(item);
+        if (contentElementTypeKey.Equals(Guid.Empty)) 
+        {
+            var newContentElement = CreateBandedImageBlock(bandedImageBlockAlias, context);
+            contentElementTypeKey = newContentElement.Key;
+        }
 
-        //    var contentTypeKey = context.ContentTypes.GetKeyByAlias(alias);
-
-        //    // tell the process we need this to be an element type
-        //    context.ContentTypes.AddElementTypes(new[] { contentTypeKey }, true);
-
-        //    blocks.Add(new BlockListConfiguration.BlockConfiguration
-        //    {
-        //        ContentElementTypeKey = contentTypeKey,
-        //        Label = item // TODO, add labels to sidebarGridEditorAliases (key value pair / dict)
-        //    });
-        //}
+        var blocks = new List<BlockListConfiguration.BlockConfiguration>
+        {
+            new() {
+                Label = "Banded Image Block",
+                Thumbnail = "icon-picture",
+                ContentElementTypeKey = contentElementTypeKey
+            }
+        };
 
         return blocks.ToArray();
+    }
+
+    private static NewContentTypeInfo CreateBandedImageBlock(string bandedImageBlockAlias, SyncMigrationContext context)
+    {
+        var newContentType = new NewContentTypeInfo(
+            key: bandedImageBlockAlias.ToGuid(),
+            alias: bandedImageBlockAlias,
+            name: "Banded Image Block",
+            icon: "icon-picture", // TODO with text?
+            folder: "BlockList")
+        {
+            IsElement = true
+        };
+
+        // Boilerplate: Add properties to element (Image, Title, Text, Img Position)
+        newContentType.Tabs = new List<NewContentTypeTab>() {
+            new() { Alias = "content", Name = "Content" }
+        };
+
+        newContentType.Properties.AddRange(
+            new List<NewContentTypeProperty>()
+            {
+                new(alias: "image", name: "Image", dataTypeAlias: "Media Picker") { TabAlias = "content" },
+                new(alias: "Title",name: "title", dataTypeAlias: "Textstring") { TabAlias = "content" },
+                new(alias: "Text", name: "text", dataTypeAlias: "Textarea") { TabAlias = "content" },
+                new(alias: "imageLeft", name: "Image Left?", dataTypeAlias: "truefalse") { TabAlias = "content" },
+            }
+        );
+
+        context.ContentTypes.AddNewContentType(newContentType);
+        context.ContentTypes.AddAliasAndKey(newContentType.Alias, newContentType.Key);
+        context.ContentTypes.AddElementType(newContentType.Key);
+
+        return newContentType;
     }
 
     // TODO: Convert grid content to blocklist grid content
