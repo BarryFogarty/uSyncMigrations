@@ -97,11 +97,11 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
         var blocks = new List<BlockListConfiguration.BlockConfiguration>
         {
             new() {
-                Label = "Links",
+                Label = "Link: {{ link | ncNodeName }}",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("links")
             },
             new() {
-                Label = "Useful Links",
+                Label = "Useful Links: {{ title || \"Useful Links\" }}",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("usefulLinks")
             },
             new() {
@@ -109,19 +109,19 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("usefulLinksFromLibrary")
             },
             new() {
-                Label = "Social Media",
-                ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("socialMedia")
+                Label = "RC Social Media",
+                ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("rCSocMed")
             },
             new() {
-                Label = "Custom Social Media",
+                Label = "Social Media (Custom)",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("customSocialMedia")
             },
             new() {
-                Label = "RC Event",
+                Label = "RC Event: {{ title }}",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("rCEvent")
             },
             new() {
-                Label = "Event (from library)",
+                Label = "Event: {{ event | ncNodeName }}",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("eventFromLibrary")
             },
             new() {
@@ -129,7 +129,7 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("newsEventsBlogs")
             },
             new() {
-                Label = "Quotes",
+                Label = "Quote: {{ quote | ncNodeName }}",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("quotes")
             }
         };
