@@ -98,47 +98,38 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
         {
             new() {
                 Label = "Links",
-                Thumbnail = "icon-link",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("links")
             },
             new() {
                 Label = "Useful Links",
-                Thumbnail = "icon-link",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("usefulLinks")
             },
             new() {
                 Label = "Useful Links (from Library)",
-                Thumbnail = "icon-link",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("usefulLinksFromLibrary")
             },
             new() {
                 Label = "Social Media",
-                Thumbnail = "icon-share",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("socialMedia")
             },
             new() {
                 Label = "Custom Social Media",
-                Thumbnail = "icon-share",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("customSocialMedia")
             },
             new() {
                 Label = "RC Event",
-                Thumbnail = "icon-calendar",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("rCEvent")
             },
             new() {
                 Label = "Event (from library)",
-                Thumbnail = "icon-calendar",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("eventFromLibrary")
             },
             new() {
                 Label = "News Events Blogs",
-                Thumbnail = "icon-newspaper",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("newsEventsBlogs")
             },
             new() {
                 Label = "Quotes",
-                Thumbnail = "icon-quote",
                 ContentElementTypeKey = context.ContentTypes.GetKeyByAlias("quotes")
             }
         };
@@ -160,8 +151,7 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
         var blocks = new List<BlockListConfiguration.BlockConfiguration>
         {
             new() {
-                Label = "Banded Image Block",
-                Thumbnail = "icon-picture",
+                Label = "Banded Image Block", // TODO:  Add media item name to the label?
                 ContentElementTypeKey = contentElementTypeKey
             }
         };
@@ -190,8 +180,8 @@ internal class GridToBlockListMigrator : SyncPropertyMigratorBase
             new List<NewContentTypeProperty>()
             {
                 new(alias: "image", name: "Image", dataTypeAlias: "Media Picker") { TabAlias = "content" },
-                new(alias: "Title",name: "title", dataTypeAlias: "Textstring") { TabAlias = "content" },
-                new(alias: "Text", name: "text", dataTypeAlias: "Textarea") { TabAlias = "content" },
+                new(alias: "Title",name: "Title", dataTypeAlias: "Textstring") { TabAlias = "content" },
+                new(alias: "Text", name: "Text", dataTypeAlias: "Textarea") { TabAlias = "content" },
                 new(alias: "imageLeft", name: "Image Left?", dataTypeAlias: "truefalse") { TabAlias = "content" },
             }
         );
