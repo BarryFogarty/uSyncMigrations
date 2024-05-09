@@ -1,0 +1,114 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Scholarship>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+}
+
+@section ExtraCss
+{
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container bs-body" id="left">
+        <div class="row">
+            <div class="col-md-4 order-md-2">
+
+                @if (Model.ClosingDate > DateTime.MinValue || !string.IsNullOrWhiteSpace(Model.ClosingText) || !string.IsNullOrWhiteSpace(Model.AmountAvailable) || Model.ApplyNowLink != null)
+                {
+                    var dateFormat = "d MMMM yyyy";
+                    if (Model.ClosingDate < DateTime.Today)
+                    {
+                        dateFormat = "MMMM";
+                    }
+
+                    <div class="scholarship-details">
+
+                        <h2>Key Details</h2>
+
+                        @if (Model.ClosingDate >= DateTime.Today)
+                        {
+                            <p>Deadline: <strong>@Model.ClosingDate.ToString(dateFormat)</strong></p>
+                        }
+                        else if (!string.IsNullOrWhiteSpace(Model.ClosingText))
+                        {
+                            <p>Deadline: <strong>@Model.ClosingText</strong></p>
+                        }
+                        else if (Model.ClosingDate > DateTime.MinValue)
+                        {
+                            <p>Deadline: <strong>@Model.ClosingDate.ToString(dateFormat)</strong></p>
+                        }
+
+
+                        @if (!string.IsNullOrWhiteSpace(Model.AmountAvailable))
+                        {
+                            <p>Amount Available: <strong>@Model.AmountAvailable</strong></p>
+                        }
+
+                        @if (Model.ApplyNowLink != null)
+                        {
+                            <a href="@Model.ApplyNowLink.Url" target="@Model.ApplyNowLink.Target" class="white-btn">Apply Now</a>
+                        }
+                    </div>
+                }
+            </div>
+            <div class="col-md-8 order-md-1">
+
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                @Model.Introduction
+
+                <div class="accordion-list">
+
+                    @if (Model.Overview != null && !string.IsNullOrWhiteSpace(Model.Overview.ToString()))
+                    {
+                        <div class="accordion-item">
+                            <h2 tabindex="0">Overview</h2>
+                            <div class="drop">@Html.Raw(Model.Overview)</div>
+                        </div>
+                    }
+
+                    @if (Model.Details != null && !string.IsNullOrWhiteSpace(Model.Details.ToString()))
+                    {
+                        <div class="accordion-item">
+                            <h2 tabindex="0">Details</h2>
+                            <div class="drop">@Html.Raw(Model.Details)</div>
+                        </div>
+                    }
+
+                    @if (Model.WhatSincludedInTheScholarship != null && !string.IsNullOrWhiteSpace(Model.WhatSincludedInTheScholarship.ToString()))
+                    {
+                        <div class="accordion-item">
+                            <h2 tabindex="0">What's Included in the Scholarship</h2>
+                            <div class="drop">@Html.Raw(Model.WhatSincludedInTheScholarship)</div>
+                        </div>
+                    }
+
+                    @if (Model.HowToApply != null && !string.IsNullOrWhiteSpace(Model.HowToApply.ToString()))
+                    {
+                        <div class="accordion-item">
+                            <h2 tabindex="0">How to Apply</h2>
+                            <div class="drop">@Html.Raw(Model.HowToApply)</div>
+                        </div>
+                    }
+
+                    @if (Model.SelectionProcess != null && !string.IsNullOrWhiteSpace(Model.SelectionProcess.ToString()))
+                    {
+                        <div class="accordion-item">
+                            <h2 tabindex="0">Selection Process</h2>
+                            <div class="drop">@Html.Raw(Model.SelectionProcess)</div>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+

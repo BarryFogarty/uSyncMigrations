@@ -1,0 +1,31 @@
+
+
+
+
+
+        
+
+/**umb_name:Heading 2*/
+h2 {
+	font-size: 36px;
+}
+
+/**umb_name:Lead text*/
+.lead {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+/**umb_name:Lead text big*/
+.lead-big {
+	font-size: 19px;
+	font-weight: bold;
+}
+
+/**umb_name:Blue button*/
+.blue-btn {
+	color: #ffffff;
+	background: #37495c;
+	font-weight: bold;
+	padding: 2px;
+}

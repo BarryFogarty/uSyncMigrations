@@ -1,0 +1,17 @@
+﻿{
+  "icon": "icon-folder",
+  "root": "uSync\\Migrations\\QMU_Migration",
+  "id": "QMU_Custom_Migration",
+  "version": 8,
+  "name": "QMU_Custom_Migration",
+  "source": "uSync/Migrations/QMU_Migration/v8",
+  "siteFolder": "uSync/Migrations/QMU_Migration/_site",
+  "target": "uSync/Migrations/QMU_Migration/migrated",
+  "migrated": false,
+  "importStatus": {
+    "Content": false,
+    "Settings": false
+  },
+  "plan": "QmuMigrationPlan",
+  "clientId": "AhKaYGGvTSWfZWvwob94Zg"
+}

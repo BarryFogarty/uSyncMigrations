@@ -1,0 +1,35 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BandedArticle>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+
+@{
+    Layout = "Master.cshtml";
+}
+
+@section ExtraCss
+{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/banded-article.css">
+}
+
+@section ExtraJs
+{
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+}
+
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<div class="qmu_pg_banded qmu_pg_banded--banded-article">
+    <main role="main" class="main-content">
+        <div class="qmu_pg_banded__bands container">
+            <div class="column-layout">
+                <div class="banded-left" id="left" tabindex="-1">
+
+                    @Html.GetGridHtml(Model, "bandedContent", "bootstrap3")
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

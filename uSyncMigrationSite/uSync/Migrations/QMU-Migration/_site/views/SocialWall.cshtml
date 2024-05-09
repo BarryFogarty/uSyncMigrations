@@ -1,0 +1,534 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.SocialWall>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+    var tiles = Model.Tiles;
+
+    //Bools return true or false if there are/arn't any of the tile types, this is used below to hide the uneeded filters if false
+    bool isTwitterTiles = tiles.Where(x => x.Type == "Twitter").Any();
+    bool isFacebookTiles = tiles.Where(x => x.Type == "Facebook").Any();
+    bool isInstagramTiles = tiles.Where(x => x.Type == "Instagram").Any();
+    bool isYouTubeTiles = tiles.Where(x => x.Type == "YouTube").Any();
+    bool isArticleTiles = tiles.Where(x => x.Type == "Articles").Any();
+    bool isUnderfinedTiles = tiles.Where(x => x.Type == "").Any();
+
+
+    //Only want to show the filters on this page if more than one tile type is populated 
+    
+    bool[] tileTypesArray = { isTwitterTiles, isFacebookTiles, isInstagramTiles, isYouTubeTiles, isArticleTiles, isUnderfinedTiles };
+    int numberOfTypesUsed = tileTypesArray.Where(y => y == true).Count();
+    bool showFilters = numberOfTypesUsed > 1 ? true : false;
+
+
+}
+
+@* TODO: This is needed for the 'card' elements on this page, needs removing once cards have been added to the scss bootstrap *@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content social-wall" style="display:flow-root;" aria-label="main body content">
+    <div class="content pb-0">
+        <div class="container">
+
+            <div class="d-flex justify-content-end justify-content-md-between align-items-center">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+           
+            <h1>@Model.DisplayTitle</h1>
+            @Model.Introduction
+
+
+
+            @*<div class="mob-filter">
+            <div class="show-filter">Show Filter...</div>
+            <div class="active-filter">All</div>
+        </div>*@
+
+
+            @*<ul class="social-filter">
+            <li><div id="all" class="all" role="button" aria-label="Remove filter" tabindex="0"><span>All</span></div></li>
+
+            <li><div id="twitter" role="button" aria-label="Filter by Twitter" tabindex="0"><span class="icon-twitter">Twitter</span></div></li>
+
+            <li><div id="facebook" role="button" aria-label="Filter by Facebook" tabindex="0"><span class="icon-facebook-official">Facebook</span></div></li>
+
+            <li><div id="instagram" role="button" aria-label="Filter by Instagram" tabindex="0"><span class="icon-instagram">Instagram</span></div></li>
+
+            <li><div id="youtube" role="button" aria-label="Filter by Youtube" tabindex="0"><span class="icon-youtube-play">Youtube</span></div></li>
+
+            <li><div id="articles" role="button" aria-label="Filter by Articles" tabindex="0"><span class="icon-articles">Articles</span></div></li>
+        </ul>*@
+            @*<div class="sw-results">
+            @foreach (var tile in tiles)
+            {
+                var cssClass = string.Empty;
+
+                if (@tile.Type == "Twitter")
+                {
+                    cssClass = "twitter icon-twitter";
+                }
+                else if (@tile.Type == "Facebook")
+                {
+                    cssClass = "facebook icon-facebook-official";
+                }
+                else if (@tile.Type == "Instagram")
+                {
+                    cssClass = "instagram icon-instagram";
+                }
+                else if (@tile.Type == "YouTube")
+                {
+                    cssClass = "youtube icon-youtube-play";
+                }
+                else if (@tile.Type == "Articles")
+                {
+                    cssClass = "articles icon-articles";
+                }
+
+            }
+
+        </div>*@
+
+
+        </div>
+    </div>
+
+    @* Actual social wall component *@
+    <section class="qmu_cmp_social-wall component-spacing pt-0">
+        <div class="container-lg">
+
+            @if(showFilters != false)
+            {
+                <ul class="social-filter">
+                    <li><div id="all" class="all" role="button" aria-label="Remove filter" tabindex="0"><span>All</span></div></li>
+                    @if (isTwitterTiles != false)
+                    {
+                        <li><div id="twitter" role="button" aria-label="Filter by Twitter" tabindex="0"><span class="icon-twitter">Twitter</span></div></li>
+                    }
+
+                    @if (isFacebookTiles != false)
+                    {
+                        <li><div id="facebook" role="button" aria-label="Filter by Facebook" tabindex="0"><span class="icon-facebook-official">Facebook</span></div></li>
+                    }
+
+                    @if (isInstagramTiles != false)
+                    {
+                        <li><div id="instagram" role="button" aria-label="Filter by Instagram" tabindex="0"><span class="icon-instagram">Instagram</span></div></li>
+                    }
+
+                    @if(isYouTubeTiles != false)
+                    {
+                        <li><div id="youtube" role="button" aria-label="Filter by Youtube" tabindex="0"><span class="icon-youtube-play">Youtube</span></div></li>
+                    }
+
+                    @if(isArticleTiles != false)
+                    {
+                        <li><div id="articles" role="button" aria-label="Filter by Articles" tabindex="0"><span class="icon-articles">Articles</span></div></li>
+                    }
+
+                </ul>
+
+                <div class="mob-filter">
+                    <div class="show-filter">Show Filter...</div>
+                    <div class="active-filter">All</div>
+                </div>
+            }
+
+
+        <div class="card-columns">
+            @foreach (var tile in tiles)
+            {
+
+                var cssClass = string.Empty;
+                var test = tile.IncludeQuotationMarks;
+
+                if (@tile.Type == "Twitter")
+                {
+                    cssClass = "twitter icon-twitter";
+                }
+                else if (@tile.Type == "Facebook")
+                {
+                    cssClass = "facebook icon-facebook-official";
+                }
+                else if (@tile.Type == "Instagram")
+                {
+                    cssClass = "instagram icon-instagram";
+                }
+                else if (@tile.Type == "YouTube")
+                {
+                    cssClass = "youtube icon-youtube-play";
+                }
+                else if (@tile.Type == "Articles")
+                {
+                    cssClass = "articles icon-articles";
+                }
+
+                if (tile.Link != null)
+                {
+                    <div class="card" style="margin-bottom:0px; border:0px;">
+                        <a href="@tile.Link.Url" class="social-item @tile.Type @cssClass">
+                            @if (tile.Image != null)
+                            {
+                                <img class="card-img-top img-fluid" src="@tile.Image.Url()" style="border-top-left-radius: 0; border-top-right-radius: 0;" alt="@tile.Image.Value("altText")">
+                            }
+                            <div class="card-body" style="background-color:#e7e7e7; color:black; padding:0;">
+                                @if (!String.IsNullOrEmpty(tile.Quote))
+                                {
+                                    <div class="quote @(tile.IncludeQuotationMarks ? "" : "quote--no-quotations")">
+                                        @tile.Quote
+                                    </div>
+                                }
+                                <div class="text-block">
+                                    @if (!String.IsNullOrEmpty(tile.Summary))
+                                    {
+                                        @tile.Summary
+                                    }
+
+                                    @if (tile.Date != default(DateTime))
+                                    {
+                                        <div class="date">@tile.Date.ToString("MMM d")</div>
+                                    }
+                                    <div class="view-post">View post</div>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                }
+
+
+            }
+        </div>
+        </div>
+    </section>
+
+    @if(!String.IsNullOrEmpty(Model.LowerBannerCopy.ToString()))
+    {
+        <section class="component-spacing pt-0">
+            <div class="container">
+                @Html.Raw(Model.LowerBannerCopy)
+            </div>
+        </section>
+    }
+</main>
+
+
+@*<style>
+    .column {
+        float: left;
+        width: 25%;
+        padding: 0 9px;
+    }
+
+        .column .social-item {
+            position: relative;
+            border: 12px solid transparent;
+            margin-bottom: 20px;
+            -moz-transition: border-color 0.15s ease-in-out;
+            -o-transition: border-color 0.15s ease-in-out;
+            -webkit-transition: border-color 0.15s ease-in-out;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+    .card-columns .social-item.twitter:before {
+        font-size: 29px;
+        background: #4DC7F0;
+        padding: 6px 0;
+        color: #fff;
+    }
+
+    .card-columns .social-item.facebook:before {
+        font-size: 29px;
+        background: #3D599A;
+        padding: 6px 0;
+        color: #fff;
+    }
+
+    .card-columns .social-item.instagram:before {
+        font-size: 29px;
+        background: #A94DBC;
+        padding: 6px 0;
+        color: #fff;
+    }
+
+    .card-columns .social-item.youtube:before {
+        font-size: 32px;
+        background: #E52518;
+        padding: 5px 0;
+    }
+
+    .card-columns .social-item.articles:before {
+        content: ' ';
+        font-size: 40px;
+        background: #D57801 url(/images/icon-article-white.png) no-repeat center;
+        background-size: 18px 24px;
+        padding: 6px 0;
+    }
+
+    .card-columns .social-item {
+        display: block;
+        text-decoration: none;
+        position: relative;
+        border: 12px solid transparent;
+        margin-bottom: 20px;
+        -moz-transition: border-color 0.15s ease-in-out;
+        -o-transition: border-color 0.15s ease-in-out;
+        -webkit-transition: border-color 0.15s ease-in-out;
+        transition: border-color 0.15s ease-in-out;
+    }
+
+        .card-columns .social-item:hover {
+            border-color: #6990b2;
+        }
+
+        .card-columns .social-item:before {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 40px;
+            z-index: 200;
+            margin-left: 0;
+            color: #fff;
+        }
+
+        .card-columns .social-item .text-block {
+            position: relative;
+            padding: 20px 14px 58px 14px;
+            background: #e7e7e7;
+            color: #333;
+            line-height: 26px;
+        }
+
+        .card-columns .social-item .quote {
+            position: relative;
+            background: #374a5c;
+            font-size: 16px;
+            line-height: 24px;
+            color: #fff;
+            padding: 42px 18px 42px 22px;
+        }
+
+            .card-columns .social-item .quote:before {
+                position: absolute;
+                top: 14px;
+                left: 14px;
+                content: ' ';
+                background: url(/images/icon-quote1.png) no-repeat center;
+                background-size: 19px 17px;
+                width: 19px;
+                height: 17px;
+            }
+
+
+            .card-columns .social-item .quote:after {
+                position: absolute;
+                bottom: 14px;
+                right: 14px;
+                content: ' ';
+                background: url(/images/icon-quote2.png) no-repeat center;
+                background-size: 19px 17px;
+                width: 19px;
+                height: 17px;
+            }
+
+        .card-columns .social-item .text-block:before {
+            position: absolute;
+            top: -10px;
+            left: 8px;
+            margin: 0 auto;
+            content: ' ';
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid #e7e7e7;
+        }
+
+    .column .image {
+        margin-bottom: 0px;
+    }
+
+    .card-columns .view-post {
+        cursor: pointer;
+        position: absolute;
+        bottom: 6px;
+        right: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #374a5c;
+    }
+
+    .sw-item {
+        width: 25%;
+    }
+</style>*@
+
+<script>
+    function twitterSearch() {
+        var filter = "twitter";
+        var nodes = document.getElementsByClassName('card');
+
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].innerHTML.toLowerCase().includes(filter)) {
+                nodes[i].style.display = "inline-block";
+            } else {
+                nodes[i].style.display = "none";
+            }
+        }
+    }
+
+    function fbSearch() {
+        var filter = "facebook";
+        var nodes = document.getElementsByClassName('card');
+
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].innerHTML.toLowerCase().includes(filter)) {
+                nodes[i].style.display = "inline-block";
+            } else {
+                nodes[i].style.display = "none";
+            }
+        }
+    }
+
+    function instaSearch() {
+        var filter = "instagram";
+        var nodes = document.getElementsByClassName('card');
+
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].innerHTML.toLowerCase().includes(filter)) {
+                nodes[i].style.display = "inline-block";
+            } else {
+                nodes[i].style.display = "none";
+            }
+        }
+    }
+
+    function ytSearch() {
+        var filter = "play";
+        var nodes = document.getElementsByClassName('card');
+
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].innerHTML.toLowerCase().includes(filter)) {
+                nodes[i].style.display = "inline-block";
+            } else {
+                nodes[i].style.display = "none";
+            }
+        }
+    }
+
+    function artSearch() {
+        var filter = "article";
+        var nodes = document.getElementsByClassName('card');
+
+        for (i = 0; i < nodes.length; i++) {
+            if (nodes[i].innerHTML.toLowerCase().includes(filter)) {
+                nodes[i].style.display = "inline-block";
+            } else {
+                nodes[i].style.display = "none";
+            }
+        }
+    }
+
+    function clearSearch() {
+        var nodes = document.getElementsByClassName('card');
+        for (i = 0; i < nodes.length; i++) {
+            nodes[i].style.display = "inline-block";
+        }
+    }
+
+    function socialSearch(btn) {
+        var id = btn.attr("id");
+        if (id == "all") {
+            clearSearch();
+        }
+        if (id == "twitter") {
+            twitterSearch();
+        }
+        if (id == "facebook") {
+            fbSearch();
+        }
+        if (id == "instagram") {
+            instaSearch();
+        }
+        if (id == "youtube") {
+            ytSearch();
+        }
+        if (id == "articles") {
+            artSearch();
+        }
+    }
+
+    $('.social-filter li div').on('click', function () {
+        socialSearch($(this));
+    });
+
+    $('.social-filter li div').keypress(function (event) {
+        if (event.key == "Enter") {
+            socialSearch($(this));
+            event.preventDefault();
+        }
+    });
+
+</script>
+@*<div class="container qmu_cmp_social-wall" style="max-width:1300px;">
+    <div class="card-columns">
+        @foreach (var tile in tiles)
+        {
+
+            var cssClass = string.Empty;
+
+            if (@tile.Type == "Twitter")
+            {
+                cssClass = "twitter icon-twitter";
+            }
+            else if (@tile.Type == "Facebook")
+            {
+                cssClass = "facebook icon-facebook-official";
+            }
+            else if (@tile.Type == "Instagram")
+            {
+                cssClass = "instagram icon-instagram";
+            }
+            else if (@tile.Type == "YouTube")
+            {
+                cssClass = "youtube icon-youtube-play";
+            }
+            else if (@tile.Type == "Articles")
+            {
+                cssClass = "articles icon-articles";
+            }
+
+
+            <div class="card" style="margin-bottom:0px; border:0px;">
+                <a href="@tile.Link.Url" class="social-item @cssClass">
+                    <img class="card-img-top img-fluid" src="@tile.Image.Url()" style="border-top-left-radius: 0; border-top-right-radius: 0;" alt="@tile.Image.Value("altText")">
+                    <div class="card-body" style="background-color:#e7e7e7; color:black; padding:0;">
+                        <div class="quote">
+                            @tile.Quote
+                        </div>
+                        <div class="text-block">
+                            @tile.Summary
+                            <div class="date">@tile.Date.ToString("MMM d")</div>
+                            <div class="view-post">View post</div>
+                        </div>
+
+                    </div>
+                </a>
+            </div>
+
+        }
+    </div>
+</div>*@
+
+<style>
+
+    .text-block {
+        font-family: Helvetica, Arial;
+        font-weight: normal;
+        font-size: 18px;
+        color: #333;
+    }
+</style>

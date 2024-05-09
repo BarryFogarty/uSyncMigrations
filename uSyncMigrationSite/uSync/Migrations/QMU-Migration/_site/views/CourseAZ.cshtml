@@ -1,0 +1,773 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.CourseAZ>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Core.PropertyEditors
+@using System.Text.RegularExpressions
+@using Umbraco.Web.PublishedModels
+@using QMUCloud.Core.Services
+@using QMUCloud.Core.Models.ViewModels
+@using QMUCloud.Core.Helpers
+
+@{
+    Layout = "Master.cshtml";
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#keyword').focus();
+
+        });
+
+    </script>
+
+    var homePage = Umbraco.ContentAtRoot().FirstOrDefault(n => n.ContentType.Alias == "home");
+    var studyHerePage = homePage.FirstChild(n => n.Name == "Study Here");
+    var ugNode = studyHerePage.FirstChild(n => n.Name == "Undergraduate Study");
+    var pgNode = studyHerePage.FirstChild(n => n.Name == "Postgraduate Study");
+    var pgResearchNode = studyHerePage.FirstChild(n => n.Name == "Postgraduate Research Study");
+    var cpdNode = studyHerePage.FirstChild(n => n.Name == "Continuing Professional Development (CPD) courses");
+    var scNode = studyHerePage.FirstChild(n => n.Name == "Short Courses");
+
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+
+    var ugAllCourses = searchService.GetDescendantsWithType(ugNode, "undergraduateCourse").Where(y => !y.Value<bool>("hideFromCourseSearch")).ToList();
+    var ugExternalCourses = searchService.GetDescendantsWithType(ugNode, "externalCourse").Where(y => !y.Value<bool>("hideFromCourseSearch"));
+    var pgAllCourses = searchService.GetDescendantsWithType(pgNode, "postgraduateTaughtCourse").Where(y => !y.Value<bool>("hideFromCourseSearch")).ToList();
+    var pgResearchCourses = searchService.GetDescendantsWithType(pgResearchNode, "postgraduateResearchCourse").Where(y => !y.Value<bool>("hideFromCourseSearch"));
+    var pgExternalCourses = searchService.GetDescendantsWithType(pgNode, "externalCourse").Where(y => !y.Value<bool>("hideFromCourseSearch"));
+    var cpdAllCourses = searchService.GetDescendantsWithType(cpdNode, "cPDCourse").Where(y => !y.Value<bool>("hideFromCourseSearch")).ToList();
+    var cpdExternalCourses = searchService.GetDescendantsWithType(cpdNode, "externalCourse").Where(y => !y.Value<bool>("hideFromCourseSearch"));
+    var shortAllCourses = searchService.GetDescendantsWithType(scNode, "microCredentialCourse").Where(y => !y.Value<bool>("hideFromCourseSearch")).ToList();
+    var shortExternalCourses = searchService.GetDescendantsWithType(scNode, "externalCourse").Where(y => !y.Value<bool>("hideFromCourseSearch"));
+
+    ugAllCourses.AddRange(ugExternalCourses);
+    var ugCourses = ugAllCourses.OrderBy(x => x.Value<string>("courseTitle"));
+
+    pgAllCourses.AddRange(pgResearchCourses);
+    pgAllCourses.AddRange(pgExternalCourses);
+    var pgCourses = pgAllCourses.OrderBy(x => x.Value<string>("courseTitle"));
+
+    cpdAllCourses.AddRange(cpdExternalCourses);
+    var cpdCourses = cpdAllCourses.OrderBy(x => x.Value<string>("courseTitle"));
+
+    shortAllCourses.AddRange(shortExternalCourses);
+    var shortCourses = shortAllCourses.OrderBy(x => x.Value<string>("courseTitle"));
+
+    var settingsPage = Umbraco.ContentAtRoot().FirstOrDefault(n => n.ContentType.Alias == "settings");
+    var tagsFolder = settingsPage.FirstChild(c => c.ContentType.Alias == "tagFolder" && c.Name == "Tags");
+    var azFolder = tagsFolder.FirstChild(c => c.ContentType.Alias == "tagFolder" && c.Name == "Course A-Z Tags");
+    IEnumerable<IPublishedContent> courseTags = new List<IPublishedContent>();
+    IEnumerable<IPublishedContent> courseTagFolders = new List<IPublishedContent>();
+    if (azFolder != null)
+    {
+        courseTags = searchService.GetDescendantsWithType(azFolder, "tag");
+        courseTagFolders = azFolder.ChildrenOfType("tagFolder").OrderBy(x => x.SortOrder);
+    }
+
+    string tab = Request.QueryString["tab"];
+    if (string.IsNullOrWhiteSpace(tab))
+    {
+        tab = "undergraduate";
+    }
+
+    string keyword = Request.QueryString["keyword"];
+    string queryTag = Request.QueryString["tag"];
+    string subject = Request.QueryString["subject"];
+    string subjectName = "";
+    string subjectClass = "";
+    IEnumerable<Guid> subjectCourseKeys = null;
+
+    if (int.TryParse(subject, out int subjectId))
+    {
+        var subjectNode = Umbraco.Content(subjectId);
+        if (subjectNode != null)
+        {
+            subjectName = subjectNode.Name;
+            subjectClass = "match-subject";
+
+            var courses = subjectNode.Value<IEnumerable<IPublishedElement>>("relatedCourses");
+            if (courses != null && courses.Any())
+            {
+                subjectCourseKeys = courses.Select(c => c.Key);
+            }
+        }
+    }
+
+    var guid = Guid.NewGuid();
+    var courseSearchPage = "";
+}
+
+
+@* TODO: double check that these arn't needed, removing as causing accesibility issues *@
+@*<h2>@homePage.Id</h2>
+<h2></h2>
+<h2></h2>*@
+
+<main role="main" class="main-content no-header" aria-label="main body content">
+    <div class="column-layout grey on-top">
+        <div class="container">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                @Html.Raw(Model.Introduction)
+            </div>
+            <div class="right" style="background-color:transparent;">
+                <div class="image-box" style="background-image: url(/images/blue-image.png)">
+                    <h2>Course Finder</h2>
+                    <div class="course-search">
+
+                        <form action="@(courseSearchPage)" method="get" id="CourseSearchForm">
+                            @Html.TextBoxFor(model => @keyword, new
+                            {
+                                placeholder = "Search our Courses...",
+                                id = "keyword",
+                                name = "keyword",
+                                style = "z-index:-1000;",
+                                aria_label = "search text",
+                                onfocusin = string.IsNullOrWhiteSpace(keyword) ? "" : "filter()",
+                                onkeyup = "filter()"
+                            })
+                            <input type="submit" value="Show Courses" aria-label="search" />
+                        </form>
+
+                        <script>
+                            function filter() {
+
+                                $("#description").hide();
+
+                                var input = document.getElementById("keyword");
+                                var filter = input.value.toLowerCase();
+                                if ((filter.length > 0)) {
+                                    $("#description").html("Below are the courses with the keyword <strong>'" + filter + "'</strong>.");
+                                    $("#description").show();
+                                }
+
+                                var activeTags = $(".tag-button.active");
+
+                                var subjectDiv = $(".a-z.match-subject");
+                                if (subjectDiv.length) {
+                                    var subjectName = subjectDiv.attr("data-subject-name");
+                                    var description = "Below are the <strong>" + subjectName + "</strong> courses";
+                                    if (filter.length) {
+                                        description += " with the keyword <strong>'" + filter + "'</strong>.";
+                                    }
+                                    else {
+                                        description += ".";
+                                    }
+                                    $("#description").html(description);
+                                    $("#description").show();
+                                }
+
+                                var nodes = document.getElementsByClassName('course-item');
+                                for (i = 0; i < nodes.length; i++) {
+
+                                    var tagsMatch = true;
+                                    for (var j = 0; j < activeTags.length; j++) {
+                                        var matchClass = activeTags[j].getAttribute("data-match-class");
+                                        if (!nodes[i].classList.contains(matchClass)) {
+                                            tagsMatch = false;
+                                            break;
+                                        }
+                                    }
+
+                                    var keywordMatch = true;
+                                    if ((filter.length > 0)) {
+                                        keywordMatch = nodes[i].innerText.toLowerCase().includes(filter);
+                                    }
+
+                                    var subjectMatch = true;
+                                    if (subjectDiv.length) {
+                                        if (!nodes[i].classList.contains("subject-match")) {
+                                            subjectMatch = false;
+                                        }
+                                    }
+
+                                    if (tagsMatch && keywordMatch && subjectMatch) {
+                                        nodes[i].style.display = "block";
+                                    }
+                                    else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function selectFilterButton(element) {
+                                if (element.hasClass("active")) {
+                                    element.removeClass("active");
+                                }
+                                else {
+                                    var folderClass = element.attr("data-folder-class");
+                                    $(".tag-button.active." + folderClass).removeClass("active");
+                                    element.addClass("active");
+                                }
+                                filter();
+                            }
+
+                            $(document).ready(function () {
+
+                                var subjectDiv = $(".a-z.match-subject");
+                                var activeButtonFromQuery = $(".tag-button.active");
+                                if (activeButtonFromQuery.length || subjectDiv.length) {
+                                    filter();
+                                }
+
+                                $(".tag-button").click(function () {
+                                    selectFilterButton($(this));
+                                });
+
+                                $(".tag-button").on("keydown", function (event) {
+                                    if (event.key == "Enter") {
+                                        selectFilterButton($(this));
+                                        event.preventDefault();
+                                    }
+                                });
+
+                            });
+
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (courseTags.Any())
+    {
+        <div class="container">
+            <div class="grey-aside alt blue">
+                <div class="white-inner">
+
+                    @foreach (var courseTagFolder in courseTagFolders)
+                    {
+                        var folderClass = "folder-" + courseTagFolder.UrlSegment;
+
+                        <p class="course-tags"><strong>@courseTagFolder.Name</strong></p>
+
+                        <ul class="tag-list">
+                            @foreach (var tag in courseTags.Where(x => x.Parent.Id == courseTagFolder.Id))
+                            {
+                                var activeClass = tag.UrlSegment == queryTag ? "active" : "";
+                                <li class="tag-button @activeClass @folderClass" data-folder-class="@folderClass" data-match-class="@tag.UrlSegment" tabindex="0"><span>@tag.Name</span></li>
+                            }
+                        </ul>
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="container">
+
+        <p id="description" hidden="hidden"></p>
+
+        <div class="a-z @subjectClass" data-subject-name="@subjectName">
+            <ul class="tab-list" role="tablist">
+                <li id="tab-1-selector" data-tab="Tab1" class="@((tab == "undergraduate") ? "active" : "")" tabindex="0" role="tab" aria-controls="Tab1" aria-selected="@((tab == "undergraduate") ? "true" : "false")">
+                    Undergraduate <span id="ugcount"></span>
+                </li>
+                <li id="tab-2-selector" data-tab="Tab2" class="@((tab == "postgraduate") ? "active" : "")" tabindex="0" role="tab" aria-controls="Tab2" aria-selected="@((tab == "postgraduate") ? "true" : "false")">
+                    Postgraduate <span id="pgcount"></span>
+                </li>
+                <li id="tab-3-selector" data-tab="Tab3" class="@((tab == "cpd") ? "active" : "")" tabindex="0" role="tab" aria-controls="Tab3" aria-selected="@((tab == "cpd") ? "true" : "false")">
+                    Continued Professional Development <span id="cpdcount"></span>
+                </li>
+                <li id="tab-4-selector" data-tab="Tab4" class="@((tab == "short-courses") ? "active" : "")" tabindex="0" role="tab" aria-controls="Tab4" aria-selected="@((tab == "short-courses") ? "true" : "false")">
+                    Short Courses <span id="mccount"></span>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="content-item @((tab == "undergraduate") ? "active" : "")" id="Tab1" role="tabpanel" aria-labelledby="tab-1-selector">
+                    <div class="letter-row">
+                        <div class="letter-wrap">
+                            <div class="letter active" data-letter="letter-all">ALL</div>
+                            @for (char c = 'A'; c <= 'Z'; c++)
+                            {
+                                string letterGroup = c.ToString();
+
+                                var letterCourse = ugCourses.FirstOrDefault(x => x.Value<string>("courseTitle").StartsWith(letterGroup));
+
+                                if (letterCourse != null)
+                                {
+                                    <div class="letter" data-letter="letter-@letterGroup.ToLower()">@letterGroup.ToUpper()</div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="course-grid">
+                        <div class="letter-content active" data-id="letter-all">
+                            @foreach (var ugCourse in ugCourses)
+                            {
+                                var tagsOnCourse = "";
+                                if (ugCourse.Value("courseTags") != null)
+                                {
+                                    var tagNodes = ugCourse.Value<List<IPublishedContent>>("courseTags");
+                                    foreach (var tagNode in tagNodes)
+                                    {
+                                        tagsOnCourse += tagNode.UrlSegment + " ";
+                                    }
+                                }
+
+                                var subjectMatch = "";
+                                if (subjectCourseKeys != null)
+                                {
+                                    subjectMatch = subjectCourseKeys.Contains(ugCourse.Key) ? "subject-match" : "";
+                                }
+
+                                var url = ugCourse.Url();
+                                if (ugCourse.ContentType.Alias == "externalCourse")
+                                {
+                                    url = ugCourse.Value<string>("externalURL");
+                                }
+
+                                var adImage = ugCourse.Value<Image>("adSpotImage");
+                                <div class="course-item @tagsOnCourse @subjectMatch">
+                                    <a href="@url">
+                                        <div class="image">
+                                            @if (adImage != null)
+                                            {
+                                                @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                            }
+                                            <div class="overlay-text">
+                                                <span>@ugCourse.Value("degreeType") @ugCourse.Value("courseTitle")</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        @for (char c = 'A'; c <= 'Z'; c++)
+                        {
+                            string letterGroup = c.ToString();
+
+                            var courseItemSubList = ugCourses.Where(x => x.Value<string>("courseTitle").StartsWith(c.ToString())).OrderBy(x => x.Value<string>("courseTitle"));
+                            if (courseItemSubList.Count() > 0)
+                            {
+                                <div class="letter-content" data-id="letter-@letterGroup.ToLower()">
+                                    @foreach (var course in courseItemSubList)
+                                    {
+                                        var tagsOnCourse = "";
+                                        if (course.Value("courseTags") != null)
+                                        {
+                                            var tagNodes = course.Value<List<IPublishedContent>>("courseTags");
+                                            foreach (var tagNode in tagNodes)
+                                            {
+                                                tagsOnCourse += tagNode.UrlSegment + " ";
+                                            }
+                                        }
+
+                                        var subjectMatch = "";
+                                        if (subjectCourseKeys != null)
+                                        {
+                                            subjectMatch = subjectCourseKeys.Contains(course.Key) ? "subject-match" : "";
+                                        }
+
+                                        var url = course.Url();
+                                        if (course.ContentType.Alias == "externalCourse")
+                                        {
+                                            url = course.Value<string>("externalURL");
+                                        }
+
+                                        var adImage = course.Value<Image>("adSpotImage");
+                                        <div class="course-item @tagsOnCourse @subjectMatch">
+                                            <a href="@url">
+                                                <div class="image">
+                                                    @if (adImage != null)
+                                                    {
+                                                        @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                        @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                                    }
+                                                    <div class="overlay-text">
+                                                        <span>@course.Value("degreeType") @course.Value("courseTitle")</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="content-item @((tab == "postgraduate") ? "active" : "")" id="Tab2" role="tabpanel" aria-labelledby="tab-2-selector">
+                    <div class="letter-row">
+                        <div class="letter-wrap">
+                            <div class="letter active" data-letter="letter-all">ALL</div>
+                            @for (char c = 'A'; c <= 'Z'; c++)
+                            {
+                                string letterGroup = c.ToString();
+
+                                var letterCourse = pgCourses.FirstOrDefault(x => x.Value<string>("courseTitle").StartsWith(letterGroup));
+
+                                if (letterCourse != null)
+                                {
+                                    <div class="letter" data-letter="letter-@letterGroup.ToLower()">@letterGroup.ToUpper()</div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="course-grid">
+                        <div class="letter-content active" data-id="letter-all">
+                            @foreach (var pgCourse in pgCourses)
+                            {
+                                var tagsOnCourse = "";
+                                if (pgCourse.Value("courseTags") != null)
+                                {
+                                    var tagNodes = pgCourse.Value<List<IPublishedContent>>("courseTags");
+                                    foreach (var tagNode in tagNodes)
+                                    {
+                                        tagsOnCourse += tagNode.UrlSegment + " ";
+                                    }
+                                }
+
+                                var subjectMatch = "";
+                                if (subjectCourseKeys != null)
+                                {
+                                    subjectMatch = subjectCourseKeys.Contains(pgCourse.Key) ? "subject-match" : "";
+                                }
+
+                                var url = pgCourse.Url();
+                                if (pgCourse.ContentType.Alias == "externalCourse")
+                                {
+                                    url = pgCourse.Value<string>("externalURL");
+                                }
+
+                                var adImage = pgCourse.Value<Image>("adSpotImage");
+                                <div class="course-item @tagsOnCourse @subjectMatch">
+                                    <a href="@url">
+                                        <div class="image">
+                                            @if (adImage != null)
+                                            {
+                                                @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                            }
+                                            <div class="overlay-text">
+                                                <span>@pgCourse.Value("degreeType") @pgCourse.Value("courseTitle")</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        @for (char c = 'A'; c <= 'Z'; c++)
+                        {
+                            string letterGroup = c.ToString();
+
+                            var courseItemSubList = pgCourses.Where(x => x.Value<string>("courseTitle").StartsWith(c.ToString())).OrderBy(x => x.Value<string>("courseTitle"));
+                            if (courseItemSubList.Count() > 0)
+                            {
+                                <div class="letter-content" data-id="letter-@letterGroup.ToLower()">
+                                    @foreach (var course in courseItemSubList)
+                                    {
+                                        var tagsOnCourse = "";
+                                        if (course.Value("courseTags") != null)
+                                        {
+                                            var tagNodes = course.Value<List<IPublishedContent>>("courseTags");
+                                            foreach (var tagNode in tagNodes)
+                                            {
+                                                tagsOnCourse += tagNode.UrlSegment + " ";
+                                            }
+                                        }
+
+                                        var subjectMatch = "";
+                                        if (subjectCourseKeys != null)
+                                        {
+                                            subjectMatch = subjectCourseKeys.Contains(course.Key) ? "subject-match" : "";
+                                        }
+
+                                        var url = course.Url();
+                                        if (course.ContentType.Alias == "externalCourse")
+                                        {
+                                            url = course.Value<string>("externalURL");
+                                        }
+
+                                        var adImage = course.Value<Image>("adSpotImage");
+                                        <div class="course-item @tagsOnCourse @subjectMatch">
+                                            <a href="@url">
+                                                <div class="image">
+                                                    @if (adImage != null)
+                                                    {
+                                                        @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                        @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                                    }
+                                                    <div class="overlay-text">
+                                                        <span>@course.Value("degreeType") @course.Value("courseTitle")</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+
+                <div class="content-item @((tab == "cpd") ? "active" : "")" id="Tab3" role="tabpanel" aria-labelledby="tab-3-selector">
+                    <div class="letter-row">
+                        <div class="letter-wrap">
+                            <div class="letter active" data-letter="letter-all">ALL</div>
+                            @for (char c = 'A'; c <= 'Z'; c++)
+                            {
+                                string letterGroup = c.ToString();
+
+                                var letterCourse = cpdCourses.FirstOrDefault(x => x.Value<string>("courseTitle").StartsWith(letterGroup));
+
+                                if (letterCourse != null)
+                                {
+                                    <div class="letter" data-letter="letter-@letterGroup.ToLower()">@letterGroup.ToUpper()</div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div class="course-grid">
+                        <div class="letter-content active" data-id="letter-all">
+                            @foreach (var cpdCourse in cpdCourses)
+                            {
+                                var tagsOnCourse = "";
+                                if (cpdCourse.Value("courseTags") != null)
+                                {
+                                    var tagNodes = cpdCourse.Value<List<IPublishedContent>>("courseTags");
+                                    foreach (var tagNode in tagNodes)
+                                    {
+                                        tagsOnCourse += tagNode.UrlSegment + " ";
+                                    }
+                                }
+
+                                var subjectMatch = "";
+                                if (subjectCourseKeys != null)
+                                {
+                                    subjectMatch = subjectCourseKeys.Contains(cpdCourse.Key) ? "subject-match" : "";
+                                }
+
+                                var url = cpdCourse.Url();
+                                if (cpdCourse.ContentType.Alias == "externalCourse")
+                                {
+                                    url = cpdCourse.Value<string>("externalURL");
+                                }
+
+                                var adImage = cpdCourse.Value<Image>("adSpotImage");
+                                <div class="course-item @tagsOnCourse @subjectMatch">
+                                    <a href="@url">
+                                        <div class="image">
+                                            @if (adImage != null)
+                                            {
+                                                @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                            }
+                                            <div class="overlay-text">
+                                                <span>@cpdCourse.Value("degreeType") @cpdCourse.Value("courseTitle")</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        @for (char c = 'A'; c <= 'Z'; c++)
+                        {
+                            string letterGroup = c.ToString();
+
+                            var courseItemSubList = cpdCourses.Where(x => x.Value<string>("courseTitle").StartsWith(c.ToString())).OrderBy(x => x.Value<string>("courseTitle"));
+                            if (courseItemSubList.Count() > 0)
+                            {
+                                <div class="letter-content" data-id="letter-@letterGroup.ToLower()">
+                                    @foreach (var course in courseItemSubList)
+                                    {
+                                        var tagsOnCourse = "";
+                                        if (course.Value("courseTags") != null)
+                                        {
+                                            var tagNodes = course.Value<List<IPublishedContent>>("courseTags");
+                                            foreach (var tagNode in tagNodes)
+                                            {
+                                                tagsOnCourse += tagNode.UrlSegment + " ";
+                                            }
+                                        }
+
+                                        var subjectMatch = "";
+                                        if (subjectCourseKeys != null)
+                                        {
+                                            subjectMatch = subjectCourseKeys.Contains(course.Key) ? "subject-match" : "";
+                                        }
+
+                                        var url = course.Url();
+                                        if (course.ContentType.Alias == "externalCourse")
+                                        {
+                                            url = course.Value<string>("externalURL");
+                                        }
+
+                                        var adImage = course.Value<Image>("adSpotImage");
+                                        <div class="course-item @tagsOnCourse @subjectMatch">
+                                            <a href="@url">
+                                                <div class="image">
+                                                    @if (adImage != null)
+                                                    {
+                                                        @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                        @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                                    }
+                                                    <div class="overlay-text">
+                                                        <span>@course.Value("degreeType") @course.Value("courseTitle")</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+
+                <div class="content-item @((tab == "short-courses") ? "active" : "")" id="Tab4" role="tabpanel" aria-labelledby="tab-4-selector">
+                    <div class="letter-row">
+                        <div class="letter-wrap">
+                            <div class="letter active" data-letter="letter-all">ALL</div>
+                            @for (char c = 'A'; c <= 'Z'; c++)
+                            {
+                                string letterGroup = c.ToString();
+
+                                var letterCourse = shortCourses.FirstOrDefault(x => x.Value<string>("courseTitle").StartsWith(letterGroup));
+
+                                if (letterCourse != null)
+                                {
+                                    <div class="letter" data-letter="letter-@letterGroup.ToLower()">@letterGroup.ToUpper()</div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div class="course-grid">
+                        <div class="letter-content active" data-id="letter-all">
+                            @foreach (var mcCourse in shortCourses)
+                            {
+                                var tagsOnCourse = "";
+                                if (mcCourse.Value("courseTags") != null)
+                                {
+                                    var tagNodes = mcCourse.Value<List<IPublishedContent>>("courseTags");
+                                    foreach (var tagNode in tagNodes)
+                                    {
+                                        tagsOnCourse += tagNode.UrlSegment + " ";
+                                    }
+                                }
+
+                                var subjectMatch = "";
+                                if (subjectCourseKeys != null)
+                                {
+                                    subjectMatch = subjectCourseKeys.Contains(mcCourse.Key) ? "subject-match" : "";
+                                }
+
+                                var url = mcCourse.Url();
+                                if (mcCourse.ContentType.Alias == "externalCourse")
+                                {
+                                    url = mcCourse.Value<string>("externalURL");
+                                }
+
+                                var adImage = mcCourse.Value<Image>("adSpotImage");
+                                <div class="course-item @tagsOnCourse @subjectMatch">
+                                    <a href="@url">
+                                        <div class="image">
+                                            @if (adImage != null)
+                                            {
+                                                @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                            }
+                                            <div class="overlay-text">
+                                                <span>@mcCourse.Value("degreeType") @mcCourse.Value("courseTitle")</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        @for (char c = 'A'; c <= 'Z'; c++)
+                        {
+                            string letterGroup = c.ToString();
+
+                            var courseItemSubList = shortCourses.Where(x => x.Value<string>("courseTitle").StartsWith(c.ToString())).OrderBy(x => x.Value<string>("courseTitle"));
+                            if (courseItemSubList.Count() > 0)
+                            {
+                                <div class="letter-content" data-id="letter-@letterGroup.ToLower()">
+                                    @foreach (var course in courseItemSubList)
+                                    {
+                                        var tagsOnCourse = "";
+                                        if (course.Value("courseTags") != null)
+                                        {
+                                            var tagNodes = course.Value<List<IPublishedContent>>("courseTags");
+                                            foreach (var tagNode in tagNodes)
+                                            {
+                                                tagsOnCourse += tagNode.UrlSegment + " ";
+                                            }
+                                        }
+
+                                        var subjectMatch = "";
+                                        if (subjectCourseKeys != null)
+                                        {
+                                            subjectMatch = subjectCourseKeys.Contains(course.Key) ? "subject-match" : "";
+                                        }
+
+                                        var url = course.Url();
+                                        if (course.ContentType.Alias == "externalCourse")
+                                        {
+                                            url = course.Value<string>("externalURL");
+                                        }
+
+                                        var adImage = course.Value<Image>("adSpotImage");
+
+                                        <div class="course-item @tagsOnCourse @subjectMatch">
+                                            <a href="@url">
+                                                <div class="image">
+                                                    @if (adImage != null)
+                                                    {
+                                                        @*<img src="@adImage.Url()" alt="@adImage.AltText" />*@
+                                                        @Html.WebpCroppedImg(adImage, "Course A-Z grid", adImage.AltText, 80, false);
+                                                    }
+                                                    <div class="overlay-text">
+                                                        <span>@course.Value("degreeType") @course.Value("courseTitle")</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+
+    @* Pulls through lower banner partial if there is an image *@
+    @if (Model.HasValue("lowerBannerImage"))
+    {
+        var lbModel = new QMU_VM_LowerBannerModel
+        {
+            Title = Model.LowerBannerTitle,
+            Copy = Model.LowerBannerCopy.ToString(),
+            BannerImage = Model.LowerBannerImage,
+            MobileBannerImage = Model.LowerBannerImageMobile,
+            BoxPosition = Model.HorizontalAdPlacement,
+            IsInfographic = Model.UsingBannerForInfographic
+        };
+
+        @Html.CachedPartial("components/qmu_cmp_lowerBanner", lbModel, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+
+    @Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+</main>
+

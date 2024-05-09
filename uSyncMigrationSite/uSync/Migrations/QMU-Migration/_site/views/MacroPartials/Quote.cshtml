@@ -1,0 +1,25 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{
+    string source = string.Empty;
+
+    var sourceName = Model.MacroParameters["source"];
+    var quoteText = Model.MacroParameters["text"];
+
+    if (sourceName != null && sourceName.ToString().Length > 0)
+    {
+        source = string.Format("<strong>{0}</strong>", sourceName.ToString());
+	}
+
+	var sourceExtra = Model.MacroParameters["sourceExtra"];
+	if (sourceExtra != null && sourceExtra.ToString().Length > 0)
+	{
+		source += string.Format(", {0}", sourceExtra.ToString());
+	}
+}
+<blockquote>
+    "@Html.Raw(quoteText)"
+</blockquote>
+@if (source.Length > 0)
+{
+	<div class="quote-author">@Html.Raw(source)</div>
+}

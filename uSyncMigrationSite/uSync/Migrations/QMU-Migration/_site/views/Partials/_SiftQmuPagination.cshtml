@@ -1,0 +1,77 @@
+﻿@model SiftLibrary.Models.SearchResultNodes
+@{
+    int numButtons = 7;
+    int numMiddleButtons = numButtons - 2;
+
+
+    int firstMiddlePage = Model.Criteria.PageNumber - (numMiddleButtons / 2);
+    if (firstMiddlePage < 0)
+    {
+        firstMiddlePage = 0;
+    }
+
+    int lastMiddlePage = firstMiddlePage + numMiddleButtons;
+    if (lastMiddlePage > Model.NumberOfPages)
+    {
+        lastMiddlePage = Model.NumberOfPages;
+        firstMiddlePage = lastMiddlePage - numMiddleButtons;
+        if (firstMiddlePage < 0)
+        {
+            firstMiddlePage = 0;
+        }
+    }
+
+    if (Model.NumberOfPages <= numButtons)
+    {
+        numMiddleButtons = Model.NumberOfPages;
+    }
+}
+
+<ul>
+    @if (firstMiddlePage > 0)
+    {
+        var activeClass = Model.Criteria.PageNumber == 0 ? "active" : "";
+        <li class="@activeClass">
+            <a id="search-button-page-first" href="#"
+               class="sift-search"
+               data-sift-results-page-number="0">
+                1
+            </a>
+        </li>
+
+        if (firstMiddlePage > 1)
+        {
+            <li class="ellipses">...</li>
+        }
+    }
+
+    @for (int i = firstMiddlePage; i < lastMiddlePage; i++)
+    {
+        var activeClass = i == Model.Criteria.PageNumber ? "active" : "";
+        <li class="@activeClass">
+            <a id="search-button-page-@i" href="#"
+               class="sift-search"
+               data-sift-results-page-number="@i">
+                @(i + 1)
+            </a>
+        </li>
+    }
+
+    @if (lastMiddlePage < Model.NumberOfPages)
+    {
+        var activeClass = Model.Criteria.PageNumber == Model.NumberOfPages - 1 ? "active" : "";
+        if (lastMiddlePage < (Model.NumberOfPages - 1))
+        {
+            <li class="ellipses">...</li>
+        }
+
+        <li class="@activeClass">
+            <a id="search-button-page-last" href="#"
+               class="sift-search"
+               data-sift-results-page-number="@(Model.NumberOfPages - 1)">
+                @Model.NumberOfPages
+            </a>
+        </li>
+    }
+
+</ul>

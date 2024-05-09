@@ -1,0 +1,42 @@
+﻿@using Umbraco.Web.PublishedModels
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<FullWidthText>
+
+<section class="qmu_cmp_textblock component-spacing">
+    <div class="container" id="@Model.AnchorCode">
+        <div class="row">
+            @if (!string.IsNullOrWhiteSpace(Model.Title))
+            {
+                <div class="col-12 band-title">
+                    <h2>@Model.Title</h2>
+                </div>
+            }
+            <div class="col-12">
+                @Html.Raw(Model.Text)
+
+                <div class="textblock__buttons">
+
+                    @if (Model.ButtonLink != null)
+                    {
+                        <div class="text-center pt-4">
+                            <a href="@Model.ButtonLink.Url" target="@Model.ButtonLink.Target" class="blue-btn lg-btn">@Model.ButtonLink.Name</a>
+                        </div>
+                    }
+
+                    @if (Model.ButtonLinkSecondary != null)
+                    {
+                        <div class="text-center pt-4">
+                            <a href="@Model.ButtonLinkSecondary.Url" target="@Model.ButtonLinkSecondary.Target" class="blue-btn lg-btn">@Model.ButtonLinkSecondary.Name</a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+

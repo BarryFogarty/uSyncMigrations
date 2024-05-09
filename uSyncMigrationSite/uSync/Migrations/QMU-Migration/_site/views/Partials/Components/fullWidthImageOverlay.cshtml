@@ -1,0 +1,12 @@
+﻿@using Umbraco.Web.PublishedModels
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<FullWidthImageOverlay>
+
+
+<section class="qmu_cmp_fullwidthimageoverlay component-spacing background-container full-width-100 image-background-container" id="@Model.AnchorCode" style="background-image: url(@Model.Image.Url())" role="img" aria-label="@Model.Image.Value("altText")">
+    <div class="container full-width full-width-95">
+        <div class="image-background">
+            <h2>@Model.Title</h2>
+        </div>
+    </div>
+</section>
+

@@ -1,0 +1,83 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.GeneralPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using QMUCloud.Core.Models.ViewModels;
+@{
+    Layout = "Master.cshtml";
+
+}
+
+@Html.Partial("bannerItem")
+
+<main role="main" class="main-content">
+
+    <div id="overlay">
+
+        <!-- overlay code in here -->
+    </div>
+
+    <div class="container">
+        <div class="column-layout">
+
+            <div class="left reassessment-payment" id="left" tabindex="-1">
+
+                @Html.Partial("breadcrumb")
+                @Html.Partial("shareUpper")
+                <h1>@Model.DisplayTitle</h1>
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+                @Html.Partial("centralBlocks")
+                <h2>Reassessment</h2>
+                <p>Students who are required to undertake reassessments must pay the appropriate fee. The fee to register for a re-assessment is £40 per module (up to a maximum of £120) payable in advance.</p>
+                <p>Reassessment fees should be paid in full before undertaking reassessment. Students will not be prevented from undertaking reassessment if the fee is not paid in advance but they may be invoiced for the amount afterwards in line with QMU's Student Debt Recovery Procedure. Students facing financial hardship should discuss their situation with the Student Funding Adviser.</p>
+                <p><br />Students who are undertaking assessments as a first diet due to extenuating circumstances are not liable to pay the reassessment fee.</p>
+
+                <form target="paypal" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="P8XA6BB67M7QU">
+                    <input type="hidden" name="on0" value="Options:">
+                    <h3 class="reassessment">Reassessment fees</h3>
+                    <select name="os0" aria-label="number of modules">
+                        <option value="1 module">1 module £40.00 GBP</option>
+                        <option value="2 modules">2 modules £80.00 GBP</option>
+                        <option value="3 modules or more">3 modules or more £120.00 GBP</option>
+                    </select>
+                    <input type="hidden" name="on1" value="Student number"><input type="text" placeholder="Student number" name="os1" maxlength="200" aria-label="student number">
+                    <input type="hidden" name="on2" value="Course title"><input type="text" placeholder="Course title" name="os2" maxlength="200" aria-label="course title">
+                    <input type="hidden" name="currency_code" value="GBP">
+                    <input type="submit" value="Pay Fees" name="submit" title="PayPal - The safer, easier way to pay online!" class="paypal-button" aria-label="pay using paypal">
+                </form>
+                <p>The Effective Learning Service has a Support Programme to help you with your resits. You can find out more information on this programme and the support available <a href="/study-here/student-services/effective-learning-service-els/help-with-resits/#:~:text=The%20programme%20is%20for%20undergraduate,they%20go%20into%203rd%20year." title="Help with Resits" data-anchor="#:~:text=The%20programme%20is%20for%20undergraduate,they%20go%20into%203rd%20year.">here</a>.</p>
+
+                @Model.BodyBottom
+                @Html.Partial("mediaGallery")
+                @Html.Partial("shareLower")
+            </div>
+
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.Partial("ContactGroup")
+                }
+                @Html.GetGridHtml(Model, "rcContent")
+
+            </div>
+        </div>
+    </div>
+    @* Pulls through lower banner partial if there is an image *@
+    @if (Model.HasValue("lowerBannerImage"))
+    {
+        var lbModel = new QMU_VM_LowerBannerModel
+        {
+            Title = Model.LowerBannerTitle,
+            Copy = Model.LowerBannerCopy.ToString(),
+            BannerImage = Model.LowerBannerImage,
+            MobileBannerImage = Model.LowerBannerImageMobile,
+            BoxPosition = Model.HorizontalAdPlacement,
+            IsInfographic = Model.UsingBannerForInfographic
+        };
+
+        @Html.CachedPartial("components/qmu_cmp_lowerBanner", lbModel, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+</main>
+@Html.Partial("_relatedContent")
+@Html.Partial("_relatedContent2")

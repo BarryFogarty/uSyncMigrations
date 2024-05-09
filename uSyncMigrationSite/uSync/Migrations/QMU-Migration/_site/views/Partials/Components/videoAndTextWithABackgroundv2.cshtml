@@ -1,0 +1,46 @@
+﻿@using Umbraco.Web.PublishedModels
+@using QMUCloud.Core.Helpers
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<VideoAndTextWithAbackgroundv2>
+@{
+    var webpBackgroundImage = "";
+    var fallbackBackgroundImage = "";
+    if (Model.BackgroundImage != null)
+    {
+        webpBackgroundImage = Url.GetCropUrlWebp(Model.BackgroundImage, "Image Banner").ToString();
+        fallbackBackgroundImage = Model.BackgroundImage.GetCropUrl("Image Banner");
+    }
+}
+
+<section class="qmu_cmp_videoAndTextBackground component-spacing background-container" id="@Model.AnchorCode" style="background-image: url(@webpBackgroundImage)" data-webp-fallback="@fallbackBackgroundImage">
+        <div class="container full-width full-width-95">
+            <div class="row">
+
+                @if(!String.IsNullOrEmpty(Model.Title))
+                {
+                    <div class="col-12">
+                        <div class="layt_image-text-overlay layt_image-text-overlay--charcoal text-center mb-4">
+                            <h2>@Model.Title</h2>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="image-background-text">
+                        @Html.Raw(Model.Text)
+
+                        @if (Model.ButtonLink != null)
+                        {
+                            <a href="@Model.ButtonLink.Url" target="@Model.ButtonLink.Target" class="blue-btn">@Model.ButtonLink.Name</a>
+                        }
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="mceNonEditable embeditem">
+                        @Html.YoutubeLazyLoad(Model.VideoUrl, Model.VideoTitle)
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</section>

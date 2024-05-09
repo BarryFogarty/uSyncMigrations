@@ -1,0 +1,62 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+    
+@{ 
+    var eventNode = Model.Event;
+
+    string ImageUrl = string.Empty;
+    string ImageAlt = string.Empty;
+
+    if (Model.Image != null)
+    {
+        ImageUrl = Model.Image.Url;
+        ImageAlt = Model.Image.AltText;
+    }
+    else
+    {
+        ImageUrl = "~/Images/ad-spot-temp.png";
+    }
+
+    <h2>@Model.Title</h2>
+    
+    <div class="event-detail-box">
+        <span style="background-image: url(@ImageUrl)" class="bg-no-cover-img" role="img" aria-label="@ImageAlt"> </span>
+
+        <div class="inner-white">
+            <strong>@Model.SubTitle</strong>
+            @Html.Raw(Model.FreeText)
+            <!-- Location -->
+            <!-- dates -->
+            <!-- Cost -->
+            <!-- Links -->
+            @if (!string.IsNullOrEmpty(Model.LinkText))
+            {
+                string linkUrl = string.Empty;
+
+                if (Model.LinkInternal != null)
+                {
+                    linkUrl = @Model.LinkInternal.Url;
+                }
+                else if (Model.LinkExternal != null)
+                {
+                    linkUrl = @Model.LinkExternal.ToString();
+                }
+
+                <p></p>
+                <a href="@linkUrl" target="_blank" class="blue-btn">@Model.LinkText</a>
+            }
+
+        </div>
+    </div>
+    }
+

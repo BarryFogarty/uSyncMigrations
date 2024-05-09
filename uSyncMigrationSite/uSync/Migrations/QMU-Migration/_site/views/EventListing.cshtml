@@ -1,0 +1,258 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.EventListing>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Services
+@{
+    Layout = "Master.cshtml";
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+}
+
+<main role="main" class="main-content no-header">
+    <div class="grey-wrap">
+        <div class="container">
+            <div class="column-layout">
+                <div class="left">
+                    <h1>@Model.DisplayTitle</h1>
+                    @Model.Introduction
+                </div>
+                <div class="right">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <div class="news-list">
+                    <!-- Paging to go in here -->
+                    @{
+                        var pageSize = 10;
+                        if (Model.HasValue("numberOfItemsPerPage"))
+                        {
+                            pageSize = Model.Value<int>("numberOfItemsPerPage");
+                        }
+
+                        var page = 1; int.TryParse(Request.QueryString["page"], out page);
+                        var items = searchService.GetDescendantsWithType(Model, "EventItem");
+                        var totalPages = (int)Math.Ceiling((double)items.Count() / (double)pageSize);
+
+                        if (page > totalPages)
+                        {
+                            page = totalPages;
+                        }
+                        else if (page < 1)
+                        {
+                            page = 1;
+                        }
+
+                        foreach (var item in items.Skip((page - 1) * pageSize).OrderBy(x => x.Value<DateTime>("eventStartDate")).ToList().Take(pageSize))
+                        {
+                            var today = DateTime.Now.ToString("dd-MM-yyyy");
+                            var eventEnd = item.Value<DateTime>("EventEndDate").ToString("dd-MM-yyyy");
+
+                            //DateTime dt = Convert.ToDateTime(eventEnd);
+
+                            @*<p>@dt</p>*@
+
+                            //if () { }
+                            <div class="news-item">
+                                <a href="@item.Url()" class="image">
+                                    @if (item.Value<IPublishedContent>("adSpotImage") != null)
+                                    {
+                                        var newsImage = item.Value<IPublishedContent>("adSpotImage");
+                                        <img src="@newsImage.Url()" alt="@newsImage.Value("AltText")" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                                    }
+                                </a>
+                                <span>
+                                    <a href="@item.Url()" aria-label="@item.Url()">
+                                        @item.Value("DisplayTitle")
+                                    </a>
+                                </span>
+                                @{var intro = item.Value<string>("Introduction");
+                                    if (intro != null)
+                                    {
+                                        string summary = string.Empty;
+
+                                        int characterCount = 100;
+
+                                        summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                        if (summary.Length > characterCount)
+                                        {
+                                            char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                            summary = summary.Truncate(characterCount).Trim(charsToTrim);
+                                        }
+                                        summary += string.Format(" <a href=\"" + item.Url() + "\" aria-label=\"read more on " + @item.Value("DisplayTitle") + "\"><strong>read more</strong></a>");
+                                        <p>@Html.Raw(summary)</p>
+                                    }
+                                }
+                                @if (item.Value("EventStartDate") != null)
+                                {
+
+
+                                    <div class="event-date">
+                                        <span class="label">Start: </span>
+                                        <span class="date"><time>@(item.Value<DateTime>("EventStartDate").ToString("dd MMMM yyyy h:mm tt"))</time></span>
+                                    </div>
+                                }
+
+                                @if (item.Value("EventEndDate") != null)
+                                {
+                                    <div class="event-date">
+                                        <span class="label">End: </span>
+                                        <span class="date"><time>@(item.Value<DateTime>("EventEndDate").ToString("dd MMMM yyyy h:mm tt"))</time></span>
+                                    </div>
+                                }
+
+                            </div>
+                        }
+
+                        if (totalPages > 1)
+                        {
+                            int startPage = page - 2;
+                            if (startPage >= (page - 4)) { startPage = (page - 4); }
+                            if (startPage <= 0) { startPage = 1; }
+
+                            int lastPage = page + 2;
+                            if (lastPage < 5) { lastPage = 5; }
+                            if (lastPage > page) { lastPage = page; }
+
+                            <ul class="paging">
+                                @if (page > 1)
+                                {
+                                    <li><a href="?page=@(page - 1)" aria-label="previous page"><i class="fa fa-caret-left"></i></a></li>
+                                }
+                                @for (int p = startPage; p <= lastPage; p++)
+                                {
+                                    <li>
+                                        <a href="?page=@p" class="@(p == page ? "active" : string.Empty)" aria-label="page @p">@p</a>
+                                    </li>
+                                }
+                                @if (page < totalPages)
+                                {
+                                    <li><a href="?page=@(page + 1)" aria-label="next page"><i class="fa fa-caret-right"></i></a></li>
+                                }
+                            </ul>
+                        }
+                    }
+                    <!-- Paging Ends -->
+                </div>
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <!-- News Filter / Tags / -->
+                <div class="grey-aside alt blue">
+                    <h2>Search Events</h2>
+                    <!-- anti forgery and validation summary-->
+                    <div class="white-inner">
+                        <div class="search-row">
+                            <input type="text" id="Search" onkeyup="eventSearch()" placeholder="Please enter a search term.." title="Type in a name" aria-label="search text">
+                        </div>
+
+                        <script>
+                            var today = new Date();
+                            days = 86400000;
+                            var nodes = document.getElementsByClassName('news-item');
+                            var week = new Date(new Date() - 60 * 60 * 24 * 7 * 1000);
+                            var yearAgo = new Date(today - (365 * days)).toLocaleDateString("en-GB");
+                            var monthAgo = new Date(today - (30 * days)).toLocaleDateString("en-GB");
+
+                            function eventSearch() {
+                                var input = document.getElementById("Search");
+                                var filter = input.value.toLowerCase();
+                                var nodes = document.getElementsByClassName('news-item');
+
+                                for (i = 0; i < nodes.length; i++) {
+                                    if (nodes[i].innerText.toLowerCase().includes(filter)) {
+                                        nodes[i].style.display = "block";
+                                    } else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function weekSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    var elms = document.querySelectorAll("[id='posted']");
+                                    var d1 = Date.parse(elms[i].innerText);
+                                    var d3 = Date.parse(week);
+                                    if (d1 > d3) {
+                                        nodes[i].style.display = "block";
+                                    }
+                                    else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function monthSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    var elms = document.querySelectorAll("[id='posted']");
+                                    var d1 = Date.parse(elms[i].innerText);
+                                    var d2 = Date.parse(monthAgo);
+                                    if (d1 > d2) {
+                                        nodes[i].style.display = "block";
+                                    }
+                                    else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function yearSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    var elms = document.querySelectorAll("[id='posted']");
+                                    var d1 = Date.parse(elms[i].innerText);
+                                    var d2 = Date.parse(yearAgo);
+                                    if (d1 > d2) {
+                                        nodes[i].style.display = "block";
+                                    }
+                                    else {
+                                        nodes[i].style.display = "none";
+                                    }
+                                }
+                            }
+
+                            function clearSearch() {
+                                for (i = 0; i < nodes.length; i++) {
+                                    nodes[i].style.display = "block";
+                                }
+                            }
+                        </script>
+
+                        <strong>Date Filter</strong>
+                        <div class="filter-list" role="group" aria-label="date range filters">
+                            <div class="filter-item">
+                                <input type="radio" id="PastWeek" name="Range" value="week" onclick="weekSearch()" />
+                                <label for="PastWeek"><span></span>Past Week</label>
+                            </div>
+                            <div class="filter-item">
+                                <input type="radio" id="PastMonth" name="Range" value="month" onclick="monthSearch()" />
+                                <label for="PastMonth"><span></span>Past Month</label>
+                            </div>
+                            <div class="filter-item">
+                                <input type="radio" id="PastYear" name="Range" value="year" onclick="yearSearch()" />
+                                <label for="PastYear"><span></span>Past Year</label>
+                            </div>
+                            <div class="filter-item">
+                                <input type="radio" id="All" name="Range" value="" onclick="clearSearch()" />
+                                <label for="All"><span></span>All</label>
+                            </div>
+                        </div>
+                        @*<input type="submit" class="blue-btn" />*@
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

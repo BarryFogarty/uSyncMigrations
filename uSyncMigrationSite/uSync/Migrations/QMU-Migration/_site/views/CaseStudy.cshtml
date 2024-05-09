@@ -1,0 +1,59 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.CaseStudy>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web;
+@using QMUCloud.Core.Models.ViewModels;
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div id="overlay">
+
+        <!-- overlay code in here -->
+    </div>
+
+    <!-- GLP Content section -->
+    <div class="container">
+        <div class="column-layout">
+
+            <div class="left" id="left" tabindex="-1">
+
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+                @Html.Partial("centralBlocks", Model)
+                @Model.BodyBottom
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+                @Html.GetGridHtml(Model, "rcContent")
+
+            </div>
+        </div>
+    </div>
+    @* Pulls through lower banner partial if there is an image *@
+    @if (Model.HasValue("lowerBannerImage"))
+    {
+        var lbModel = new QMU_VM_LowerBannerModel
+        {
+            Title = Model.LowerBannerTitle,
+            Copy = Model.LowerBannerCopy.ToString(),
+            BannerImage = Model.LowerBannerImage,
+            MobileBannerImage = Model.LowerBannerImageMobile,
+            BoxPosition = Model.HorizontalAdPlacement,
+            IsInfographic = Model.UsingBannerForInfographic
+        };
+
+        @Html.CachedPartial("components/qmu_cmp_lowerBanner", lbModel, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

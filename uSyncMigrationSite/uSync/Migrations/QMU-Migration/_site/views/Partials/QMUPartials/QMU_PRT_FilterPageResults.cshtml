@@ -1,0 +1,150 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.ViewModels.QMU_VM_FilterPageResults>
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Helpers
+@{
+
+    Regex lettersOnlyRegEx = new Regex("[^a-zA-Z ]");
+    Regex whitespaceRegEx = new Regex("\\s+");
+    bool showPagination = Model.TotalResultsCount > Model.MaxResultsPerPage;
+
+
+}
+
+@if (Model.TotalResultsCount == 0)
+{
+    <div class="text-center" role="alert">
+        <h3>
+            No results found
+        </h3>
+    </div>
+}
+
+@if (Model.TotalResultsCount > 0)
+{
+    <div class="filter-grid no-padding-grid row @(showPagination == false ? "filter-grid--no-pagination" : "")" @*data-filter-param="@filterParam"*@>
+
+        @if (showPagination == true)
+        {
+            @Html.Partial("PageStructure/QMU_PRT_Pagination", Model)
+        }
+
+
+        @foreach (var result in Model.Results)
+        {
+            var item = result.Item;
+            var tagColour = !String.IsNullOrEmpty(result.ItemIndicatorColour) ? $"#{result.ItemIndicatorColour}" : null;
+            var ancestorFolder = item.AncestorOrSelf("filterFolder");
+            var isIndicators = Model.ShowPageLevelIndicators;
+            var folderName = "";
+            if (ancestorFolder != null)
+            {
+                folderName = whitespaceRegEx.Replace(lettersOnlyRegEx.Replace(ancestorFolder.Name, "").ToLower(), "-");
+            }
+
+            var showImagesItemClass = Model.ShowImage ? "" : " accented-boxes";
+
+            <div class="filter-item col-sm-6 col-lg-4 mb-4 @folderName ">
+                <div class="d-flex h-100 @showImagesItemClass">
+                    <div class="box @(isIndicators == true ? "box--with-indicator" : "")  w-100">
+                        <div class="image">
+                            <a href="@item.Url()">
+
+                                @if (isIndicators == true)
+                                {
+                                    var indicatorClasses = "filter-item__box__indicator";
+
+                                    if (Model.ShowImage == true && item.Value<Image>("adSpotImage") != null)
+                                    {
+                                        indicatorClasses += " filter-item__box__indicator--pill";
+                                    }
+
+                                    else if (Model.ShowImage == true && item.Value<Image>("adSpotImage") == null)
+                                    {
+                                        indicatorClasses += " filter-item__box__indicator--pill-no-image-present";
+                                    }
+
+                                    <span class="@indicatorClasses">
+                                        @(result.IsItemImmediateDecendant ? "main section" : "sub-section")
+                                    </span>
+                                }
+
+                                @if (Model.ShowImage == true)
+                                {
+                                    var overlayTextStyles = "";
+                                    if(tagColour != null)
+                                    {
+                                        overlayTextStyles += $"border-left: 10px solid {tagColour}; padding-left: 4px;";
+                                    }
+                                    if (item.Value<Image>("adSpotImage") != null)
+                                    {
+                                        var itemImage = item.Value<Image>("adSpotImage");
+                                        @Html.WebpCroppedImg(itemImage, "Filter Page Item", itemImage.AltText, 80);
+                                        <div class="overlay-text" style="@(overlayTextStyles)">
+                                            <div class="d-flex flex-row align-items-center justify-content-between w-100">
+                                                <span>
+                                                    @item.Value("DisplayTitle")
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="overlay-text-accent overlay-text-accent--large" style="@(overlayTextStyles)">
+                                            <div class="d-flex flex-row align-items-center justify-content-between w-100">
+                                                <span>
+                                                    @item.Value("DisplayTitle")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div class="overlay-text-accent" @(!String.IsNullOrEmpty(tagColour) ? $"style=border-top-color:{tagColour};" : "")>
+                                        <div class="d-flex flex-row align-items-center justify-content-between w-100">
+                                            <span>
+                                                @item.Value("DisplayTitle")
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            </a>
+                        </div>
+                        <div class="text">
+                            @{
+                                var intro = item.Value<string>("Introduction");
+                                if (intro != null)
+                                {
+                                    string summary = string.Empty;
+
+                                    int characterCount = 100;
+
+                                    summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                    if (summary.Length > characterCount)
+                                    {
+                                        char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                        summary = Html.TruncateByWords(summary, 16, false).ToString().Trim(charsToTrim) ?? summary;
+
+                                    }
+                                    summary += string.Format(" <a href=\"" + @item.Url() + "\" aria-label=\"read more about " + @item.Value("DisplayTitle") + "\" title=\"read more about " + @item.Value("DisplayTitle") + "\"><strong class=\"text-nowrap\" >read more</strong></a>");
+                                    <p>@Html.Raw(summary)</p>
+                                }
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (showPagination == true)
+        {
+            @Html.Partial("PageStructure/QMU_PRT_Pagination", Model)
+        }
+
+
+    </div>
+}

@@ -1,0 +1,88 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{ 
+    var tabParam = HttpContext.Current.Request.QueryString["tab"];
+    int defaultTab = 1;
+    if (!string.IsNullOrWhiteSpace(tabParam))
+    {
+        if (int.TryParse(tabParam, out var temp))
+        {
+            if (temp > 0 && temp <= Model.CentralBlocks.Count)
+            {
+                defaultTab = temp;
+            }
+        }
+    }
+}
+
+@if (Model.CentralBlocks != null && Model.CentralBlocks.Count > 0)
+{ 
+    var type = Model.CentralBlocksType;
+
+    if (type == "Tabs")
+    {
+        int count = 1;
+        <div class="full-width-tabs">
+            <div class="tab-area">
+                <ul role="tablist">
+                    @foreach (var item in Model.CentralBlocks)
+                    {
+                        if (!string.IsNullOrEmpty(item.Content.ToString()))
+                        {
+                            string id = "Content" + count.ToString();
+                            string cssClass = (count == defaultTab ? "tab active" : "tab");
+                            var selected = (count == defaultTab ? "true" : "false");
+                            count++;
+                            <li id="@id-selector" class="@cssClass" data-tab="@id" role="tab" tabindex="0" aria-controls="@id" aria-selected="@selected">
+                                <span>@item.Title</span>
+                            </li>
+                        }
+                    }
+                </ul>
+                <div class="tab-content underline-li-links">
+                    @{ count = 1;
+                        foreach (var item in Model.CentralBlocks)
+                        {
+                            if (!string.IsNullOrEmpty(item.Content.ToString()))
+                            {
+                                string id = "Content" + count.ToString();
+                                string cssClass = (count == defaultTab ? "class=active" : "");
+                                count++;
+                                <div @cssClass id="@id" role="tabpanel" aria-labelledby="@id-selector">
+                                    @item.Content
+                                </div> }
+                        } }
+                </div>
+            </div>
+        </div> }
+    else
+    {
+
+        <div class="accordion-list">
+            @foreach (var item in Model.CentralBlocks)
+            {
+                if (!string.IsNullOrEmpty(item.Content.ToString()))
+                {
+                    <div class="accordion-item">
+                        <h2 tabindex="0">@item.Title</h2>
+                        <div class="drop">@Html.Raw(item.Content)</div>
+                    </div>
+                }
+            }
+        </div>
+
+    } 
+}
+
+

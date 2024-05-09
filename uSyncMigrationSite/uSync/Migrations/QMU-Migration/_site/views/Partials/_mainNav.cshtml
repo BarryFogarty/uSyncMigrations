@@ -1,0 +1,135 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using QMUCloud.Core.Extensions
+@using QMUCloud.Core.Services
+@using Examine.Search
+@using QMUCloud.Core.Helpers
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+    var navList = searchService.GetDescendantsWithType(Umbraco.GetSettingsNode(), "navigationGroup", "sortOrder", SortType.Int);
+
+    foreach (var item in navList)
+    {
+        var itemList = item.Children;
+        var numLevelTwo = itemList.Count();
+        var count = 0;
+        var navLink = item.Value<Umbraco.Web.Models.Link>("Link");
+        var adSpots = item.Value<IEnumerable<IPublishedElement>>("adSpots");
+        var numAdSpots = 0;
+        var adSpotCount = 0;
+        if (adSpots != null)
+        {
+            numAdSpots = adSpots.Count();
+        }
+
+        if (@item.Parent.Name == "Main Navigation")
+        {
+            var topLink = item.Value<Umbraco.Web.Models.Link>("Link");
+        <li>
+            @if (topLink != null)
+            {
+                <a href="@topLink.Url" target="" tabindex="-1" class="nav-level-one">
+
+                    @item.Name
+                    <span class="level2-btn"></span>
+                </a>
+            }
+            else
+            {
+                <a role="button" tabindex="0" class="nav-level-one">
+
+                    @item.Name
+                    <span class="level2-btn"></span>
+                </a>
+            }
+            <div class="nav-panel">
+                <span class="pointer"></span>
+                <div class="back-btn">Back</div>
+                <div class="title">@item.Name</div>
+                <div class="column-wrap">
+                    <div class="column">
+                        @foreach (var more in itemList)
+                        {
+                            var level2 = more.Value<Umbraco.Web.Models.Link>("Link");
+
+                            if (level2 != null)
+                            {
+                                count++;
+                                var firstLastClass = "";
+                                if (count == 1)
+                                {
+                                    firstLastClass = "nav-two-first ";
+                                }
+                                if (count == numLevelTwo && numAdSpots == 0)
+                                {
+                                    firstLastClass += "nav-two-last";
+                                }
+
+                                <ul>
+                                    <li class="level-two">
+                                        <a href="@level2.Url" tabindex="-1" class="@firstLastClass">@more.Name</a>
+                                    </li>
+                                </ul>
+                            }
+                        }
+                    </div>
+                    @if (adSpots != null)
+                    {
+                        <div class="column">
+                            @*@Html.Partial("courseFinderNavigation")*@
+                            @foreach (var adspot in adSpots)
+                            {
+                                adSpotCount++;
+                                var lastClass = "";
+                                if (adSpotCount == numAdSpots)
+                                {
+                                    lastClass = "nav-two-last";
+                                }
+
+                                if (adspot.Value<Umbraco.Web.Models.Link>("Link") != null && adspot.Value<IPublishedContent>("Image") != null)
+                                {
+                                    var adspotLink = adspot.Value<Umbraco.Web.Models.Link>("Link");
+                                    var adSpotImage = adspot.Value<IPublishedContent>("Image");
+
+                                    var imageAsWebp = Url.GetCropUrlWebp(adSpotImage, "Main Nav Panel Image");
+                                    var imageAsWebpFallback = adSpotImage.GetCropUrl("Main Nav Panel Image");
+
+                                    try
+                                    {
+                                        <div class="image-row">
+                                            <a href="@adspotLink.Url" target="@adspotLink.Target" class="image @lastClass" tabindex="-1">
+                                                @if (adspot.Value<IPublishedContent>("Image") != null)
+                                                {
+                                                    <img src="@imageAsWebp" data-webp-fallback="@imageAsWebpFallback" alt="@adSpotImage.Value("AltText")" />
+                                                }
+                                                <div class="title-overlay">
+                                                    <span>@adspot.Value("Text")</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        < p > @ex.Message </ p >
+                                    }
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </li>
+                    }
+                }
+}
+

@@ -1,0 +1,81 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.NewsListing>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Services
+@{
+    Layout = "Master.cshtml";
+}
+
+@section ExtraCss
+{
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container sift sift-update-on-change sift-auto-load-on-page-load"
+         id="left"
+         data-sift-result-root="@Model.Key"
+         data-sift-result-document-type="NewsItem"
+         data-sift-result-partial="_SiftNewsResults"
+         data-sift-result-sort-by="datePosted desc"
+         data-sift-results-per-page="12">
+
+        <div class="row mt-3">
+            <div class="col-md-8">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                @Model.Introduction
+            </div>
+            <div class="col-md-4">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+            </div>
+        </div>
+
+
+        <div class="news-search grey-aside alt blue">
+            <h2>Search News</h2>
+            <div class="white-inner">
+                <form class="sift-criteria">
+                    @Html.AntiForgeryToken()
+                    <div class="row search-row">
+                        <div class="col">
+                            <input type="text" 
+                                   id="Search" 
+                                   placeholder="Enter search text..." 
+                                   title="Type in a name" 
+                                   aria-label="search text" 
+                                   class="sift-criterion sift-wildcard"
+                                   data-sift-match-property="displayTitle,introduction"
+                                   data-sift-min-change-letters="2">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="sift-result">
+                </div>
+            </div>
+        </div>
+
+        <div class="row full-width-content">
+            <div class="col">
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+        </div>
+    </div>
+</main>
+
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<script src="~/scripts/sift.js" type="text/javascript"></script>
+

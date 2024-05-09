@@ -1,0 +1,53 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+    @{ 
+        var facebook = Model.Facebook;
+        var twitter = Model.Twitter;
+        var insta = Model.Instagram;
+        var linkedIn = Model.LinkedIn;
+        var youtube = Model.YouTube;
+
+        <div class="grey-aside">
+        <h2>Engage with the Team</h2>
+        <div class="white-inner">
+    <div class="social-box">
+        @if (!string.IsNullOrEmpty(facebook))
+        {
+         <a href="@facebook" class="icon-item facebook " target="_blank" aria-label="social link facebook"></a>
+        }
+        
+        @if (!string.IsNullOrEmpty(twitter))
+        {
+         <a href="@twitter" class="icon-item twitter " target="_blank" aria-label="social link twitter"></a>
+        }
+
+        @if (!string.IsNullOrEmpty(insta))
+        {
+         <a href="@insta" class="icon-item instagram " target="_blank" aria-label="social link Instagram"></a>
+        }
+
+        @if (!string.IsNullOrEmpty(linkedIn))
+        {
+         <a href="@linkedIn" class="icon-item linkedin " target="_blank" aria-label="social link linkedIn"></a>
+        }
+
+        @if (!string.IsNullOrEmpty(youtube))
+        {
+         <a href="@youtube" class="icon-item youtube " target="_blank" aria-label="social link youtube"></a>
+        }
+    </div>
+            </div>
+            </div>
+    
+    }

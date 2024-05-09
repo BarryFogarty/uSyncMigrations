@@ -1,0 +1,32 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    {
+        var fps = Model.LinkList;
+        if (fps != null)
+        {
+            foreach (var fp in fps)
+            {
+                if (fp != null)
+                {
+        <div class="subject-item">
+            <a href="@fp.Link.Url" class="image">
+                <img src="@fp.Image.Url" alt="@fp.Image.AltText">
+                <div class="text">
+                                <span>@fp.Text</span>
+                </div>
+            </a>
+        </div>
+                    }
+                }
+            }
+        }
+    }

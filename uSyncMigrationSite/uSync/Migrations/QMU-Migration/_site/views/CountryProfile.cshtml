@@ -1,0 +1,66 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.CountryProfile>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+                @Html.Partial("centralBlocks", Model)
+                @Model.BodyBottom
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                @if (!string.IsNullOrEmpty(Model.ContactBoxTitle) || !string.IsNullOrEmpty(Model.ContactBoxSubtitle) || !string.IsNullOrEmpty(Model.ContactBoxTelephoneNumber) || !string.IsNullOrEmpty(Model.ContactBoxEmail))
+                {
+                    <div class="application-box">
+                        @if (!string.IsNullOrEmpty(Model.ContactBoxTitle))
+                        {
+                            <h2>@Model.ContactBoxTitle</h2>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ContactBoxSubtitle))
+                        {
+                            <p>@Model.ContactBoxSubtitle</p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ContactBoxTelephoneNumber))
+                        {
+                            <p>Tel: <a href="tel:@Model.ContactBoxTelephoneNumber">@Model.ContactBoxTelephoneNumber</a></p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ContactBoxEmail))
+                        {
+                            <a href="mailto:@Model.ContactBoxEmail" class="white-btn">Email us</a>
+                        }
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.RightBlockTitle))
+                {
+                    var rbimage = Model.Value<IPublishedContent>("rightBlockImage");
+                    <h2>@Model.RightBlockTitle</h2>
+                    <div class="event-detail-box">
+                        <span style="background-image: url(@rbimage.Url());" class="bg-cover-img" role="img" aria-label="@rbimage.Value("altText")"> </span>
+                        <div class="inner-white">
+                            @Model.RightBlockCopy
+                            @{
+
+                                if (Model.RightBlockLink != null)
+                                {
+                                    <a href="@Model.RightBlockLink.Url" class="blue-btn" target="@Model.RightBlockLink.Target">@Model.RightBlockLink.Name</a> } }
+                        </div>
+                    </div>}
+            </div>
+
+        </div>
+    </div>
+</main>
+
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

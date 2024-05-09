@@ -1,0 +1,93 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using System.Text;
+@using Umbraco.Examine
+@using Examine.Search;
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Extensions
+@using QMUCloud.Core.Services
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+@{
+    //DEV
+    var courseSearchPage = "/study-here/course-a-z-tiled/";
+
+    var settingsContent = Umbraco.GetSettingsNode();
+
+    var items = settingsContent.Value<IEnumerable<IPublishedElement>>("courseSearchControl");
+
+    string tab = Request.QueryString["tab"];
+    string keyword = Request.QueryString["keyword"];
+
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+}
+
+@if (items.Any())
+{
+    <div class="image-box" style="background-image: url(/images/blue-image.png); min-height: 378px; ">
+        <h2>Your Journey Starts Here: Find a Course...</h2>
+        <ul>
+            @foreach (var item in items)
+            {
+                IPublishedContent subjectNode = item.Value<IPublishedContent>("subjectsFolder");
+                if (subjectNode != null && subjectNode.ContentType.Alias == "subjectsOverview")
+                {
+                    <li>
+                        <a class="course-search-item" data-id="@item.Value("courseSearchTab")" tabindex="0">@item.Value("Title")</a>
+                        <select id="SubjectArea@(@item.Value("Title"))" class="hidden" aria-label="Subject Area">
+                            <option value="">Select a Subject Area....</option>
+                            @{
+                                var subjects = searchService.GetDescendantsWithType(subjectNode, "subject");
+                                foreach (var subject in subjects)
+                                {
+                                    <option value="@subject.Id">@subject.Name</option>
+                                }
+                            }
+                        </select>
+                    </li>
+                }
+                else if (subjectNode != null && subjectNode.TemplateId > 0)
+                {
+                    <li>
+                        <a href="@subjectNode.Url()">@item.Value("Title")</a>
+                    </li>
+                }
+                else if (subjectNode == null)
+                {
+                    <li>
+                        <a href="/study-here/course-a-z-tiled?tab=@item.Value("courseSearchTab")">@item.Value("Title")</a>
+                    </li>
+                }
+            }
+        </ul>
+
+        <a href="/study-here/how-to-apply/admissions-faqs/" class="link">Need some help?</a>
+        <div class="box-overlay">
+            <button class="close-btn" aria-label="Close" tabindex="-1"></button>
+            <div class="title"></div>
+            <p class="instructions"></p>
+
+            @if (courseSearchPage != null)
+            {
+                <div id="CourseSearchForm" data-url="@courseSearchPage">
+                    @Html.HiddenFor(model => tab, new { @class = "course-parent" })
+
+                    <select id="subject" name="subject" aria-label="subject" tabindex="-1">
+                        <option value="">Select a Subject Area....</option>
+                    </select>
+
+
+                    @Html.TextBoxFor(m => keyword, new { placeholder = "Search...", @class = "search-textbox", aria_label = "search text", tabindex = "-1" })
+
+                    <input type="button" id="submit-course-search" value="Show Courses" aria-label="search" tabindex="-1" />
+                </div>
+            }
+            <span class="cancel" role="button" aria-label="Cancel" tabindex="-1">Cancel</span>
+        </div>
+    </div>
+}

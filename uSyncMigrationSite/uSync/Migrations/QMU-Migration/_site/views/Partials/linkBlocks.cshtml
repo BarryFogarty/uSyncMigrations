@@ -1,0 +1,60 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    <div class="article-list">
+        <div class="row">
+            @{ var ihtls = Model.LinkBlocks;
+                if (ihtls != null)
+                {
+                    foreach (var ihtl in ihtls)
+                    {
+                        if (ihtl != null)
+                        {
+                            var cssClass = string.Empty;
+                            if(ihtl.Text != null)
+                            {
+                                cssClass = "alt-style";
+                            }
+                            var imageUrl = ihtl.Image != null ? ihtl.Image.Url : string.Empty;
+                            var imageAltText = ihtl.Image != null ? ihtl.Image.AltText : string.Empty;
+
+                            <article class="@cssClass" aria-label="@ihtl.Header">
+
+                                @if (ihtl.Link != null)
+                                {
+                                    <a class="image" href="@ihtl.Link.Url" target="@ihtl.Link.Target">
+                                        <img src="@imageUrl" alt="@imageAltText" />
+                                        <div class="text">
+                                            <span>@ihtl.Header</span>
+                                        </div>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="image no-link">
+                                        <img src="@imageUrl" alt="@imageAltText" />
+                                        <div class="text">
+                                            <span>@ihtl.Header</span>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if(ihtl.Text != null)
+                                {
+                                        <div>@ihtl.Text</div>
+                                }
+                            </article>
+                            }
+                        }
+                    }
+                }
+        </div>
+        </div> }

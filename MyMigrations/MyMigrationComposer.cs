@@ -32,8 +32,8 @@ public class MySyncMigrationComposer : IComposer
     {
         // if we have a custom migration for the grid, we should 
         // remove the existing one. 
-        // builder.SyncPropertyMigrators().Replace<GridMigrator, GridToBlockListMigrator>();
-        builder.SyncPropertyMigrators().Replace<GridMigrator, DTGEMigrator.DTGEMigrator>();
+        builder.SyncPropertyMigrators().Replace<GridMigrator, GridToBlockListMigrator>();
+        //builder.SyncPropertyMigrators().Replace<GridMigrator, DTGEMigrator.DTGEMigrator>();
 
         // our migration will be discovered, if it implements ISyncItemMigrator
 

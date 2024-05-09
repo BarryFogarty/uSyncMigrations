@@ -1,0 +1,106 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<SiftLibrary.Models.SearchResultNodes>
+@using System.Text.RegularExpressions
+@{
+    var blogItems = Model.Nodes.Select(n => (BlogPost)n);
+    IPublishedContent fillerImage = null;
+
+    var imagesFolder = Umbraco.MediaAtRoot().Where(m => m.Name == "Images").FirstOrDefault();
+    if (imagesFolder != null)
+    {
+        var generalCampusUseFolder = imagesFolder.Children(m => m.Name == "Campus General Use").FirstOrDefault();
+        if (generalCampusUseFolder != null)
+        {
+            fillerImage = generalCampusUseFolder.Children(m => m.Name == "Qmu Filler Thumb").FirstOrDefault();
+        }
+    }
+}
+
+<div class="search-form">
+    <div class="search-paging">
+        @Html.Partial("_SiftQmuPagination", Model)
+    </div>
+</div>
+
+<div class="filter-grid no-padding-grid row">
+
+    @foreach (var blogItem in blogItems)
+    {
+        BlogBio bio = null;
+        var bioTitle = "";
+
+
+        //Sometimes a blog is not a decendant of a blog bio. If it is blogTitle and bio need setting
+        if(blogItem.Parent is BlogBio)
+        {
+            bio = blogItem.Parent as BlogBio;
+            bioTitle = bio.DisplayTitle;
+            if (string.IsNullOrWhiteSpace(bioTitle))
+            {
+                bioTitle = bio.Name;
+            }
+        }
+
+        <div class="filter-item blog-item col-sm-6 col-lg-4 mb-5">
+            <div class="d-flex h-100 accented-boxes">
+
+                <div class="box w-100">
+
+                    <div class="image">
+                        <a href="@blogItem.Url()">
+                            @if (blogItem.AdSpotImage != null)
+                            {
+                                <img src="@blogItem.AdSpotImage.Url()" alt="@blogItem.AdSpotImage.Value("AltText")" />
+                            }
+                            else if (fillerImage != null)
+                            {
+                                <img src="@fillerImage.Url()" alt="@fillerImage.Value("AltText")" />
+                            }
+                            <div class="overlay-text lh-sm">
+                                @blogItem.DisplayTitle
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="text">
+                        <p>
+                            <time>@(blogItem.DatePosted.ToString("dd MMMM yyyy"))</time>
+                            @if (bio != null && !String.IsNullOrEmpty(bioTitle))
+                            {
+                                <span>by </span><a href="@bio.Url()">@bioTitle</a>
+                            }
+                        </p>
+                        @{
+                            if (blogItem.Introduction != null)
+                            {
+                                var intro = blogItem.Introduction.ToString();
+                                string summary = string.Empty;
+
+                                int characterCount = 95;
+
+                                summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                if (summary.Length > characterCount)
+                                {
+                                    char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                    summary = Html.TruncateByWords(summary, 16, false).ToString().Trim(charsToTrim) ?? summary;
+                                }
+                                summary += string.Format(" <a href=\"" + @blogItem.Url() + "\" aria-label=\"read more about " + @blogItem.DisplayTitle + "\"><strong>read more</strong></a>");
+                                <p>@Html.Raw(summary)</p>
+                            }
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<div class="search-form">
+    <div class="search-paging">
+        @Html.Partial("_SiftQmuPagination", Model)
+    </div>
+</div>
+

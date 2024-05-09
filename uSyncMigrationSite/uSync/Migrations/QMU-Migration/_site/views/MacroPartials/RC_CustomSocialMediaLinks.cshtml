@@ -1,0 +1,22 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+<div class="grey-aside">
+	<h2>Engage with the Team</h2>
+	<div class="white-inner">
+		<div class="social-box">
+			@FormatLink("facebook")
+			@FormatLink("twitter")
+			@FormatLink("instagram")
+			@FormatLink("linkedin")
+			@FormatLink("youtube")
+		</div>
+	</div>
+</div>
+
+@helper FormatLink(string property) {
+	var link = Model.MacroParameters[property];
+	if (link != null && link.ToString().Length > 0)
+	{
+		var cssClass = property.ToString().ToLower().Replace(" ", string.Empty);
+		<a href="@link" class="icon-item @cssClass" target="_blank" aria-label="social link @cssClass"></a>
+	}
+}

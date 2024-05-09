@@ -1,0 +1,44 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using System.Text;
+@using Umbraco.Examine
+@using Examine.Search;
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Extensions
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{ 
+    //LOCAL
+    //var courseSearchPage = "/study-there/course-a-z/";
+
+    //DEV
+    var courseSearchPage = "/study-here/course-a-z/";
+
+    string tab = Request.QueryString["tab"];
+    string keyword = Request.QueryString["keyword"];
+
+<div class="find-a-course" style="width:250px;">
+    Find a Course    
+    <div class="keyword">
+         @if (courseSearchPage != null)
+        {
+            string searchUrl = courseSearchPage;
+    <form action="@(courseSearchPage)" method="get" id="CourseFinderForm">
+
+        @Html.TextBoxFor(m => keyword, new { placeholder = "Enter a keyword...", id = "Keyword", aria_label = "search text" })
+
+        <input type="submit" aria-label="search" />
+    </form>
+    }
+    
+    </div>
+    <a href="@courseSearchPage">All Courses (A-Z)</a>
+</div> }
+
+

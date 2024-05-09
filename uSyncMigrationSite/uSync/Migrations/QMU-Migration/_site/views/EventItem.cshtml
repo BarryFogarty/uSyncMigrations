@@ -1,0 +1,81 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.EventItem>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+                <!-- does not go here !! -->
+                @*<span class="blue-title">Events</span>*@
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+                @Html.Partial("centralBlocks", Model)
+                @Model.BodyBottom
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+                <div class="grey-aside alt">
+                    <h2>Event Details</h2>
+                    <div class="white-inner">
+                        <div class="detail-row">
+                            <span class="icon-marker"></span>
+                            <strong>Location</strong>
+                            @Html.Raw(Model.Location)
+                        </div>
+                        <div class="detail-row">
+                            <span class="icon-calendar"></span>
+                            <strong>Date &amp Time</strong>
+                            @if (Model.EventStartDate != null)
+                            {
+                                <stong><sub>Start</sub></stong>
+                            }
+
+                            <time>@(Model.Value<DateTime>("EventStartDate").ToString("dd/MM/yyyy HH:mm tt"))</time>
+                            <br />
+                            @if (Model.EventEndDate != null)
+                            {
+                                <stong><sub>End</sub></stong>
+                            }
+                            <time>@(Model.Value<DateTime>("EventEndDate").ToString("dd/MM/yyyy HH:mm tt"))</time>
+                        </div>
+                        <div class="detail-row">
+                            <span class="icon-moneybag"></span>
+                            <strong>Cost</strong>
+                            @Html.Raw(Model.Cost)
+                        </div>
+                        @if (Model.FurtherInformation != null)
+                        {
+                            <div>
+                                @Model.FurtherInformation
+                            </div>
+                        }
+                        @if (Model.Button != null)
+                        {
+                            <a href="@Model.Button.Url" target="@Model.Button.Target" class="blue-btn">@Model.Button.Name</a>
+                        }
+                    </div>
+                </div>
+                @Html.GetGridHtml(Model, "rcContent")
+            </div>
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+@Html.CachedPartial("_relatedContent2", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

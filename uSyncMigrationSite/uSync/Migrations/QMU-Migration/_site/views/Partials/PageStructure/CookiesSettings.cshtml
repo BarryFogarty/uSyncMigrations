@@ -1,0 +1,58 @@
+﻿@* The same cookies are used on the Master.cshtml, FullWidthPage.cshtml, StudyHereBC4 -- changing them here will change them on all pages *@
+@* ATTENTION: error.html also incluedes this script but is hardcoded. Any changes that need to be made sitewide also need making there *@
+@* Documentation: https://www.civicuk.com/cookie-control/documentation/  *@
+
+@* ---Custom Triggers - GTM datalayer --- *@
+@* Due to a an issue with firing 3rd party code in Google Tag Managers, custom triggers have been created (dataLayer.push()) to fire granted/revoked for Analytics and Marketing  *@
+@* These datalayer events are used to fire Facebook/Snapchat tracking scripts etc.*@
+@*Documentation - https://support.google.com/tagmanager/answer/7679219?hl=en*@
+
+<script src="https://cc.cdn.civiccomputing.com/9/cookieControl-9.x.min.js" type="text/javascript"></script>
+<script>
+    var config = {
+        apiKey: '69b2a675e51a919484f3f2b62d7d6194eb1f2a8e',
+        product: 'PRO',
+        text: {
+            intro: 'Some of these cookies are essential, while others help us to improve your experience by providing insights into how the site is being used. We recommend that you accept all cookies.',
+            acceptSettings: 'I Accept All Cookies'
+        },
+        necessaryCookies: ['UMB-XSRF-TOKEN', "CookieControl"],
+        optionalCookies: [
+            {
+                name: 'analytics',
+                label: 'Analytical Cookies',
+                description: 'Analytical cookies help us to improve our website performance by collecting and reporting information on its usage such as number of visits and how users interact with our website.',
+                onAccept: function () {
+                    gtag('consent', 'update', { 'analytics_storage': 'granted' });
+                    dataLayer.push({ event: "analytics_consent_given" });
+                },
+                onRevoke: function () {
+                    gtag('consent', 'update', { 'analytics_storage': 'denied' });
+                    dataLayer.push({ event: "analytics_consent_revoked" });
+                }
+            },
+            {
+                name: 'marketing',
+                label: 'Ads Cookies',
+                description: 'These are marketing cookies used by our agencies as part of website and social media activity to improve the relevancy of campaigns you receive.',
+                onAccept: function () {
+                    gtag('consent', 'update', { 'ad_storage': 'granted' });
+                    dataLayer.push({ event: "marketing_consent_given" });
+                },
+                onRevoke: function () {
+                    gtag('consent', 'update', { 'ad_storage': 'denied' });
+                    dataLayer.push({ event: "marketing_consent_revoked" });
+                }
+            }
+        ],
+        branding: {
+            removeAbout: true
+        },
+        accessibility: {
+            outline: true,
+            highlightFocus: true
+        }
+    };
+
+    CookieControl.load(config);
+</script>

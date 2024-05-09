@@ -1,0 +1,48 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.FilterPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Services
+@using QMUCloud.Core.Controllers
+@using QMUCloud.Core.Models.ViewModels
+@{
+    Layout = "Master.cshtml";
+}
+
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+ 
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+            <div id="left" class="left" style="padding-bottom:0px">
+
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+                <h1>@Model.DisplayTitle</h1>
+
+                @if (!String.IsNullOrEmpty(Model.Introduction.ToString()))
+                {
+                    @Html.Raw(Model.Introduction)
+                }
+
+            </div>
+
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+            </div>
+
+        </div>
+
+        <!-- Filter form -->
+        @Html.Action("GetFilterPageForm", "FilterPageForm")
+
+    </div>
+</main>
+
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+

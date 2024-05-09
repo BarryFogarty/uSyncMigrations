@@ -1,0 +1,12 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@if (Model.DesktopImage != null)
+{
+    <img class="desktop-image" src="@Model.DesktopImage.Url" alt="@Model.DesktopImage.AltText" />
+}
+
+@if (Model.MobileImage != null)
+{
+    <img class="mobile-image" src="@Model.MobileImage.Url" alt="@Model.MobileImage.AltText" />
+}
+

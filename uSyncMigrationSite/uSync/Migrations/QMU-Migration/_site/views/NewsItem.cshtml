@@ -1,0 +1,50 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.NewsItem>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                <div class="posted-by">
+                    <strong>By @Model.Author</strong>
+                    <time>@(Model.Value<DateTime>("DatePosted").ToString("dd MMMM yyyy"))</time>
+                </div>
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+                @Model.BodyBottom
+
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @if (Model.NotesToEditors != null && Model.NotesToEditors.ToString().Length > 0)
+                {
+                    <div class="accordion-drop">
+                        <h2 tabindex="0">Notes to Editor</h2>
+                        <div class="content-drop">
+                            @Model.NotesToEditors
+                        </div>
+                    </div>
+                }
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+                <!-- News Filter / Tags / -->
+                @Html.GetGridHtml(Model, "rcContent")
+            </div>
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

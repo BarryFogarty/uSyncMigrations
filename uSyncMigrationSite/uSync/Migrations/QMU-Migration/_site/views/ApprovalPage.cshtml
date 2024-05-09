@@ -1,0 +1,85 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.ViewModels.ApprovalPageModel>
+@using System.Web.Mvc.Html
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using Umbraco.Web.Controllers
+@{
+    Layout = "Master.cshtml";
+
+    var loginStatusModel = Members.GetCurrentLoginStatus();
+    var logoutModel = new PostRedirectModel();
+
+    @*
+        Here you can specify a redirect URL for after logging out, by default umbraco will simply
+        redirect to the current page. Example to redirect to the home page:
+
+        logoutModel.RedirectUrl = "/";
+    *@
+}
+
+@section ExtraCss
+{
+    @* Put this in the header to stop the page being indexed by search engines *@
+    <meta name="robots" content="noindex, nofollow">
+}
+
+@section ExtraJs
+{
+    <script type="text/javascript" src="~/scripts/approval.js"></script>
+}
+
+@Html.AntiForgeryToken()
+
+<main role="main" class="main-content approval-page">
+    <div class="container bs-body" id="left">
+
+        <h1>@Model.DisplayTitle</h1>
+
+        <div class="row login-status">
+            <div class="col-8">
+                <p>You are currently logged in as @loginStatusModel.Name</p>
+            </div>
+            <div class="col-2">
+                <p><a href="/change-password/">Change password</a></p>
+            </div>
+            <div class="col-2">
+                @using (Html.BeginUmbracoForm<UmbLoginStatusController>("HandleLogout"))
+                {
+                    <button>Logout</button>
+                    @Html.HiddenFor(m => logoutModel.RedirectUrl)
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <p><strong>Page</strong></p>
+            </div>
+            <div class="col-3">
+                <p><strong>Last Updated</strong></p>
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+
+        @foreach (var profile in Model.UnapprovedPages)
+        {
+            <div class="row">
+                <div class="col-6">
+                    <p><a href="@profile.Url()" target="_blank">@profile.DisplayTitle</a></p>
+                </div>
+                <div class="col-3">
+                    <p>@profile.UpdateDate.ToString("dd/MM/yyyy HH:mm:ss")</p>
+                </div>
+                <div class="col-2">
+                    <button class="approve-btn" data-id="@profile.Id">Approve</button>
+                </div>
+            </div>
+        }
+
+    </div>
+</main>
+
+<script>
+    var approverName = "@loginStatusModel.Name";
+</script>

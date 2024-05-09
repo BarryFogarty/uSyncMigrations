@@ -1,0 +1,409 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = null;
+}
+
+@* the fun starts here *@
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BandedArticle>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+
+@{
+    Layout = "Master.cshtml";
+
+    <link rel="stylesheet" type="text/css" href="/css/banded-article.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+}
+
+<header role="banner" class="banner">
+    <div class="item">
+        <span style="background-image: url(/media/8d884e61d7fccee/current-students-b.jpg)" class="bg-cover-img" role="img" aria-label="A Queen Margaret University student raising their hand with a question for the lecturer"> </span>
+        <div class="text-overlay">
+            <div class="container">
+                <h1 class="bannerTitle">Courses available NOW for September 2022 entry!</h1>
+
+                <div class="banner-intro">
+                    <p>We can help you find your perfect undergraduate course at QMU, Edinburgh. </p>
+                    <p>The following courses still have availability for you to apply now for entry in September 2022!</p>
+                    <p>We will continue to update this page with any changes and if more courses are added. </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main role="main" class="main-content">
+    <div class="container" style="width:156%; margin-left:-15px;">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                <div class="umb-grid">
+                    <div class="grid-section">
+                        <!-- first band here -->
+                        <div class="left-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column left-text">
+                                        <h2><strong>QMU University Undergraduate Courses available for September 2022 entry - course page links:</strong></h2>
+                                        <h3>
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/bsc-bsc-hons-psychology-and-sociology/">Associate Degree - Psychology and Sociology (Home/Scottish domiciled students only)</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/ba-ba-hons-business-management/">Business Management</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/master-of-radiography-diagnostic-mdrad/">Diagnostic Radiography</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/ba-ba-hons-events-and-festival-management/">Events and Festival Management</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/ba-ba-hons-international-hospitality-and-tourism-management/">International Hospitality and Tourism Management</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/ba-ba-hons-media-and-communications/">Media and Communications</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/master-of-nursing-mnurse/">Nursing</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/bsc-bsc-hons-nutrition/">Nutrition</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/master-of-podiatry-mpod/">Podiatry</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/bsc-bsc-hons-psychology/">Psychology</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/bsc-bsc-hons-psychology-and-sociology/">Psychology and Sociology</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/ba-ba-hons-public-relations-and-marketing-communications/">Public Relations and Marketing Communications</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/bsc-bsc-hons-public-sociology/">Public Sociology</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/ba-ba-hons-theatre-and-film/">Theatre and Film</a> |
+                                            <a href="https://www.qmu.ac.uk/study-here/undergraduate-study/2022/master-of-radiography-therapeutic-mtrad/">Therapeutic Radiography</a> |
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- second band here -->
+                        <div class="right-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="right-text" style="color:White;">
+                                            <h2>Business Management</h2>
+                                            <p>More and more employers require business management graduates who can join their companies and hit the ground running. This degree will give you both the theoretical business knowledge and, crucially, the practical experience you need to make your professional mark from day one. You’ll also have the opportunity to study abroad. Our business management options are designed to give you the knowledge and skills that you need to thrive as a business leader and manager in the fast-moving marketplaces of tomorrow.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 column">
+                                        <div>
+                                            <iframe width="360" height="203" src="https://www.youtube.com/embed/ezufQvGTr8Q?feature=oembed" title="What are the benefits of studying Business Management at Queen Margaret University, Edinburgh?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                                        </div>
+                                    </div>
+                                    <p><a href="/study-here/undergraduate-study/2022/ba-ba-hons-business-management/" title="BA/ BA (Hons) Business Management"><span class="white-btn">Course information and apply now - Business Management at QMU</span></a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- third band here -->
+                        <div class="right-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text">
+                                            <h2>Diagnostic Radiography</h2>
+                                            <p>As a diagnostic radiographer you will be a healthcare professional who acquires and evaluates images of the human body to diagnose disease and trauma. You will use a range of high-technology imaging equipment and techniques and work closely with the multidisciplinary team to provide a person-centred service. Radiography is invaluable in the diagnosis and treatment of disease and trauma. As a diagnostic radiographer your skill, judgement and professionalism will be a vital part of a team’s clinical work, and affect patients’ lives, day after day.</p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88d721b6ee6ec/fp-theraputic-radiography.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/master-of-radiography-diagnostic-mdrad/" title="MDRad: Master of Diagnostic Radiography"><span class="blue-btn">Course information and apply now - Diagnostic Radiography at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fourth band here -->
+                        <div class="right-band" style="background-color:#6990b2;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White;">
+                                            <h2>Events and Festival Management</h2>
+                                            <p>Events help drive the strategies of businesses, charities and public bodies, and there is now a growing cadre of supremely capable events professionals. They know all about planning, management, legal issues, budgeting, staging, marketing, promotions, evaluation and social responsibility. This course will teach you these skills and give you that experience and more. Could you plan, deliver and orchestrate an event such as a music festival? Where would you start? What would you need to consider? You will know all this by Year Two of this course. By Year Three you will understand who your audience is and what makes them return and promote your event for you.  </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88cc88be31b76/fp-events.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="Two Queen Margaret University students standing in a busy library, deep in conversation">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/ba-ba-hons-events-and-festival-management/" title="BA/ BA (Hons) Events and Festival Management"><span class="blue-btn">Course information and apply now - Events and Festival Management at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fifth band here -->
+                        <div class="right-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="right-text" style="color:White;">
+                                            <h2>International Hospitality and Tourism Management</h2>
+                                            <p>Want to be a leader in a fascinating and fast-growing global industry? On this course you will learn the business management skills that the best employers in international hospitality and tourism are looking for, enjoy close support and supervision from our staff and gain practical experience on a 20-week internship in the UK or abroad.As a graduate of our international hospitality and tourism management degree you will be at the forefront of these exciting industries. You will gain a thorough theoretical understanding of the political, economic and social factors at work in the industry, and what they will mean for you as a manager of the future.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88cc88d1a4a70/fp-international-hospitality-banner-copy.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/ba-ba-hons-international-hospitality-and-tourism-management/" title="BA/ BA (Hons) International Hospitality and Tourism Management"><span class="white-btn">Course information and apply now - International Hospitality and Tourism Management at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- sixth band here -->
+                        <div class="right-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text">
+                                            <h2>Media and Communications</h2>
+                                            <p>Our Media and Communications course will engage you in creative, collaborative and professional ways of thinking, researching and working. The degree emphasises studying the media and understanding the importance of creative communication skills in this exciting and dynamic sector. We live in a world where everyone joins in media debates and many people are content creators, but how do you differentiate yourself, and your professional skills, in this field? On this new course you’ll study media theory while gaining the creative, practical and collaborative skills you’ll need to establish a career in tomorrow’s global, digitally networked world. </p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88cccb2f0dbaa/fp-media-communications.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/ba-ba-hons-media-and-communications/" title="BA/ BA (Hons) Media and Communications"><span class="blue-btn">Course information and apply now - Media and Communications at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- seventh band here -->
+                        <div class="right-band" style="background-color:#6990b2;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White;">
+                                            <h2>Nursing</h2>
+                                            <p>Nursing demands compassion and skill and this course will fully equip you to give exceptional person-centred care. With this degree course you will be able to register with the NMC and practise as a nurse. As a nurse, you will be at the forefront of healthcare, meeting a broad range of people who truly need your expertise and empathy. Nurses are involved in promoting health and preventing illness in addition to caring for sick and dying people. This can take place in a variety of environments, which include health centres, homes, residential/care homes and hospitals. This course will prepare you to confidently deliver safe, effective and person-centred nursing care.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 column">
+                                        <div>
+                                            <iframe width="360" height="203" src="https://www.youtube.com/embed/12ilaCnk4NY?feature=oembed" title="Master of Nursing (MNurse) at Queen Margaret University, Edinburgh" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                                        </div>
+                                        <p><a href="/study-here/undergraduate-study/2022/master-of-nursing-mnurse/" title="MNurse Master of Nursing"><span class="blue-btn">Course information and apply now - Nursing at QMU</span></a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- eighth band here -->
+                        <div class="right-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="right-text" style="color:White;">
+                                            <h2>Nutrition</h2>
+                                            <p>If we are what we eat, then nutrition can tell us a lot about who we are, how we live and how we can improve the health of society. As a science it looks at how food affects the functioning of the living organism. It includes the study of food composition, how it is digested and absorbed, the production of energy, elimination of wastes and all the syntheses that are essential for growth, maintenance and reproduction across the life cycle.What and how we eat is vital to individual and community health and it is an engaging and rewarding subject to study. You will learn the academic principles behind food and gain practical skills in our advanced laboratories. You will also learn how to think on a larger scale.</p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88d721bd92806/fp-ug-nutrition.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/bsc-bsc-hons-nutrition/" title="BSc/ BSc (Hons) Nutrition"><span class="white-btn">Course information and apply now - Nutrition at QMU</span></a></p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ninth band here -->
+                        <div class="right-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text">
+                                            <h2>Podiatry</h2>
+                                            <p>As a podiatrist you will be a healthcare professional who has been trained to diagnose and treat abnormal conditions of the feet and lower limbs. Podiatrists work with their patients to prevent and correct deformity, keeping people mobile and active, and helping to relieve pain. Podiatrists work with people of all ages, and your patients will count on you to support and help them with a broad range of mobility and medical conditions of the foot and lower limbs. These may include muscular and joint problems as well as broader health issues such as diabetes, blood disorders and disorders of the nervous system, which may involve complex wound management.</p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88d721a7137ce/fp-podiatry2.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/master-of-podiatry-mpod/" title="MPod Master of Podiatry"><span class="blue-btn">Course information and apply now - Podiatry at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- tenth band here -->
+                        <div class="right-band" style="background-color:#6990b2;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White;">
+                                            <h2>Psychology</h2>
+                                            <p>Why do humans think, feel and behave the way we do? As a psychology student you will find answers to some of the most fundamental and fascinating of questions. On this British Psychological Society (BPS) accredited course you will learn the skills and the analytical abilities that employers in a range of careers are looking for. You will learn across six core areas of psychology (cognitive, biological, historical, developmental, social and individual differences) and gain extensive practical training in research methods. You can focus on a particular area of interest through our module choices.</p>
+                                        </div>
+                                    </div>
+                                    <!-- eleventh band here -->
+                                    <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88d6d62fa8ee9/as-psychology.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="Two Queen Margaret University students standing in a busy library, deep in conversation">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/bsc-bsc-hons-psychology/" title="BSc/ BSc (Hons) Psychology"><span class="blue-btn">Course information and apply now - Psychology at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- twelfth band here -->
+                        <div class="right-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="right-text" style="color:White;">
+                                            <h2>Psychology and Sociology</h2>
+                                            <p>Are you fascinated by human nature, by who we are and how we interact? Do you want to understand what impacts the shape of society around us and how it could be changed for the better? Then you will enjoy our joint course in psychology and sociology as it provides a challenging and stimulating environment for exploring these questions around the individual and society. In this course you will learn to use social scientific methods and evidence to make sense of human behaviour. You will learn how to think and write critically, giving you skills that can be valuable in many fields.</p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88d6d6cff71fa/fp-psychology-and-sociology-jpg-1.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="Two Queen Margaret University students standing in a busy library, deep in conversation">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/bsc-bsc-hons-psychology-and-sociology/" title="BSc/ BSc (Hons) Psychology and Sociology"><span class="white-btn">Course information and apply now - Psychology and Sociology at QMU</span></a></p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- thirteenth band here -->
+                        <div class="right-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text">
+                                            <h2>Public Relations and Marketing Communications</h2>
+                                            <p>This course will give you the theoretical understanding, professional experience and industry contacts you need to step into an exciting and rewarding career in public relations (PR) and marketing, fascinating, fast-moving fields that offer many rewarding career opportunities. You will gain practical experience of developing strategic PR and marketing communication solutions for live clients, creating authentic digital content for a range of social media platforms. You will find out how organisations use video, photography, blogs and podcasts to drive their marketing, and how you can help them do it better. You will undertake original research to inform decision making, and measure the effectiveness of campaigns using a range of analytics.</p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88cccb3964ade/fp-media-pr.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/ba-ba-hons-public-relations-and-marketing-communications/" title="BA/ BA (Hons) Public Relations and Marketing Communications"><span class="blue-btn">Course information and apply now - Public Relations and Marketing Communications at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fourteenth band here -->
+                        <div class="right-band" style="background-color:#6990b2;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White;">
+                                            <h2>Public Sociology</h2>
+                                            <p>
+                                                What are the root causes of social injustice and inequality? How could we change society’s perception of them, and make the actual changes themselves? On this course you will reflect upon the ways in which sociological knowledge can affect real change in people’s everyday lives.
+
+                                                If you have an enquiring, questioning mind and you want to understand more about human societies, social problems, interactions and experiences, you will thrive here. You’ll engage with a diversity of communities and develop a sense of the ways in which a public sociological imagination can meaningfully intervene in real-world political and social events. Many of our staff are actively involved in social justice, and so you will see first-hand how we can bring what we study to life.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88d6d634ceb1a/as-public-sociology.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="Two Queen Margaret University students standing in a busy library, deep in conversation">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/bsc-bsc-hons-public-sociology/" title="BSc/ BSc (Hons) Public Sociology"><span class="blue-btn">Course information and apply now - Public Sociology at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- fifteenth band here -->
+                        <div class="right-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="right-text" style="color:White;">
+                                            <h2>Theatre and Film</h2>
+                                            <p>If you love theatre and film you can study them both in depth on the only course of its kind in Scotland. The course combines practical work-based learning with a solid grounding in critical studies.You will learn about the histories of theatre and cinema, and examine the key critical cultural and political debates. You will explore the spaces of the stage and studio, stage and screen performances and the genres, narratives and authorship of plays and screenplays. We study the economics and management of theatre and cinema within the creative industries. Alongside the course’s academic core you will have plenty of opportunity to gain production experience from Year One, and can specialise in practice areas in later years.</p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88cccb1f5cbf9/fp-film-and-theatre.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/ba-ba-hons-theatre-and-film/" title="BA/BA (Hons) Theatre and Film"><span class="white-btn">Course information and apply now - Theatre and Film at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- sixteenth band here -->
+                        <div class="right-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text">
+                                            <h2>Therapeutic Radiography</h2>
+                                            <p>Are you technically minded with an equally strong interest in person-centred care? Therapeutic radiography is a rewarding profession that brings together care and technological expertise. It is the skilled application of controlled amounts of radiation to treat medical conditions, mainly cancer and tumours. The therapeutic radiographer has shared responsibility for the planning and accurate delivery of radiation treatment. Are you ready to make a difference? As a therapeutic radiographer you will work with patients every day to help improve their care and their lives. You are a part of their journey, from initial referral through planning and treatment to the post treatment review.</p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d88d7223d61c59/msc-radiotherapy-and-oncology-fb.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                            <p class="caption"></p>
+                                            <p><a href="/study-here/undergraduate-study/2022/master-of-radiography-therapeutic-mtrad/" title="Master of Radiography: Therapeutic (MTRad)"><span class="blue-btn">Course information and apply now - Therapeutic Radiography at QMU</span></a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- seventeenth band here -->
+                    <div class="right-band" style="background-color:#374a5c;">
+                        <div class="container">
+                            <div class="row clearfix">
+                                <div class="col-md-8 column">
+                                    <div class="right-text" style="color:White;">
+                                        <h2>Clearing Enquiries</h2>
+                                        Interested in studying an undergraduate course at QMU? Still have some questions? </p>
+                                    </div>
+                                </div>            <div class="col-md-4 column">
+                                    <p><a href="/study-here/how-to-apply/clearing/clearing-enquiry-form/" title="Clearing Enquiry Form"><span class="white-btn">Contact us about Clearing - QMU Clearing Enquiry Form</span></a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- tenth band -->
+                @*<div class="right-band">
+                        <div class="container">
+                            <div class="row clearfix">
+                                <div class="col-md-8 column">
+                                    <div class="right-text">
+                                        <h2>COURSE TITLE</h2>
+                                        <p>COURSE COPY</p>
+                                    </div>
+                                </div>            <div class="col-md-4 column">
+                                    <div>
+                                        <img src="/media/8d88bed7bb42353/extracurricular-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A woman and a man looking at some paper in Queen Margaret University's Business Gateway">
+                                        <p class="caption"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                <!-- eleventh band -->
+                @*<div class="left-band" style="background-color:#374a5c;">
+                        <div class="container">
+                            <div class="row clearfix">
+                                <div class="col-md-4 column">
+                                    <div>
+                                        <img src="/media/8d88bed7c229a59/feel-supported-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University wellbeing advisor talking to a student">
+                                        <p class="caption"></p>
+                                    </div>
+                                </div>            <div class="col-md-8 column">
+                                    <div class="left-text" style="color:White;">
+                                        <h2>COURSE TITLE</h2>
+                                        <p>COURSE COPY</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                <!-- end eleventh band -->
+            </div>
+        </div>
+
+    </div>
+    </div>
+    </div>
+</main>

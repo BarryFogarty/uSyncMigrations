@@ -1,0 +1,47 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Subject>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@{
+    Layout = "Master.cshtml";
+    var focusImage = Model.Value<IPublishedContent>("focusImage");
+    var overlapClass = focusImage != null ? "overlap-banner" : "";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content image">
+    <div class="container">
+        <div class="column-layout @overlapClass">
+            <div class="left" id="left" tabindex="-1">
+
+                @if (focusImage != null)
+                {
+                    <img src="@focusImage.Url()" alt="@focusImage.Value("altText")" class="focusImage" />
+                }
+
+                @Html.Partial("shareUpper")
+                @Model.BodyTop
+                @Html.Partial("centralBlocks", Model)
+                @Model.BodyBottom
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+            <div class="right">
+                <!-- Related courses -->
+                @if (Model.RelatedCourses != null)
+                {
+                    <div class="blue-box">
+                        <h2>@Model.RelatedCoursesTitle</h2>
+                        <ul>
+                            @foreach (var item in Model.RelatedCourses)
+                            {
+                                <li><a href="@item.Url">@item.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</main>

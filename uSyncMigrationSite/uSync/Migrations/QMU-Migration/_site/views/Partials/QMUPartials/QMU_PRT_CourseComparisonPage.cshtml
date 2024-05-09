@@ -1,0 +1,192 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.ViewModels.QMU_VM_CourseComparisonPage>
+<section class="course-comparison">
+    <div class="grey-aside alt blue mb-0">
+        <div class="white-inner">
+            <fieldset class="white-inner__checkwrapper">
+                <legend>Select @Model.MaxCoursesToShow courses</legend>
+                @foreach (var filter in Model.ComparisonFilters)
+                {
+
+                    <div class="qmu_checkbox qmu_checkbox--white-text qmu_checkbox--med-text">
+                        <input tabindex="-1" class="btn-check js--checkbox" type="checkbox" name="filterBy" data-courseid="course-@filter.Id" id="cb-@filter.Id" value="cb-@filter.Id" @(filter.ShowColumn != true ? "disabled=\"disabled\"" : "") @(filter.ShowColumn == true ? "checked" : "") />
+                        <label class="js--form-checkbox-label" role="button" tabindex="@(filter.ShowColumn == true ? 0 : 1)" for="cb-@filter.Id" title="@filter.FilterName">@filter.FilterName</label>
+                    </div>
+                }
+            </fieldset>
+            <p class="mb-0 mt-3"><span id="numCoursesChecked">@Model.CurrentNumOfCoursesShown</span> out of @Model.MaxCoursesToShow selected</p>
+        </div>
+    </div>
+
+    <table class="course-comparison__table">
+        <caption class="visually-hidden">Course Comparison:</caption>
+        <thead>
+            <tr>
+                <td class="d-none d-sm-table-cell" aria-label="No value"></td>
+                @foreach (var tableHeader in Model.TableHeaders)
+                {
+
+                    <th class="js--course-element @(!tableHeader.ShowColumn ? "d-none" : "")" data-checkbox-for="course-@tableHeader.ColumnId">
+                        @if (!String.IsNullOrEmpty(tableHeader.ColumnTitle))
+                        {
+                            <span>
+                                @tableHeader.ColumnTitle
+                            </span>
+                        }
+                        @if (tableHeader.HeaderLink != null)
+                        {
+                            <span class="course-comparison__table__thead__link">
+                                <a href="@tableHeader.HeaderLink" target="_blank" title="View course page @tableHeader.ColumnTitle" aria-label="View course page @tableHeader.ColumnTitle" aria-describedby="Opens in a new window">
+                                    View course page
+                                </a>
+                            </span>
+                        }
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tableRow in Model.TableRows)
+            {
+                <tr>
+                    <th class="d-none d-sm-table-cell" scope="row">
+                        @if (!String.IsNullOrEmpty(tableRow.RowIconCssClass))
+                        {
+                            <span class="@tableRow.RowIconCssClass"></span>
+                        }
+                        @if (!String.IsNullOrEmpty(tableRow.RowTitle))
+                        {
+                            @tableRow.RowTitle
+                        }
+                    </th>
+
+                    @foreach (var cell in tableRow.TableRowCells)
+                    {
+                        <td class="js--course-element @(!cell.ShowColumn ? "d-none" : "") @(cell.centerText ? "text-sm-center" : "") @(!cell.alignTextMiddle ? "align-top" : "")" data-checkbox-for="course-@cell.ColumnId">
+                            @if (!String.IsNullOrEmpty(tableRow.RowTitle))
+                            {
+                                <span class="d-block d-sm-none mb-2"><strong>@tableRow.RowTitle</strong></span>
+                            }
+
+                            @if (!String.IsNullOrEmpty(cell.InnerHtml))
+                            {
+
+                                //Inner Html is set in each row item in GetTableRows (line 112 CourseComparisonController.cs)
+                                @Html.Raw(cell.InnerHtml)
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+<script>
+
+            //Checkbox toggle functionality
+            $(function () {
+                let courses = $(".js--course-element");
+                let checkBoxes = $(".js--checkbox");
+                let checkBoxLabels = $(".js--form-checkbox-label");
+                let maxItemsToShow = @Model.MaxCoursesToShow;
+
+                if (checkBoxes && courses) {
+
+                    checkBoxes.click(function () {
+
+                        //Execute
+                        var toggledCourseId = $(this).data("courseid");
+                        executeUiChange(toggledCourseId);
+                    });
+
+                    checkBoxLabels.keydown(function (e) {
+                        if (e.which == 13) {
+                            //Toggle checkbox UI check
+                            var checkBox = $(this).siblings("input").first();
+                            checkBox.prop("checked", !checkBox.prop("checked"));
+
+                            //Execute
+                            var toggledCourseId = $(this).siblings("input").first().data("courseid");
+                            executeUiChange(toggledCourseId);
+                        }
+                    });
+                }
+
+
+                //When a Ui Change is executed
+                // - find corredsponding course item and toggle show/hide
+                // - update fronend checkbox counter
+                // - enable/disable items in checkbox array depending on num that are checked
+                function executeUiChange(toggledCourseId) {
+                    let numCheckedCheckboxes = $(".js--checkbox:checked").length;
+                    let courseElements = getCourseEls(toggledCourseId);
+                    let enableCheckboxes = maxItemsToShow > numCheckedCheckboxes;
+
+                    toggleCourseDisplay(courseElements);
+                    updatedCheckboxCounter(numCheckedCheckboxes);
+
+                    if (enableCheckboxes) {
+                        endableCheckboxeAry(checkBoxes);
+                    } else {
+                        disableCheckboxeAry(checkBoxes.not(':checked'));
+                    }
+                }
+
+                function getCourseEls(courseId) {
+
+                    return courses.filter(function () {
+                        return $(this).attr('data-checkbox-for') == courseId;
+                    });
+                }
+
+                function toggleCourseDisplay(el) {
+                    el.toggleClass("d-none");
+                }
+
+                function updatedCheckboxCounter(int) {
+                    $("#numCoursesChecked").text(int);
+                }
+
+                function endableCheckboxeAry(ary) {
+                    ary.each(function () {
+                        $(this).attr("disabled", false);
+                        $(this).siblings("label").first().attr('tabindex', 0);
+                    });
+                }
+
+                function disableCheckboxeAry(ary) {
+                    ary.each(function () {
+                        $(this).attr("disabled", true);
+                        $(this).siblings("label").first().attr('tabindex', 1);
+                    });
+                }
+            });
+
+
+            //Read more text functionality
+            //When a read more is clicked, shows text and the text of all 'read more' boxes in the row
+            $(function () {
+                $(".js--course-comparison-rm__cta").click(function () {
+                    var readMoreCtaAry = GetAllCtasFromRow($(this));
+                    readMoreCtaAry.each(function () {
+                        ToggleOverFlowText($(this));
+                    });
+                });
+
+                function GetAllCtasFromRow(cta) {
+                    let row = cta.closest('tr').first();
+                    let childCtaAry = row.find('.js--course-comparison-rm__cta');
+                    return childCtaAry;
+                }
+
+                function ToggleOverFlowText(el) {
+                    el.hasClass("text-hidden") == true ? el.html('Read less') : el.html('Read more');
+                    el.toggleClass("text-hidden");
+                    el.siblings(".js--course-comparison-rm__standard").first().toggleClass("d-none");
+                    el.siblings(".js--course-comparison-rm__overflow").first().toggleClass("d-none");
+                    el.siblings(".js--course-comparison-rm__coverover").first().toggleClass("d-none");
+                }
+            });
+
+
+</script>

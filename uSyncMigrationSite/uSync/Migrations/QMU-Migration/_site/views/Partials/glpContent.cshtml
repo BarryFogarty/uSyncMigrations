@@ -1,0 +1,88 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.GlpContent>
+@using ContentModels = Umbraco.Web.PublishedModels;
+
+<div class="container">
+    <div class="column-layout">
+
+        <div class="left">
+            <!-- bread crumbs in here-->
+            <!-- share page in here -->
+
+            <h1>@Model.DisplayTitle</h1>
+
+            @Model.Introduction
+            @Model.BodyTop
+            <div class="article-list">
+                <div class="row">
+            @{
+                var fps = Model.Value<IEnumerable<IPublishedElement>>("focusPanel");
+
+                foreach (var fp in fps)
+                {
+                    var title = fp.Value<string>("title");
+                    var image = fp.Value<IPublishedContent>("image");
+                    <article aria-label="@title">
+                        <a class="image">
+                            <img src="@image.Url()" alt="@image.Value("AltText")" />
+                            <div class="text">
+                                <span>@title</span>
+                            </div>
+                        </a>
+                    </article>
+                }
+                }
+
+            </div>
+                </div>
+            </div>
+
+        <div class="right">
+            @*@Html.Partial("_ContactGroup")*@
+            @*@Html.Partial("_rcLinks")*@
+
+            @{var links = Model.Value<IEnumerable<IPublishedElement>>("links");
+
+                var level1 = Model.Links;
+
+                var level2 = level1.FirstOrDefault();
+
+                var level3 = level2.Value("link");
+
+                foreach (var item in level1)
+                {
+                    <hr />
+                    var subitem = item.Value<IPublishedContent>("link");
+                    @*<div>@subitem.Value("Name")</div>*@
+                    
+                }
+                foreach (var link in links)
+
+                {
+
+                    var lib = link.Properties.ToList();
+
+                    var lies = lib.FirstOrDefault().Value("text");
+
+                    foreach (var li in lib)
+                    {
+                        <div>@lies </div>
+                    }
+                }
+            }
+        </div>
+
+    </div>   
+
+</div>
+

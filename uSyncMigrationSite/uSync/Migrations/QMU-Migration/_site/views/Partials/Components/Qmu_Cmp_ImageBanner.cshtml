@@ -1,0 +1,41 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Qmu_Cmp_ImageBanner>
+@using Umbraco.Web.PublishedModels
+@using QMUCloud.Core.Helpers
+
+@{ 
+    var overlayColorClass = Model.OverlayBackgroundColour != null ? $"layt_image-text-overlay--{Model.OverlayBackgroundColour.Label.ToLower()}" : "";
+
+    //Loads a webpImage
+    var webpBackgroundImage = Url.GetCropUrlWebp(Model.Image, "Image Banner");
+    var fallbackBackgroundImage = Model.Image.GetCropUrl("Image Banner");
+}
+
+<section class="qmu_cmp_imagebanner component-spacing @(Model.HighlightTitle == true ? "qmu_cmp_imagebanner--highlighted-header" : "")" @(!String.IsNullOrEmpty(Model.AnchorCode) ? $"id={Model.AnchorCode}" : "") style="background-image: url(@webpBackgroundImage)" data-webp-fallback="@fallbackBackgroundImage" role="img" aria-label="@Model.Image.Value("altText")">
+    <div class="container full-width full-width-95">
+
+        @if (!String.IsNullOrEmpty(Model.Title) || !String.IsNullOrEmpty(Model.Strapline))
+        {
+            <div class="qmu_cmp_imagebanner__header layt_image-text-overlay @overlayColorClass text-center">
+
+                @if (!String.IsNullOrEmpty(Model.Title))
+                {
+                    <h2>@Model.Title</h2>
+                }
+
+                @if (!String.IsNullOrEmpty(Model.Strapline))
+                {
+                    <h3>@Model.Strapline</h3>
+                }
+            </div>
+        }
+
+        @if (!String.IsNullOrEmpty(Model.TextBox.ToString()))
+        {
+            <div class="qmu_cmp_imagebanner__textbox">
+                <div class="layt_image-text-overlay @overlayColorClass">
+                    @Html.Raw(Model.TextBox)
+                </div>
+            </div>
+        }
+    </div>
+</section>

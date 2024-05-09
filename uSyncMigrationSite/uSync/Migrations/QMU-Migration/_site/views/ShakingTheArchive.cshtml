@@ -1,0 +1,85 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.GeneralPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using QMUCloud.Core.Models.ViewModels;
+@{
+    Layout = "Master.cshtml";
+
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+
+    <div id="overlay">
+
+        <!-- overlay code in here -->
+    </div>
+
+    <div class="container">
+        <div class="column-layout">
+
+            <div class="left" id="left" tabindex="-1">
+
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" class="paypal">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="Q3L7EMNS4YCZU">
+                    <table>
+                        <tr><td><input type="hidden" name="on0" value="Fee">Fee</td></tr>
+                        <tr>
+                            <td>
+                                <select name="os0">
+                                    <option value="In-person attendance (employed):">In-person attendance (employed): £50.00 GBP</option>
+                                    <option value="In-person attendance (student):">In-person attendance (student): £30.00 GBP</option>
+                                    <option value="In-person attendance (unemployed):">In-person attendance (unemployed): £15.00 GBP</option>
+                                    <option value="Online attendance (employed):">Online attendance (employed): £25.00 GBP</option>
+                                    <option value="Online attendance (student):">Online attendance (student): £10.00 GBP</option>
+                                    <option value="Online attendance (unemployed):">Online attendance (unemployed): £5.00 GBP</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="hidden" name="currency_code" value="GBP">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/GB/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal – The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_GB/i/scr/pixel.gif" width="1" height="1">
+                </form>
+
+                @Html.Partial("centralBlocks", Model)
+                @Model.BodyBottom
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+                @Html.GetGridHtml(Model, "rcContent")
+
+            </div>
+        </div>
+    </div>
+    @* Pulls through lower banner partial if there is an image *@
+    @if (Model.HasValue("lowerBannerImage"))
+    {
+        var lbModel = new QMU_VM_LowerBannerModel
+        {
+            Title = Model.LowerBannerTitle,
+            Copy = Model.LowerBannerCopy.ToString(),
+            BannerImage = Model.LowerBannerImage,
+            MobileBannerImage = Model.LowerBannerImageMobile,
+            BoxPosition = Model.HorizontalAdPlacement,
+            IsInfographic = Model.UsingBannerForInfographic
+        };
+
+        @Html.CachedPartial("components/qmu_cmp_lowerBanner", lbModel, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+@Html.CachedPartial("_relatedContent2", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

@@ -1,0 +1,193 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = null;
+}
+
+@* the fun starts here *@
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BandedArticle>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+
+@{
+    Layout = "Master.cshtml";
+
+    <link rel="stylesheet" type="text/css" href="/css/banded-article.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+}
+
+<header role="banner" class="banner">
+    <div class="item">
+        <span style="background-image: url(/media/8d884e61d7fccee/current-students-b.jpg)" class="bg-cover-img" role="img" aria-label="A Queen Margaret University student raising their hand with a question for the lecturer"> </span>
+        <div class="text-overlay">
+            <div class="container">
+                <strong></strong><h1 class="bannerTitle">Services for Students</h1></strong>
+
+                <div class="banner-intro">
+                    <p><h2>Support is at the heart of what we do</h2></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main role="main" class="main-content">
+    <div class="container" style="width:156%; margin-left:-15px;">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+                <div class="umb-grid">
+                    <div class="grid-section">
+                        <!-- first band here -->
+                        <div class="left-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column">
+                                        <h1><strong>Making your experience at QMU a positive one; we will support you from application through to graduation.</strong></h1>
+                                        <h2>Quick Links:</h2>
+                                        <h2><a href="https://www.qmu.ac.uk/study-here/student-services/healthcare-faith-and-chaplaincy/">Health and Wellbeing</a> | <a href="https://www.qmu.ac.uk/study-here/services-for-students/support-for-learning/">Support for Learning</a> | <a href="https://www.qmu.ac.uk/campus-life/careers-and-employability/">Careers and Employability</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/student-funding-service/">Student Funding</a> | <a href="https://www.qmu.ac.uk/study-here/services-for-students/support-for-specific-groups/">Support for Specific Groups</a></h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- second band here -->
+                        <div class="right-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="right-text" style="color:White;">
+                                            <h1>Health and Wellbeing</h1>
+                                            <p>Test related to H&W</p>
+                                            <p> Quick Links: <a href="https://www.qmu.ac.uk/study-here/student-services/healthcare-faith-and-chaplaincy/">Healthcare</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/counselling-service/">Counselling</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/wellbeing-service/">Wellbeing Service</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/sexual-harassment-and-violence/">Gender Based Violence</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/togetherall/">Togetherall</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/healthcare-faith-and-chaplaincy/">Contemplation and Spirituality</a>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+                                                <iframe width="360" height="203" src="https://www.youtube.com/embed/ezufQvGTr8Q?feature=oembed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="" title="What are the benefits of studying Business Management at Queen Margaret University, Edinburgh?"></iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- third band here-->
+                            <div class="left-band" style="background-color:#6990b2;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+                                                <img src="/media/8d88bed7e251362/learning-facilities-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="Two Queen Margaret University students standing in a busy library, deep in conversation">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text" style="color:White;">
+                                                <h1>Support for Learning</h1>
+                                                <p>Text related to support for learning</p>
+                                                <p> Quick Links: <a href="https://www.qmu.ac.uk/study-here/student-services/disability-service/">Disability Service</a> | <a href="">Dyslexia</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/effective-learning-service-els/">Effective Learning Service</a> | <a href="">Assistive Technology</a> | <a href="">Studiosity</a> | <a href="https://www.qmu.ac.uk/footer/bsl-action-plan/">BSL Action Plan</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- fourth band -->
+                            <div class="right-band">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text" style="color:White;">
+                                                <h1>Careers and Employability</h1>
+                                                <p>Text related to Careers and Employability.</p>
+                                                <p> Quick Links: <a href="">Careers Support Whilst Studying</a> | <a href="">Jobs, Work Experience and Volunteering </a> | <a href="">CVs and Applications</a> | <a href="">Mentoring</a> | <a href="">Support After Graduating</a> | <a href="">Recruiting our Students and Graduates</a></p>
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+                                                <img src="/media/8d88bed7faf39ec/top-ranking-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="An outside view of Queen Margaret University, Edinburgh">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- fifth band -->
+                            <div class="left-band" style="background-color:#374a5c;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-4 column">
+                                            <div>
+                                                <img src="/media/8d88bed7dbf0d60/learn-from-experts-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University student sitting at a laptop and talking confidently to a small group of people">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>            <div class="col-md-8 column">
+                                            <div class="left-text" style="color:White;">
+                                                <h1>Student Funding</h1>
+                                                <p>Text related to student funding.</p>
+                                                <p> Quick Links: What do we Fund | Application Forms | External Support</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- sixth band -->
+                            <div class="right-band" style="background-color:#6990b2;">
+                                <div class="container">
+                                    <div class="row clearfix">
+                                        <div class="col-md-8 column">
+                                            <div class="right-text" style="color:White;">
+                                                <h1>Support for Specific Groups</h1>
+                                                <p>Text related to support for specific groups.</p>
+                                                <p> Quick Links: <a href="https://www.qmu.ac.uk/study-here/student-services/support-for-care-leavers/">Care Leavers</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/support-for-student-carers/">Student Carers</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/support-for-armed-forces/">Armed Forces</a> | <a href="https://www.qmu.ac.uk/study-here/student-services/support-for-estranged-students/">Estranged Students</a></p>
+                                            </div>
+                                        </div>            <div class="col-md-4 column">
+                                            <div>
+                                                <img src="/media/8d88bed797cdc47/community-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A group of Queen Margaret University students sitting on a couch in on-site accommodation">
+                                                <p class="caption"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- tenth band -->
+                            @*<div class="right-band">
+                                    <div class="container">
+                                        <div class="row clearfix">
+                                            <div class="col-md-8 column">
+                                                <div class="right-text">
+                                                    <h1>COURSE TITLE</h1>
+                                                    <p>COURSE COPY</p>
+                                                </div>
+                                            </div>            <div class="col-md-4 column">
+                                                <div>
+                                                    <img src="/media/8d88bed7bb42353/extracurricular-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A woman and a man looking at some paper in Queen Margaret University's Business Gateway">
+                                                    <p class="caption"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <!-- eleventh band -->
+                            @*<div class="left-band" style="background-color:#374a5c;">
+                                    <div class="container">
+                                        <div class="row clearfix">
+                                            <div class="col-md-4 column">
+                                                <div>
+                                                    <img src="/media/8d88bed7c229a59/feel-supported-540x360.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A Queen Margaret University wellbeing advisor talking to a student">
+                                                    <p class="caption"></p>
+                                                </div>
+                                            </div>            <div class="col-md-8 column">
+                                                <div class="left-text" style="color:White;">
+                                                    <h1>COURSE TITLE</h1>
+                                                    <p>COURSE COPY</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <!-- end eleventh band -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</main>
+
+

@@ -1,0 +1,284 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BlogListing>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Services
+@{
+    Layout = "Master.cshtml";
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+}
+
+<script>
+
+    $(document).ready(function () {
+
+        // SHOW ONLY 12 STAFF ITEMS
+
+        items = $('.blog-grid');
+        $.each(items, function (key, value) {
+            $(this)
+                .find('.blog-item')
+                .slice(12)
+                .hide();
+        });
+
+        // CHECK IF MORE THEN 12 ITEMS
+
+        var items = $('.blog-item').length;
+        var x = document.getElementById("more");
+
+        if (items > 12) {
+            x.style.display = "block";
+        }
+
+        var headerOffset = 92 + 30;
+        if (viewport().width <= 900) {
+            headerOffset = 10;
+        }
+        else if (viewport().width <= 1250) {
+            headerOffset = 76 + 20;
+        }
+
+        // SHOW MORE
+
+        $('.show-more').click(function () {
+            // show all the cards
+            // show the "less" link and hide the "more" link
+            var showMoreHasFocus = false;
+            var focusVisible = $.find(":focus-visible");
+            if (focusVisible.length > 0) {
+                showMoreHasFocus = focusVisible[0].id == "more";
+            }
+
+            var firstHidden = $('.blog-item').parent().find(".blog-item:hidden:first");
+
+            $('.blog-item').parent().find(":hidden").show();
+            $('.show-less').css('display', 'block');
+            $(this).hide();
+
+            var offset = 3000;
+            if (firstHidden.length) {
+                var firstLink = firstHidden.find("a:first");
+                if (firstLink.length) {
+                    if (showMoreHasFocus) {
+                        firstLink.focus();
+                    }
+                    offset = firstLink.offset().top - headerOffset;
+                }
+            }
+
+            $("html, body").animate({ scrollTop: offset }, 800);
+        });
+
+        // SHOW LESS
+
+        $('.show-less').click(function () {
+
+            var showLessHasFocus = false;
+            var focusVisible = $.find(":focus-visible");
+            if (focusVisible.length > 0) {
+                showLessHasFocus = focusVisible[0].id == "less";
+            }
+
+            $(this).parent().parent()
+                .find('.blog-item')
+                .slice(12)
+                .hide();
+
+            var lastShown = $('.blog-item').parent().find(".blog-item:not(:hidden):last");
+
+            $('.show-more').show();
+            $(this).hide();
+
+            var offset = 600;
+
+            if (lastShown.length) {
+                var lastLink = lastShown.find("a:first");
+                if (lastLink.length) {
+                    if (showLessHasFocus) {
+                        lastLink.focus();
+                    }
+                    offset = lastLink.offset().top - headerOffset;
+                }
+            }
+
+            $("html, body").animate({ scrollTop: offset }, 800);
+        });
+
+    });
+
+</script>
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="container">
+        <div class="column-layout">
+            <div class="left" style="padding-bottom:0px">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                @Model.Introduction
+            </div>
+            <div class="right">
+
+            </div>
+        </div>
+        <!-- NEW -->
+        <div class="grey-aside alt blue">
+            <div class="white-inner">
+
+                <div class="search-row">
+                    <input type="text" id="Search" placeholder="Please enter a search term.." title="Type in a name" aria-label="search text">
+                </div>
+                <p><strong>Or Search by Tag...</strong></p>
+                <ul class="tag-list" id="tag-list">
+                    <li class="knowhow knowhow-hub" tabindex="0"><span>Hub</span><div style="border-bottom: 10px solid #A7226E !important; width:51px; margin-left:-10px"></div></li>
+                    <li class="knowhow knowhow-collaborate" tabindex="0"><span>Collaborate</span><div style="border-bottom: 10px solid #F7DB4F !important; width:108px; margin-left:-10px"></div></li>
+                    <li class="knowhow knowhow-turnitin" tabindex="0"><span>Turnitin</span><div style="border-bottom: 10px solid #F26B38 !important; width:79px; margin-left:-10px"></div></li>
+                    <li class="knowhow knowhow-panopto" tabindex="0"><span>Panopto</span><div style="border-bottom: 10px solid #2F9599 !important; width:84px; margin-left:-10px"></div></li>
+
+                </ul>
+
+            </div>
+        </div>
+        <script>
+
+            $("#Search").keyup(function (event) {
+                if (event.key != "Tab" && event.key != "Enter" && event.key != "Escape" && event.key != "Shift") {
+                    knowHowSearch();
+                }
+            });
+
+            function knowHowSearch() {
+                var input = document.getElementById("Search");
+                var filter = input.value.toLowerCase();
+                var nodes = document.getElementsByClassName('blog-item');
+
+                for (i = 0; i < nodes.length; i++) {
+                    if (nodes[i].innerText.toLowerCase().includes(filter)) {
+                        nodes[i].style.display = "block";
+                    } else {
+                        nodes[i].style.display = "none";
+                    }
+                }
+            }
+
+            function knowHowTagSearch(element) {
+                var input = document.getElementById("Search");
+                input.value = "";
+                $('.show-more').hide();
+                $('.show-less').hide();
+
+                var nodes = document.getElementsByClassName('blog-item');
+                for (i = 0; i < nodes.length; i++) {
+                    if ((nodes[i].classList.contains("hub") && element.classList.contains("knowhow-hub")) ||
+                        (nodes[i].classList.contains("collaborate") && element.classList.contains("knowhow-collaborate")) ||
+                        (nodes[i].classList.contains("turnitin") && element.classList.contains("knowhow-turnitin")) ||
+                        (nodes[i].classList.contains("panopto") && element.classList.contains("knowhow-panopto"))) {
+                        nodes[i].style.display = "block";
+                    } else {
+                        nodes[i].style.display = "none";
+                    }
+                }
+            }
+
+            $(".knowhow").click(function () {
+                knowHowTagSearch(this);
+            });
+
+            $('.knowhow').keypress(function (event) {
+                if (event.key == "Enter") {
+                    knowHowTagSearch(this);
+                    event.preventDefault();
+                }
+            });
+
+        </script>
+        <!-- NEW finishes -->
+
+
+        <div class="blog-grid">
+            @foreach (IPublishedContent blog in searchService.GetDescendantsWithType(Model, "blogPost"))
+            {
+                <div class="blog-item @blog.Parent.Name.ToLower()">
+                    <div class="box">
+                        <div class="image">
+                            <a href="@blog.Url()">
+                                @if (blog.Value<IPublishedContent>("adSpotImage") != null)
+                                {
+                                    var blogImage = blog.Value<IPublishedContent>("adSpotImage");
+                                    <img src="@blogImage.Url()" alt="@blogImage.Value("AltText")" />
+                                }
+                                <div class="overlay-text">
+                                    @blog.Value("DisplayTitle")
+                                </div>
+                            </a>
+                        </div>
+                        <div class="text">
+                            @{
+                                var intro = blog.Value<string>("Introduction");
+                                if (intro != null)
+                                {
+                                    string summary = string.Empty;
+
+                                    int characterCount = 100;
+
+                                    summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                                    if (summary.Length > characterCount)
+                                    {
+                                        char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                                        summary = summary.Truncate(characterCount).Trim(charsToTrim);
+                                    }
+                                    summary += string.Format(" <a href=\"" + @blog.Url() + "\" aria-label=\"read more about " + @blog.Value("DisplayTitle") + "\"><strong>read more</strong></a>");
+                                    <p>@Html.Raw(summary)</p>
+                                }
+                            }
+
+                        </div>
+
+                        <!-- TAG style changes in here -->
+                        @*@{ var firstTag = @blog.Tags.First();}
+                                    @if (blog.Tags != null && firstTag == "Hub")
+                                    {
+
+                            <div class="knowhow-tags" style="background-color: #851b58 !important;">
+                                <a href="/search/?Tag=@blog.Tags.First()">@blog.Tags.First()</a>
+                            </div> }
+                                            else if (blog.Tags != null && firstTag == "Collaborate")
+                                            {
+
+                            <div class="knowhow-tags" style="background-color: #BC193A !important;">
+                                <a href="/search/?Tag=@blog.Tags.First()">@blog.Tags.First()</a>
+                            </div> }
+                                            else if (blog.Tags != null && firstTag == "Turnitin")
+                                            {
+
+                            <div class="knowhow-tags" style="background-color: #C1552C !important;">
+                                <a href="/search/?Tag=@blog.Tags.First()">@blog.Tags.First()</a>
+                            </div> }
+                                            else if (blog.Tags != null && firstTag == "Panopto")
+                                            {
+
+                            <div class="knowhow-tags" style="background-color: #25777A !important;">
+                                <a href="/search/?Tag=@blog.Tags.First()">@blog.Tags.First()</a>
+                            </div>}*@
+
+                    </div>
+                </div>
+
+            }
+        </div>
+
+
+
+        <div class="full-width-content" style="padding-top:0px;">
+            <button id="more" class="show-more" aria-label="show more pages"><i class="fa fa-plus-circle fa-3x"></i></button>
+            <button id="less" class="show-less" aria-label="show fewer pages"><i class="fa fa-minus-circle fa-3x"></i></button>
+            @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+

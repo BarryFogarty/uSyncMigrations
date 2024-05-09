@@ -1,0 +1,84 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BandedLandingPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+
+    var bandIndex = 0;
+}
+
+
+@* TODO: Remove old css when not needed *@
+@*@section ExtraCss
+{
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/banded-article.css?v=1">
+}
+
+@section ExtraJs
+{
+    <script src="~/scripts/bootstrap.bundle.min.js"></script>
+}*@
+<div class="qmu_pg_banded">
+    @if (Model.AlternativeBannerImage != null)
+    {
+        <header role="banner" class="banner">
+            <div class="item">
+                <span style="background-image: url(@Model.AlternativeBannerImage.Url())" class="bg-cover-img" role="img" aria-label="@Model.AlternativeBannerImage.Value("altText")"> </span>
+                <div class="text-overlay">
+                    <div class="container">
+                        <h1 class="bannerTitle">@Model.DisplayTitle</h1>
+
+                        <div class="banner-intro">
+                            @Html.Raw(Model.AlternativeBannerIntroduction)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    }
+    else
+    {
+        @Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+
+    <main role="main" class="main-content">
+
+        <div class="container">
+            <div class="qmu_pg_banded__meta">
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+        </div>
+
+        <div class="qmu_pg_banded__bands banded-container">
+            <div class="column-layout">
+                <div class="banded-left" id="left" tabindex="-1">
+
+                    @if (Model.AlternativeBannerImage == null)
+                    {
+                        <div class="left-band">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-12 column">
+                                        <h1>@Model.DisplayTitle</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @foreach (var band in Model.Bands)
+                    {
+                        @Html.Partial(band.ContentType.Alias, band, new ViewDataDictionary { { "index", bandIndex } })
+
+                        if (band.ContentType.Alias == "band")
+                        {
+                            bandIndex++;
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

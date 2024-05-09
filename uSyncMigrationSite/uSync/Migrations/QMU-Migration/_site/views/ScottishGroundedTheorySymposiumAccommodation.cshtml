@@ -1,0 +1,221 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.GeneralPage>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Forms.Core.Services;
+@using Umbraco.Forms.Core.Data.Storage;
+@using Umbraco.Forms.Core.Models;
+@using Umbraco.Forms.Core.Persistence.Dtos;
+@using QMUCloud.Core.Models.ViewModels;
+@{
+    Layout = "Master.cshtml";
+
+    //var clientId = "AZBzRSRwioFwipEPw_xixE9hRoj8Q11I6wnC4y1YeRLdQuvnGf2DJc0ktnib2LTsHLksFGAsiAlRYihm";        // Test account
+    var clientId = "AU-dKNg7zmJW9NvpokPfg-Q3J1xHvMXJAXdjZMX4Xp4pF2B1VU9sbPhIwrtVUZyx_3L5SNxTxYU15MD9";          // Live Account
+    var accountUrl = "https://www.paypal.com/sdk/js?client-id=" + clientId + "&currency=GBP";
+    var sku = "SGTC23";
+
+    var costPerNight = 66;
+    var numNights = 0;
+    var totalAmount = 0;
+    var checkInDate = DateTime.MinValue;
+    var checkOutDate = DateTime.MinValue;
+
+    Guid? formId = null;
+    Form form = null;
+    Guid? recordId = null;
+    string recordIdStr = "";
+    Record record = null;
+
+    // Look for the submitted form Id and record Id in the TempData.
+    if (TempData["UmbracoFormSubmitted"] != null)
+    {
+        formId = Guid.Parse(TempData["UmbracoFormSubmitted"].ToString());
+
+        var formService = DependencyResolver.Current.GetService<IFormService>();
+        form = formService.Get(formId.Value);
+
+        if (TempData["Forms_Current_Record_id"] != null)
+        {
+            recordId = Guid.Parse(TempData["Forms_Current_Record_id"].ToString());
+
+            var recordStorage = DependencyResolver.Current.GetService<IRecordStorage>();
+            record = recordStorage.GetRecordByUniqueId(recordId.Value, form);
+        }
+    }
+
+    if (formId.HasValue && recordId.HasValue && record != null)
+    {
+        recordIdStr = recordId.Value.ToString("D");
+        var checkInDateRecord = record.RecordFields.Values.FirstOrDefault(v => v.Alias == "checkInDate");
+        var checkOutDateRecord = record.RecordFields.Values.FirstOrDefault(v => v.Alias == "checkOutDate");
+
+        if (checkInDateRecord != null && checkOutDateRecord != null)
+        {
+            var checkInDateValue = checkInDateRecord.Values.FirstOrDefault();
+            var checkOutDateValue = checkOutDateRecord.Values.FirstOrDefault();
+            if (checkInDateValue != null && checkOutDateValue != null)
+            {
+                checkInDate = ((DateTime)checkInDateValue).Date;
+                checkOutDate = ((DateTime)checkOutDateValue).Date;
+                numNights = checkOutDate.Subtract(checkInDate).Days;
+                totalAmount = numNights * costPerNight;
+            }
+        }
+    }
+}
+
+@Html.AntiForgeryToken()
+
+<script src="@accountUrl" data-sdk-integration-source="button-factory"></script>
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+
+    <div id="overlay">
+
+        <!-- overlay code in here -->
+    </div>
+
+    <div class="container">
+        <div class="column-layout">
+
+            <div class="left" id="left" tabindex="-1">
+
+                @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                <h1>@Model.DisplayTitle</h1>
+                <p class="lead">@Model.Introduction</p>
+                @Model.BodyTop
+
+                @if (numNights > 0 && totalAmount > 0)
+                {
+                    <div>
+                        <p>From @checkInDate.ToString("dd MMMM yyyy") to @checkOutDate.ToString("dd MMMM yyyy")</p>
+                        <p>@numNights Nights at &pound;@costPerNight per night</p>
+                        <p>Total: <strong>&pound;@totalAmount.ToString("#,##0.00")</strong></p>
+                    </div>
+                    <div id="paypal-button-container"></div>
+                }
+                else
+                {
+                    <p>No form or record data.</p>
+                }
+
+                @Html.Partial("centralBlocks", Model)
+                @Model.BodyBottom
+                @Html.CachedPartial("mediaGallery", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            </div>
+
+            <div class="right">
+                @if (Model.ContactPicker != null)
+                {
+                    @Html.CachedPartial("ContactGroup", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                }
+                @Html.GetGridHtml(Model, "rcContent")
+
+            </div>
+        </div>
+    </div>
+    @* Pulls through lower banner partial if there is an image *@
+    @if (Model.HasValue("lowerBannerImage"))
+    {
+        var lbModel = new QMU_VM_LowerBannerModel
+        {
+            Title = Model.LowerBannerTitle,
+            Copy = Model.LowerBannerCopy.ToString(),
+            BannerImage = Model.LowerBannerImage,
+            MobileBannerImage = Model.LowerBannerImageMobile,
+            BoxPosition = Model.HorizontalAdPlacement,
+            IsInfographic = Model.UsingBannerForInfographic
+        };
+
+        @Html.CachedPartial("components/qmu_cmp_lowerBanner", lbModel, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+    }
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+@Html.CachedPartial("_relatedContent2", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<script>
+    paypal.Buttons({
+
+        style: {
+            label: 'pay'
+        },
+
+        // Sets up the transaction when a payment button is clicked
+        createOrder: (data, actions) => {
+
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '@totalAmount',
+                        breakdown: {
+                            "item_total": {
+                                "currency_code": "GBP",
+                                "value": "@totalAmount"
+                            }
+                        }
+                    },
+                    items: [{
+                        name: "Scottish Grounded Theory Symposium Accommodation",
+                        description: "Scottish Grounded Theory Symposium Accommodation",
+                        sku: "@sku",
+                        "unit_amount": {
+                            "currency_code": "GBP",
+                            "value": "@costPerNight"
+                        },
+                        "quantity": "@numNights"
+                    }],
+                    description: 'Scottish Grounded Theory Symposium Accommodation',
+                    custom_id: '@recordIdStr'
+                }]
+            });
+        },
+
+        // Finalize the transaction after payer approval
+        onApprove: (data, actions) => {
+
+            return actions.order.capture().then(function (orderData) {
+
+                // Successful capture
+                //console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                const transaction = orderData.purchase_units[0].payments.captures[0];
+                const element = document.getElementById('paypal-button-container');
+
+                if (transaction.status == "COMPLETED") {
+
+                    element.innerHTML = '<h3>Thank you for your payment</h3><p>PayPal Reference: ' + transaction.id + '</p>';
+
+                    // Anti-forgery token
+                    var token = $('input[name=__RequestVerificationToken]').val();
+
+                    // Update the form record
+                    var payPalDetails = {
+                        RecordId: '@recordIdStr',
+                        PayPalId: transaction.id
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Umbraco/Api/UpdateFormRecord/UpdatePayPalReference',
+                        headers: { '__RequestVerificationToken': token },
+                        data: payPalDetails,
+                        success: function () {
+                            console.log("Form successfully updated with PayPal reference.");
+                        },
+                        error: function () {
+                            console.log("Error. Form not updated with PayPal reference.");
+                        }
+                    });
+                }
+                else {
+                    element.innerHTML = '<p>There was a problem with your payment.</p><p>PayPal Status: ' + transaction.status + '</p><p>PayPal Reference: ' + transaction.id + '</p>';
+                }
+
+            });
+        }
+
+    }).render('#paypal-button-container');
+
+</script>

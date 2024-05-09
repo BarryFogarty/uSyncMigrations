@@ -1,0 +1,64 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BlogPost>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using System.Text.RegularExpressions
+@{
+    Layout = "Master.cshtml";
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content" aria-label="main body content">
+    <div class="content">
+        <div class="container">
+            <div class="column-layout">
+                <div class="left">
+                    @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                    @Html.CachedPartial("shareUpper", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                    <div class="post-date">@Model.DatePosted</div>
+                    <!-- @Model.Introduction -->
+                    @Model.BodyContent
+                    @*@Html.Action("PageTags", "Tags")*@
+                    @Html.CachedPartial("shareLower", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+                </div>
+                <div class="right">
+
+                    <!-- NEW -->
+                    <div class="grey-aside alt blue">
+                        <h2>Search QM KnowHow</h2>
+                        <div class="white-inner">
+
+                            <p><strong>Search by Tag...</strong></p>
+                            <ul class="tag-list" id="tag-list">
+                                <li class="knowhow-hub"><a href="/search/?Tag=Hub">Hub</a><div style="border-bottom: 10px solid #A7226E !important; width:51px; margin-left:-10px"></li>
+                                <li class="knowhow-collaborate"><a href="/search/?Tag=Collaborate">Collaborate</a><div style="border-bottom: 10px solid #F7DB4F !important; width:108px; margin-left:-10px"></div></li>
+                                <li class="knowhow-turnitin"><a href="/search/?Tag=Turnitin">Turnitin</a><div style="border-bottom: 10px solid #F26B38 !important; width:79px; margin-left:-10px"></div></li>
+                                <li class="knowhow-panopto"><a href="/search/?Tag=Panopto">Panopto</a><div style="border-bottom: 10px solid #2F9599 !important; width:84px; margin-left:-10px"></div></li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <script>
+                        function myFunction() {
+                            var input = document.getElementById("Search");
+                            var filter = input.value.toLowerCase();
+                            var nodes = document.getElementsByClassName('blog-item');
+
+                            for (i = 0; i < nodes.length; i++) {
+                                if (nodes[i].innerText.toLowerCase().includes(filter)) {
+                                    nodes[i].style.display = "block";
+                                } else {
+                                    nodes[i].style.display = "none";
+                                }
+                            }
+                        }
+                    </script>
+                    <!-- NEW finishes -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)

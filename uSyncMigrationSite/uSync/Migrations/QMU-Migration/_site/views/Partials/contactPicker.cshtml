@@ -1,0 +1,24 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using Umbraco.Web.PublishedModels
+
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.ContactPicker>
+
+
+@{ var typedContentPicker = Model.Contact;
+                if (typedContentPicker != null)
+                {
+    <p>@typedContentPicker</p>
+                } }
+
+
+

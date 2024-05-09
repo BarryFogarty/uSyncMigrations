@@ -1,0 +1,62 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    <div class="article-list">
+        <div class="row">
+            @{ var fps = Model.FocusPanel;
+                if (fps != null)
+                {
+                    foreach (var fp in fps)
+                    {
+                        if (fp != null)
+                        {
+                            var linkUrl = "#";
+                            if (fp.Link != null)
+                            {
+                                linkUrl = fp.Link.Url;
+                            }
+
+                            <article aria-label="@fp.Title">
+
+                                <a class="image" href="@linkUrl">
+
+                                    @if (fp.Image != null)
+                                    {
+                                        <img src="@fp.Image.Url" alt="@fp.Image.AltText" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                                    }
+
+                                    <div class="text">
+                                        <span>@fp.Title</span>
+                                    </div>
+
+                                </a>
+
+                                @Html.Raw(fp.Content)
+
+                            </article> 
+                            }
+                        }
+                    }
+                }
+        </div>
+    </div> 
+}
+
+<style>
+    article:nth-child(1) {
+        margin-bottom: 0px;
+    }
+
+</style>

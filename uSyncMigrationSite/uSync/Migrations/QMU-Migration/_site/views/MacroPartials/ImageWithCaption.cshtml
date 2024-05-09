@@ -1,0 +1,20 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{
+	string imageUrl = string.Empty;
+	var image = Model.MacroParameters["image"];
+	if (image != null && image.ToString().Length > 0)
+	{
+		imageUrl = Helpers.GetMediaUrl(image);
+	}
+
+	var caption = Model.MacroParameters["caption"];
+}
+<div class="inline-image">
+	<img src="@imageUrl" alt="Image" />
+	@if (caption != null && caption.ToString().Length > 0)
+	{
+		<div class="caption">
+			<span>@caption</span>
+		</div>
+	}
+</div>

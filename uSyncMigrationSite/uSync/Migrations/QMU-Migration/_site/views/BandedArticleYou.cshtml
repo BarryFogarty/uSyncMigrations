@@ -1,0 +1,198 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.BandedArticle>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+
+@{
+    Layout = "Master.cshtml";
+
+    <link rel="stylesheet" type="text/css" href="/css/banded-article.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+}
+
+<header role="banner" class="banner">
+    <div class="item">
+        <span style="background-image: url(/media/8d885b436829fc8/youcandoitfromhome.jpg)" class="bg-cover-img" role="img" aria-label="A laptop on someone's desk at home beside a set of headphones and some notepads"> </span>
+        <div class="text-overlay">
+            <div class="container">
+                <h1 class="bannerTitle">You can do <strong>IT</strong> at Home</h1>
+
+                <div class="banner-intro">
+                    <p>If you are working or studying away from campus there are a range of services available to you.&nbsp; These links provide access to all the key services you will require.&nbsp; A link is also provided for access to the help desk should you require support during office hours.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>
+
+<main role="main" class="main-content">
+    <div class="container" style="width:156%; margin-left:-15px;">
+        <div class="column-layout">
+            <div class="left" id="left" tabindex="-1">
+
+                <div class="umb-grid">
+                    <div class="grid-section">
+                        <div class="left-band" style="background-color:#6990b2;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White; background-color:#6990b2;">
+                                            <h1>Remote Desktop</h1>
+
+                                            <p><button style="padding:10px;background-color:orange" onclick="window.open('https://myit.qmu.ac.uk')">Go to Remote Desktop</button><br><br><a href="https://www.qmu.ac.uk/study-here/learning-facilities/it-services/remote-access/" style="color:white" target="_blank">Further Information</a></p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+
+
+                                            <img src="/media/8d885b438a9c069/desktop.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A laptop open on a desktop with its menu options open">
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-4 column">
+                                        <div>
+
+
+                                            <img src="/media/8d885b42f273291/hub_screenshot.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A desktop open on the Queen Margaret University hub training site">
+
+                                        </div>
+                                    </div>            <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White; background-color:#374a5c;">
+
+                                            <h1>Digital Learning Technologies</h1>
+
+                                            <p>
+                                                <button style="padding:10px;background-color:orange" onclick="window.open('https://hub.qmu.ac.uk')">Go to HUB</button><br><a href="https://www.qmu.ac.uk/study-here/learning-facilities/it-services/learning-and-technologies/hub-blackboard/" style="color:white" target="_blank">Further Information</a> / <a href="https://hub.qmu.ac.uk/webapps/blackboard/content/listContentEditable.jsp?content_id=_1154193_1&amp;course_id=_30550_1" target="_blank" style="color:white">Online Staff Training</a><br><br>
+                                                <button style="padding:10px;background-color:orange" onclick="window.open('https://v3.pebblepad.co.uk/login/qmu/Login')">Go to ePortfolio</button><br><a href="https://www.qmu.ac.uk/study-here/learning-facilities/it-services/learning-and-technologies/eportfolio-pebblepad/" style="color:white" target="_blank">Further Information</a><br><br>
+                                                <button style="padding:10px;background-color:orange" onclick="window.open('https://hub.qmu.ac.uk')">Go to Blackboard Collaborate (Virtual Classroom)</button><br><a href="https://www.qmu.ac.uk/study-here/learning-facilities/it-services/learning-and-technologies/real-time-learning-collaborate/" style="color:white" target="_blank">Further Information</a> / <a href="https://www.qmu.ac.uk/study-here/learning-facilities/it-services/learning-and-technologies/real-time-learning-collaborate/" style="color:white" target="_blank">Staff training sessions</a><br><br>
+                                            </p>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="left-band" style="background-color:#ff9933;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White; background-color:#ff9933;">
+
+
+                                            <h1>Office 365</h1>
+
+                                            <p>
+                                                <button style="padding:10px;background-color:#374A5C" onclick="window.open('https://outlook.com/owa/qmu.ac.uk')">Go to Email (Outlook)</button><br><br>
+                                                <button style="padding:10px;background-color:#374A5C" onclick="window.open('https://www.office.com/launch/excel')">Go to Excel (Spreadsheets)</button><br><br>
+                                                <button style="padding:10px;background-color:#374A5C" onclick="window.open('https://www.office.com/launch/word')">Go to Word (Word Processor)</button><br><br>
+                                                <button style="padding:10px;background-color:#374A5C" onclick="window.open('https://www.office.com/launch/powerpoint')">Go to Powerpoint (Presentation)</button><br><br><button style="padding:10px;background-color:#374A5C" onclick="window.open('https://teams.microsoft.com/')">Go to Teams (Collaboration / Web Conferencing)</button><br><br><a href="https://www.qmu.ac.uk/media/8528/byod_final.pdf" style="color:white" target="_blank">Help: Using Office 365 for work &amp; study</a><br><br><a href="https://qmu.sharepoint.com/sites/O365CL" style="color:white" target="_blank">Training, Tips &amp; Tricks: QMU Microsoft Learning</a><br><br><a href="https://support.office.com/client/en-us/videoplayer/embed/RWeqWC?pid=ocpVideo0-innerdiv-oneplayer&amp;postJsllMsg=true&amp;maskLevel=20&amp;market=en-us" style="color:white" target="_blank">Teams: Welcome to Teams</a><br><br><a href="https://docs.microsoft.com/en-US/microsoftteams/instructor-led-training-teams-landing-page?.mc_id=TeamsAdminCenterCSH#pivot=home&amp;panel=home-all" style="color:white" target="_blank">Teams: Instructor-led training</a><br><br>
+                                            </p>
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+
+                                            <img src="/media/8d885b437980527/cropped-office365.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A digital image showing several people using Office 365's different online services">
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right-band" style="background-color:#000000;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-4 column">
+                                        <div>
+                                            <img src="/media/8d884e62d3be953/fp-module-registration.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A friendly woman in a call centre at QMU, Edinburgh">
+
+                                        </div>
+                                    </div>            <div class="col-md-8 column">
+                                        <div style="color:White;">
+
+                                            <h1>Support Desk</h1>
+
+                                            <p>
+                                                <button style="padding:10px;background-color:#E94700" onclick="window.location='mailto:assist@qmu.ac.uk'">Email Support</button><br>
+                                            </p><div>Staff will be available during normal working hours</div>
+                                            <br><br>
+                                            <button style="padding:10px;background-color:#E94700" onclick="window.open('https://passwordreset.microsoftonline.com/')">Self Service Password Reset</button><br><br><br><br><p></p>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="left-band" style="background-color:#6990b2;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-8 column">
+                                        <div class="left-text" style="color:White; background-color:#6990b2;">
+
+                                            <h1>Media Services</h1>
+
+                                            <p>
+                                                <button style="color:black;padding:10px;background-color:#eeeeee" onclick="window.open('https://media.qmu.ac.uk/portal/')">Media Server</button><br>
+                                                <br><a href="https://www.qmu.ac.uk//media/8525/media-services.docx" style="color:white" target="_blank">Further Information</a><br><br>
+                                                <button style="color:black;padding:10px;background-color:#eeeeee" onclick="window.open('https://vscene.net/')">VSCENE</button><br>
+                                                <br><a href="mailto:ms-staff@qmu.ac.uk" style="color:white" target="_blank">Please contact ms-staff@qmu.ac.uk to get setup - click here</a><br>
+                                            </p>
+
+                                        </div>
+                                    </div>            <div class="col-md-4 column">
+                                        <div>
+
+                                            <img src="/media/8d88c9d8ddedc03/focus-media-services.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A man standing beside a large television screen">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="left-band" style="background-color:#374a5c;">
+                            <div class="container">
+                                <div class="row clearfix">
+                                    <div class="col-md-4 column">
+                                        <div class="left-text">
+
+                                            <img src="/media/8d884e6310f54dd/fp-study-rooms.jpg?width=300&amp;height=200&amp;center=0.5,0.5&amp;mode=crop" alt="A corridor of modern study rooms at Queen Margaret University, Edinburgh">
+
+                                        </div>
+                                    </div>            <div class="col-md-8 column">
+                                        <div style="color:White; background-color:#374a5c;">
+
+                                            <h1>Library</h1>
+
+                                            <p>
+                                                <button style="color:black;padding:10px;background-color:#eeeeee" onclick="window.open('https://www.qmu.ac.uk/study-here/learning-facilities/library/library-resources')">Library Resources</button><br>
+                                                <br>
+                                                <br><a href="mailto:LRCHelp@qmu.ac.uk" style="color:white" target="_blank">Please contact LRCHelp@qmu.ac.uk for help</a>
+                                            </p>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>

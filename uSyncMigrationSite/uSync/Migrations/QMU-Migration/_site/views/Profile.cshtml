@@ -1,0 +1,69 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContentModels.Profile>
+@using ContentModels = Umbraco.Web.PublishedModels;
+@{
+    Layout = "Master.cshtml";
+    //New code
+    //CourseTag course = null;
+    //if(Model.Course != null && Model.Course is CourseTag)
+    //{
+    //    course = Model.Course as CourseTag;
+    //}
+}
+
+@Html.CachedPartial("bannerItem", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+
+<main role="main" class="main-content">
+    <div class="content" id="left" tabindex="-1">
+        <div class="container">
+            @Html.CachedPartial("breadcrumb", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+            <div class="inner">
+                <div class="staffintro staffintro--profile-pg">
+                    <p class="lead">@Model.Introduction</p>
+                </div>
+                @Model.BodyTop
+                @if (!string.IsNullOrEmpty(Model.PullQuote))
+                {
+                    <blockquote>"@Model.PullQuote"</blockquote>
+                    if (!string.IsNullOrEmpty(Model.PullQuoteAuthor))
+                    {
+                        <div class="quote-author">
+                            @if (!string.IsNullOrEmpty(Model.PullQuoteAuthorExtra))
+                            {
+                                <text><strong>@Model.PullQuoteAuthor</strong>, @Model.PullQuoteAuthorExtra</text>
+                            }
+                            else
+                            {
+                                <strong>@Model.PullQuoteAuthor</strong>
+                            }
+                        </div>
+                    }
+                }
+                @Model.BodyBottom
+
+            </div>
+            @* Old code *@
+            @if (Model.CourseLink != null)
+            {
+                <div class="course-box">
+                    <h2>@Model.CourseLink.Name</h2>
+                    <p>Want to study here? Find out more about this course…</p>
+                    <a href="@Model.CourseLink.Url()" class="white-btn">Course Information</a>
+                </div>
+            }
+
+            @*New code*@
+            @*@if (course?.CourseLink != null)
+            {
+                <div class="course-box">
+                    <h2>@course.CourseName</h2>
+                    <p>Want to study here? Find out more about this course…</p>
+                    <a href="@course.CourseLink.Url()" title="Link to @course.CourseName" class="white-btn">Course Information</a>
+                </div>
+            }*@
+
+
+        </div>
+    </div>
+</main>
+@Html.CachedPartial("_relatedContent", Model, QMUCloud.Core.QMUConstants.PartialCachedSeconds, true)
+

@@ -1,0 +1,25 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    string currentUrl = HttpUtility.UrlEncode(Umbraco.AssignedContentItem.Url(mode: UrlMode.Absolute));
+
+    bool showPrint = false;
+    var showPrintViewData = ViewData["showPrint"];
+    if (showPrintViewData != null)
+    {
+        showPrint = (bool)showPrintViewData;
+    }
+}
+
+<a href="mailto:?subject=Queen Margaret University&body=@currentUrl" class="icon-item email" aria-label="social link email"> Email</a>
+<a href="http://www.facebook.com/sharer.php?u=@currentUrl" target="_blank" class="icon-item facebook share" aria-label="social link facebook"> Facebook</a>
+<a href="https://twitter.com/intent/tweet?url=@currentUrl&hashtags=qmu" target="_blank" class="icon-item twitter share" aria-label="social link twitter"> X</a>
+<a href="http://www.linkedin.com/shareArticle?mini=true&url=@currentUrl" target="_blank" class="icon-item linkedin share" aria-label="social link linkedin"> LinkedIn</a>
+<a href="https://www.pinterest.com/pin/create/button/" target="_blank" class="icon-item pinterest share" aria-label="social link pinterest"> Pinterest</a>
+@if (showPrint)
+{
+    <span class="al-right">
+        <strong>Print <span class="hide-mob">this page</span></strong>
+        <a href="javascript:window.print()" class="icon-item print"></a>
+    </span>
+}

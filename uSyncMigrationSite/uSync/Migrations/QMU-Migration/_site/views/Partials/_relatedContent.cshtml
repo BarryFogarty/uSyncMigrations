@@ -1,0 +1,62 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using System.Linq
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    var relatedContentPage = Model;
+    var contents = relatedContentPage.RelatedContent;
+    while (contents == null && relatedContentPage.Parent != null)
+    {
+        relatedContentPage = relatedContentPage.Parent;
+
+        if (relatedContentPage.GetProperty("relatedContent") != null)
+        {
+            contents = relatedContentPage.RelatedContent;
+        }
+    }
+
+    var sectionCssClass = "l-blue";
+
+    if (contents != null)
+    {
+        <section class="@sectionCssClass" style="height:316px" aria-label="related content full width block ">
+            <div class="container">
+                @if (!string.IsNullOrEmpty(relatedContentPage.RelatedContentTitle))
+                {
+                    <h2>@relatedContentPage.RelatedContentTitle</h2>
+                }
+
+                <div class="image-row student-stories slick-fix" style="height:240px">
+                    @foreach (var content in contents)
+                    {
+                        <div class="item">
+                            <a href="@content.Url" class="image" aria-label="@content.Name">
+                                @if (@content.AdSpotImage != null)
+                                {
+                                    <img src="@content.AdSpotImage.Url" alt="@content.AdSpotImage.AltText" />
+                                }
+                                else
+                                {
+                                    <img src="~/Images/ad-spot-temp.png" alt="QMU preview image" />
+                                }
+                                <div class="title-overlay">
+                                    <div class="name">
+                                        @content.Name
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </section>
+    }
+}

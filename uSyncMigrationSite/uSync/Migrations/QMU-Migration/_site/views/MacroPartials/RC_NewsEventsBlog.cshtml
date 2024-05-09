@@ -1,0 +1,56 @@
+﻿@inherits Umbraco.Web.Macros.PartialViewMacroPage
+@{ 
+	var tabList = new List<NEBModel>();
+
+	var newsModel = Helpers.PopulateNEBModel("newsItem", Model.MacroParameters["newsTabTitle"], Model.MacroParameters["newsTabTagFilter"], Model.MacroParameters["newsTabButton"]);
+	if (!string.IsNullOrEmpty(newsModel.Title))
+	{
+		tabList.Add(newsModel);
+	}
+
+	var eventModel = Helpers.PopulateNEBModel("eventItem", Model.MacroParameters["eventTabTitle"], Model.MacroParameters["eventTabTagFilter"], Model.MacroParameters["eventTabButton"]);
+	if (!string.IsNullOrEmpty(eventModel.Title))
+	{
+		tabList.Add(eventModel);
+	}
+
+	var blogModel = Helpers.PopulateNEBModel("blogPost", Model.MacroParameters["blogTabTitle"], Model.MacroParameters["blogTabTagFilter"], Model.MacroParameters["blogTabButton"]);
+	if (!string.IsNullOrEmpty(blogModel.Title))
+	{
+		tabList.Add(blogModel);
+	}
+}
+<div class="tab-area">
+	<ul>
+		@for (int i = 0; i < tabList.Count; i++)
+		{
+			var nebItem = tabList[i];
+			<li class="tab @(i == 0 ? "active" : "")" data-tab="Content@(i + 1)">@nebItem.Title</li>
+		}
+	</ul>
+	<div class="tab-content">
+		@for (int i = 0; i < tabList.Count; i++)
+		{
+			var nebItem = tabList[i];
+			<div @(i == 0 ? "class=active" : "") id="Content@(i + 1)">
+				@if (nebItem.Items.Any())
+				{
+					foreach (var item in nebItem.Items)
+					{
+						<h2><a href="@item.LinkUrl">@item.Title</a></h2>
+						<p>@Html.Raw(item.Summary)</p>
+						<span class="date">@item.DatePosted</span>
+					}
+					if (nebItem.Button != null)
+					{
+						<a href="@nebItem.Button.url" target="@nebItem.Button.target" class="blue-btn">@nebItem.Button.name</a>
+					}
+				}
+				else
+				{
+					<p>There are currently no items to display.</p>
+				}
+			</div>
+		}
+	</div>
+</div>

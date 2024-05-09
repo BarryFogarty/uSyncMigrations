@@ -1,0 +1,165 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<QMUCloud.Core.Models.ViewModels.QMU_VM_FilterPage>
+
+@{
+    Html.EnableClientValidation();
+    Html.EnableUnobtrusiveJavaScript();
+
+    var checkBoxes = Model.CheckboxDict;
+    var pageFromUrl = HttpContext.Current.Request.QueryString["page"];
+    var filterFromUrl = HttpContext.Current.Request.QueryString["filter"];
+
+}
+
+
+<div class="filter-page js--form-wrapper">
+    <div class="grey-aside alt blue">
+
+
+        @using (Ajax.BeginForm("GetFilterPageResults", "FilterPageForm",
+            new AjaxOptions{
+                HttpMethod = "Get",
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "filter-page-results",
+                OnBegin = "submitBegin",
+                OnComplete = "submitComplete"
+            },
+        new { id = "filter-page-form", @class = "filter-page__form js--prevent-doubled-submission" }))
+        {
+            <div class="white-inner">
+                <fieldset>
+                    <div class="search-row">
+                        <input type="text" id="searchBy" name="searchBy" placeholder="Please enter a search term..." title="Type in a name" aria-label="search text">
+                    </div>
+                    <p><strong>Or Search by Tag...</strong></p>
+
+                    @if (Model.FilterArray != null)
+                    {
+
+                        <div class="white-inner__checkwrapper">
+                            @*As default the page loads with no checkbox's checked*@
+                            @*This can be done via the url with ?filter= and the Value of th*@
+                            @foreach (var filter in Model.FilterArray)
+                            {
+                                var name = filter.CheckboxName;
+                                var filterId = filter.CheckboxId;
+                                bool isColour = !String.IsNullOrEmpty(filter.CheckboxIndicatorColour);
+
+                                <div class="qmu_checkbox qmu_checkbox--btn-check @(isColour ? "qmu_checkbox--colour-indicator" : "")">
+                                    <input tabindex="-1" class="btn-check js--form-checkbox" type="checkbox" name="filterBy" id="@filterId" value="@filterId" @(string.Equals(filterFromUrl, filterId) ? "checked" : "") />
+                                    <label class="js--form-checkbox-label" @(isColour ? $"style=border-left-color:#{filter.CheckboxIndicatorColour};" : "") role="button" tabindex="0" for="@filterId" title="@name">@name</label>
+                                </div>
+                            }
+                        </div>
+
+                    }
+
+
+                    <input type="hidden" name="page" id="page" value="@pageFromUrl" />
+                    <input type="hidden" name="pageId" id="pageId" value="@Model.PageId" />
+                    <input type="hidden" name="showImages" id="showImages" value="@Model.ShowImages.ToString()" />
+                    <input type="hidden" name="showAllChildPages" id="showAllChildPages" value="@Model.ShowAllChildPage.ToString()" />
+                    <input type="hidden" name="showPageLevelIndicators" id="showPageLevelIndicators" value="@Model.ShowPageLevelIndicators.ToString()" />
+                    <input type="hidden" name="allowCustomOrdering" id="allowCustomOrdering" value="@Model.AllowCustomOrdering.ToString()" />
+                </fieldset>
+            </div>
+
+        }
+
+    </div>
+
+    <div id="filter-page-results" class="js--for-pagiantion--form-results filter-page__results @(Model.ShowImages == true ? "filter-page__results--items-with-images" : "")">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //Submit the form on load
+    $(window).bind("load", function () {
+        submitForm();
+    });
+
+    //Submit form if checkbox is clicked
+    $(document).on("click", ".js--form-checkbox", function (e) {
+        deselectOtherCheckboxes($(this));
+        resetPage();
+        submitForm();
+    });
+
+    //Accessibility - if a forms checkbox label is tabbed through, submit if enter is pressed while focued on it 
+    $(".js--form-checkbox-label").on("keydown", function (e) {
+        if (e.key == "Enter") {
+            e.preventDefault();
+            var checkboxEl = $(this).siblings('input[type=checkbox]');
+
+            if (checkboxEl.is(":checked")) {
+                checkboxEl.prop("checked", false);
+            } else {
+                checkboxEl.prop("checked", true);
+            }
+
+            deselectOtherCheckboxes(checkboxEl);
+            resetPage();
+            submitForm();
+        }
+    });
+
+    //Submits forms and returns search item every time a letter is typed into the search box
+    $("#searchBy").keyup(function (e) {
+        resetPage();
+        submitForm();
+    })
+
+    //This component is only meant to show items form one checkbox at a time
+    //When one checkbox is selected all others deselected
+    //Radio buttons not used as instance needed where none are selected (which shows all results) 
+    function deselectOtherCheckboxes(el) {
+        $('.js--form-checkbox').each(function () {
+            if ($(this).val() != el.val()) {
+                $(this).prop('checked', false)
+            }
+        });
+    }
+
+    //Resets page value to 0
+    function resetPage() {
+        $("#page").val(0);
+    }
+
+    //Sets forms as unsubmitted, and resubmits form 
+    function submitForm() {
+        var $form = $("#filter-page-form");
+        $form.submit()
+    }
+
+
+    //Stops double submittion of AJAX form
+    function submitBegin() {
+
+        var $form = $("#filter-page-form");
+        if ($form.data('submitted') === true && !$(this).hasClass("allow-double-submission")) {
+            // Previously submitted - don't submit again
+            return false;
+        } else {
+
+            // Mark it so that the next submit can be ignored
+            if ($form.valid()) {
+                $form.data('submitted', true);
+            }
+        }
+
+        return true;
+    }
+
+    //Resets form submitted to false on complete so ready for new form submittion
+    function submitComplete() {
+        var $form = $("#filter-page-form");
+        $form.data('submitted', false);
+    }
+
+
+</script>

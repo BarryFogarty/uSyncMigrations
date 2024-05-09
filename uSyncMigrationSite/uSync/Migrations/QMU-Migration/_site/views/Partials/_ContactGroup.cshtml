@@ -1,0 +1,209 @@
+﻿@model GeneralLandingPage
+
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.PublishedModels
+@using Umbraco.Core.Models.PublishedContent
+
+@if (Model.ContactPicker != null)
+{
+    IPublishedContent contact = Model.ContactPicker;
+
+    object socials = @contact.Value("displaySocialMediaLinks");
+
+    IPublishedContent mainImage = (IPublishedContent)contact.Value("mainImage");
+
+    IPublishedContent secImage = (IPublishedContent)contact.Value("secondaryImage");
+
+    IPublishedContent contacts = (IPublishedContent)contact.Value("contacts");
+
+    var telNum1 = @contact.Value("telephoneNumber1");
+
+    var telNum2 = @contact.Value("telephoneNumber2");
+
+    if(contact.IsDocumentType("contactGroup"))
+    {
+    <div class="enquiries-box">
+        <h2>@contact.Value("groupName")</h2>
+
+        @if (@contact.Value("summary") != null)
+        {
+            @contact.Value("summary")
+        }
+        <a class="white-btn">Show Contacts</a>
+
+        <!-- socials in here -->
+        @if (!Model.Value<bool>
+            ("displaySocialMediaLinks"))
+        {
+            <div class="contact-row">
+                @{ var items = contact.Value<IEnumerable<IPublishedElement>>("contactOptions");
+                }
+                @foreach (var item in items)
+                {
+                    if (@item.Value<string>("type") == "Facebook")
+                    {
+                        <a href="@item.Value("scUrl")" target="_blank" class="facebook" aria-label="social link facebook"></a>
+                    }
+                    if (@item.Value<string>("type") == "Twitter")
+                    {
+                        <a href="@item.Value("scUrl")" target="_blank" class="twitter" aria-label="social link twitter"></a>
+                    }
+                    if (@item.Value<string>("type") == "Instagram")
+                    {
+                        <a href="@item.Value("scUrl")" target="_blank" class="instagram" aria-label="social link instagram"></a>
+                    }
+                    if (@item.Value<string>("type") == "YouTube")
+                    {
+                        <a href="@item.Value("scUrl")" target="_blank" class="youtube" aria-label="social link youtube"></a>
+                    }
+                    if (@item.Value<string>("type") == "LinkedIn")
+                    {
+                        <a href="@item.Value("scUrl")" target="_blank" class="linkedin" aria-label="social link linkedin"></a>
+                    }
+                    if (@item.Value<string>("type") == "TikTok")
+                    {
+                        <a href="@item.Value("scUrl")" target="_blank" class="tiktok" aria-label="social link tiktok"></a>
+                    }
+                }
+            </div>
+        }
+        <!-- end of socials -->
+
+        <div class="enquiries-overlay">
+            <button class="close-overlay" aria-label="close"></button>
+            <h2>@contact.Value("groupName")</h2>
+
+            <div class="enquiry-profile">
+                @contact.Value("subTitle")
+                @if (telNum1 != null)
+                {
+                    <a href="tel:@telNum1" class="tel" aria-label="@contact.Value("groupName") telephone number">@telNum1</a><br />
+                }
+                @if (telNum2 != null)
+                {
+                    <a href="tel:@telNum2" class="tel" aria-label="@contact.Value("groupName") telephone number 2">@telNum2</a><br />
+                }
+                @{ var itemss = contact.Value<IEnumerable<IPublishedElement>>("contactOptions");
+                }
+                @foreach (var item in itemss)
+                {
+                    if (@item.Value<string>("type") == "Email")
+                    {
+                        <a href="mailto:@item.Value("scUrl")" target="_blank" class="email" aria-label="@contact.Value("groupName") email address">Email</a>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+    }
+    else
+    {
+    string profileBoxCssClass = string.Empty;
+
+    IPublishedContent logoImage = (IPublishedContent)contact.Value("logoImage");
+
+    <div class="profile-box @profileBoxCssClass">
+        <span style="background-image: url(@mainImage.Url()" class="bg-cover-img" role="img" aria-label="@mainImage.Value("altText")"> </span>
+        <div class="blue-overlay">
+            <h2>@contact.Value("mainTitle")</h2>
+            <p>
+                @if (@contact.Value("subTitle") != null)
+                {
+                    @contact.Value("subTitle")<br />
+                }
+                @if (@contact.Value("telephoneNumber1") != null)
+                {
+                    <text>Tel: <a class="link-reset" href="tel:@contact.Value("telephoneNumber1")" aria-label="@contact.Value("mainTitle") telephone number">@contact.Value("telephoneNumber1")</a></text>
+                }
+            </p>
+
+            @if (logoImage != null)
+            {
+                <div class="white-contact-row">
+                    <div class="blue-logo">
+                        <img src="@logoImage.Url()" alt="@logoImage.Value("altText")" />
+                    </div>
+                    <!-- socials -->
+                    @{ var itemsy = contact.Value<IEnumerable<IPublishedElement>>("contactOptions");
+                    }
+                    @foreach (var item in itemsy)
+                    {
+                        if (@item.Value<string>("type") == "Facebook")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="facebook" aria-label="@contact.Value("groupName") facebook"></a>
+                        }
+                        if (@item.Value<string>("type") == "Email")
+                        {
+                            <a href="mailto:@item.Value("scUrl")" target="_blank" class="email" aria-label="@contact.Value("groupName") email address">Email</a>
+                        }
+                        if (@item.Value<string>("type") == "Twitter")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="twitter" aria-label="@contact.Value("groupName") twitter"></a>
+                        }
+                        if (@item.Value<string>("type") == "Instagram")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="instagram" aria-label="@contact.Value("groupName") instagram"></a>
+                        }
+                        if (@item.Value<string>("type") == "YouTube")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="youtube" aria-label="@contact.Value("groupName") youtube"></a>
+                        }
+                        if (@item.Value<string>("type") == "LinkedIn")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="linkedin" aria-label="@contact.Value("groupName") linkedin"></a>
+                        }
+                        if (@item.Value<string>("type") == "TikTok")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="tiktok" aria-label="@contact.Value("groupName") tiktok"></a>
+                        }
+                    }
+
+
+                    <!--socials end-->
+                </div>
+            }
+            else
+            {
+                <div class="contact-row">
+                    @{ var itemsy = contact.Value<IEnumerable<IPublishedElement>>("contactOptions");
+                    }
+                    @foreach (var item in itemsy)
+                    {
+                        if (@item.Value<string>("type") == "Facebook")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="facebook" aria-label="@contact.Value("groupName") facebook"></a>
+                        }
+                        if (@item.Value<string>("type") == "Email")
+                        {
+                            <a href="mailto:@item.Value("scUrl")" target="_blank" class="email" aria-label="@contact.Value("groupName") email address">Email</a>
+                        }
+                        if (@item.Value<string>("type") == "Twitter")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="twitter" aria-label="@contact.Value("groupName") twitter"></a>
+                        }
+                        if (@item.Value<string>("type") == "Instagram")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="instagram" aria-label="@contact.Value("groupName") instagram"></a>
+                        }
+                        if (@item.Value<string>("type") == "YouTube")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="youtube" aria-label="@contact.Value("groupName") facebook"></a>
+                        }
+                        if (@item.Value<string>("type") == "LinkedIn")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="linkedin" aria-label="@contact.Value("groupName") linkedin"></a>
+                        }
+                        if (@item.Value<string>("type") == "TikTok")
+                        {
+                            <a href="@item.Value("scUrl")" target="_blank" class="tiktok" aria-label="@contact.Value("groupName") tiktok"></a>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    }
+}
+

@@ -1,0 +1,19 @@
+﻿@using Umbraco.Web.PublishedModels
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<CentredText>
+
+<section class="qmu_cmp_centredText component-spacing" id="@Model.AnchorCode">
+    <div class="container full-width full-width-95 centred-text">
+        <div class="inner-box">
+            @if (Model.Title != null)
+            {
+                <h2>@Model.Title</h2>
+            }
+
+            @if (Model.Text != null)
+            {
+                <p>@Model.Text</p>
+            }
+            <div class="divider"></div>
+        </div>
+    </div>
+</section>

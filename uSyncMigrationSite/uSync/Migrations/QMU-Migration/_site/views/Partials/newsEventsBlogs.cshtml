@@ -1,0 +1,234 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using System.Text.RegularExpressions
+@using QMUCloud.Core.Services
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    var newsNode = Umbraco.Content(33398);
+    var eventsNode = Umbraco.Content(34464);
+    var blogsNode = Umbraco.Content(33548);
+    var searchService = DependencyResolver.Current.GetService<ISearchService>();
+    var newsItems = searchService.GetDescendantsWithType(newsNode, "NewsItem", "datePosted_date", Examine.Search.SortType.Long, false).Take(3);
+    var eventsChildren = searchService.GetDescendantsWithTypeAfter(eventsNode, "EventItem", "eventStartDate_date", DateTime.Today, true).Take(3).ToList();
+    var blogs = searchService.GetDescendantsWithType(blogsNode, "BlogPost", "datePosted_date", Examine.Search.SortType.Long, false).Take(3);
+}
+
+<div class="tab-area">
+    <ul>
+        <li class="tab drop active" onclick="openCourse(event, 'News')">@Model.NewsTabTitle</li>
+        <li onclick="openCourse(event, 'Events')" class="tab drop">Events</li>
+        <li onclick="openCourse(event, 'Blogs')" class="tab drop">Blogs</li>
+    </ul>
+
+    <div class="tab-content news tabcontenty" id="News" style="display:block;">
+
+        @foreach (var child in newsItems)
+        {
+            <h2><a href="@child.Url()">@child.Name</a></h2>
+            {
+                var intro = child.Value<string>("Introduction");
+                if (intro != null)
+                {
+                    string summary = string.Empty;
+
+                    int characterCount = 100;
+
+                    summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                    if (summary.Length > characterCount)
+                    {
+                        char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                        summary = Html.TruncateByWords(summary, 16, false).ToString().Trim(charsToTrim) ?? summary;
+                    }
+                    summary += string.Format(" <a href=\"" + child.Url() + "\" aria-label=\"read more about " + @child.Name + "\"><strong>read more</strong></a>");
+                    <p>@Html.Raw(summary)</p>
+                    <span class="date"><time>@(child.Value<DateTime>("datePosted").ToString("dd MMMM yyyy"))</time></span>
+                }
+            }
+        }
+        <a href="/news-and-events/news/" target="_self" class="blue-btn">More News</a>
+    </div>
+
+    <div class="tab-content events tabcontenty" id="Events">
+        @foreach (var eventChild in eventsChildren)
+        {
+            <h2><a href="@eventChild.Url()">@eventChild.Name</a></h2>
+            {
+                var intro = eventChild.Value<string>("Introduction");
+                if (intro != null)
+                {
+                    string summary = string.Empty;
+
+                    int characterCount = 100;
+
+                    summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                    if (summary.Length > characterCount)
+                    {
+                        char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                        summary = Html.TruncateByWords(summary, 16, false).ToString().Trim(charsToTrim) ?? summary;
+                    }
+                    summary += string.Format(" <a href=\"" + eventChild.Url() + "\" aria-label=\"read more about " + eventChild.Name + "\"><strong>read more</strong></a>");
+                    <p>@Html.Raw(summary)</p>
+                    <span class="date"><time>@(eventChild.Value<DateTime>("eventStartDate").ToString("dd MMMM yyyy"))</time></span>
+                }
+            }
+        }
+        <a href="/news-and-events/events-listing/" target="_self" class="blue-btn">More Events</a>
+    </div>
+
+    <div class="tab-content blogs tabcontenty" id="Blogs">
+
+        @foreach (var blogChild in blogs)
+        {
+            <h2><a href="@blogChild.Url()">@blogChild.Name</a></h2>
+            {
+                var intro = blogChild.Value<string>("Introduction");
+                if (intro != null)
+                {
+                    string summary = string.Empty;
+
+                    int characterCount = 100;
+
+                    summary = Regex.Replace(intro, @"<[^>]+>|&nbsp;", "").Trim();
+
+                    if (summary.Length > characterCount)
+                    {
+                        char[] charsToTrim = { ',', '.', '?', '!', ' ' };
+                        summary = Html.TruncateByWords(summary, 16, false).ToString().Trim(charsToTrim) ?? summary;
+                    }
+                    summary += string.Format(" <a href=\"" + blogChild.Url() + "\" aria-label=\"read more about " + blogChild.Name + "\"><strong>read more</strong></a>");
+                    <p>@Html.Raw(summary)</p>
+                    <span class="date"><time>@(blogChild.Value<DateTime>("datePosted").ToString("dd MMMM yyyy"))</time></span>
+                }
+            }
+        }
+        <a href="campus-life/blogs/" target="_self" class="blue-btn">More Blogs</a>
+    </div>
+</div>
+
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        });
+    }
+
+    function openCourse(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontenty");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tab");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+<style>
+    .accordion {
+        background-color: #e7e7e7;
+        color: #6990b2;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 24px;
+        transition: 0.4s;
+        margin-bottom: 12px;
+    }
+
+        .accordion:after {
+            font-family: "FontAwesome";
+            content: '\f0d8';
+            color: #6990b2;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+
+        .accordion:hover {
+            background-color: #6990b2;
+            color: #fff;
+        }
+
+            .accordion:hover:after {
+                color: #fff;
+            }
+
+    .panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+    }
+
+    /* Style the tab content */
+    .tabcontenty {
+        display: none;
+        padding: 0px 12px;
+        border-top: none;
+    }
+
+        .tabcontenty p {
+            margin-top: 0px;
+        }
+
+    .tab {
+        padding: 10px;
+    }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            font-size: 16px;
+            background-color: #fff;
+        }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+                background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+                background-color: #fff;
+                color: #37495c;
+                position: relative;
+                -moz-transition: color, 0.2s;
+                -o-transition: color, 0.2s;
+                -webkit-transition: color, 0.2s;
+                transition: color, 0.2s;
+                font-weight: bold;
+                border-bottom: 3px solid rgba(128, 128, 128, 0.4);
+                font-size: 16px;
+            }
+
+    .alert {
+        padding: 5px;
+        margin-bottom: 10px;
+        background-color: orange;
+        color: black;
+    }
+</style>

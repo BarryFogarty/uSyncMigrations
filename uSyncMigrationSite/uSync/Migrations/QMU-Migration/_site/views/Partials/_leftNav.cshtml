@@ -1,0 +1,52 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using Microsoft.CSharp.RuntimeBinder
+@using Our.Umbraco.DocTypeGridEditor.Helpers
+@using Our.Umbraco.DocTypeGridEditor.Web.Extensions
+@using Umbraco.Core.Models
+@using Umbraco.Core.Models.PublishedContent
+@using ContentModels = Umbraco.Web.PublishedModels;
+@using Umbraco.Web
+@using Umbraco.Web.Models
+@using QMUCloud.Core.Extensions
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<dynamic>
+
+@{
+    var leftNavigation = Umbraco.GetNavigationNode("Left Navigation");
+    if (leftNavigation != null)
+    {
+        var children = leftNavigation.Children(x => x.ContentType.Alias == "navigationItem");
+        var numChildren = children.Count();
+        var count = 0;
+
+        foreach (var item in children)
+        {
+            var navLink = item.Value<Umbraco.Web.Models.Link>("Link");
+            var lastClass = "";
+            count++;
+            if (count == numChildren)
+            {
+                lastClass = "nav-menu-last";
+            }
+
+            <li>
+                @if (navLink != null)
+                {
+                    <a href="@navLink.Url" target="@navLink.Target" tabindex="-1" class="@lastClass">
+                        <span>@navLink.Name</span>
+                    </a>
+                }
+                else
+                {
+                    <a tabindex="-1" class="@lastClass">
+                        <span>
+                            @item.Name
+                        </span>
+                    </a>
+                }
+            </li> 
+        }
+    }
+}
+
